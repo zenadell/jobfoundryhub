@@ -1,0 +1,30 @@
+{% load static %}
+<section class="cta-section">
+    <div class="margin-top margin-huge">
+        <div class="background-cta-blog">
+            <div class="padding-vertical padding-huge">
+                <div class="position-relative">
+                    <div class="container-90">
+                        <div class="container-cta-blog">
+                            <h2 class="heading-1">Keep up to date with the latest recruitment news</h2>
+                            <div class="max-width-80 still-80">
+                                <p class="text-color-black">Join our community and get the best career advice delivered straight to your inbox.</p>
+                            </div>
+                            <div class="display-vertical-left">
+                                <div class="w-form">
+                                    <form action="{% url 'newsletter:subscribe' %}" method="post" id="newsletter-form" class="position-relative newsletter-wrapper">
+                                        {% csrf_token %}
+                                        <input class="form-input newsletter w-input" name="email" placeholder="Enter your email" type="email" required />
+                                        <input type="submit" class="button button-small newsletter-button w-button" value="Subscribe" />
+                                    </form>
+                                </div>
+                                <p class="paragraph-small">Join 9,500+ users already on the newsletter.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <img src="{% static 'images/better-talent-badge.svg' %}" loading="lazy" class="position-absolute item-23" />
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

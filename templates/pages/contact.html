@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Contact Us | {{ site_name }}{% endblock %}
+
+{% block meta_description %}
+    Get in touch with {{ site_name }}. Whether you have questions about job postings, partnerships, or need support, our team is here to help.
+{% endblock %}
+
+{% block content %}
+    {# Contact Form Section #}
+    <section class="contact-section">
+        <div class="padding-vertical padding-huge">
+            <div class="container-90">
+                <div class="w-layout-grid grid-contact">
+                    <div class="display-vertical-left gap-1rem text-display-center-landscape">
+                        <h1 class="heading-2">
+                            A specific question? Contact our team
+                        </h1>
+                        <p>
+                            We're here to help with anything you need. Reach out and our team will get back to you within 24 hours.
+                        </p>
+                    </div>
+                    <div class="form-wrapper">
+                        <div class="w-form">
+                            <form action="{% url 'core:contact' %}" method="POST" class="contact-form-grid">
+                                {% csrf_token %}
+                                <div>
+                                    <label for="First-Name" class="field-label">First Name</label>
+                                    <input class="form-input w-input" maxlength="256" name="name"
+                                        placeholder="James" type="text" id="First-Name" required />
+                                </div>
+                                <div>
+                                    <label for="Last-Name" class="field-label">Last Name</label>
+                                    <input class="form-input w-input" maxlength="256" name="last_name"
+                                        placeholder="Dean" type="text" id="Last-Name" />
+                                </div>
+                                <div>
+                                    <label for="email" class="field-label">Email</label>
+                                    <input class="form-input w-input" maxlength="256" name="email"
+                                        placeholder="your@mail.com" type="email" id="email" required />
+                                </div>
+                                <div>
+                                    <label for="Phone-Number" class="field-label">Phone Number</label>
+                                    <input class="form-input w-input" maxlength="256" name="phone"
+                                        placeholder="(123) 456 78 90" type="tel" id="Phone-Number" />
+                                </div>
+                                <div>
+                                    <label for="Subject" class="field-label">Subject</label>
+                                    <input class="form-input w-input" maxlength="256" name="subject"
+                                        placeholder="How can we help?" type="text" id="Subject" required />
+                                </div>
+                                <div>
+                                    <label for="Message" class="field-label">Message</label>
+                                    <textarea id="Message" name="message" maxlength="5000"
+                                        placeholder="How can we help you?"
+                                        class="form-input text-area w-input" required></textarea>
+                                </div>
+                                <div>
+                                    <input type="submit" value="Submit" class="button w-button" />
+                                </div>
+                            </form>
+                            {% if messages %}
+                                {% for message in messages %}
+                                    <div class="w-form-done" style="display: block; margin-top: 20px;">
+                                        <div>{{ message }}</div>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="padding-top padding-huge">
+                    <div class="margin-bottom margin-large">
+                        <h2 class="display-vertical-center text-align-center heading-3">
+                            Contact our team directly
+                        </h2>
+                        <div class="container-50">
+                            <p class="text-align-center">
+                                Prefer to reach us directly? Choose the right team for your query below.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="w-layout-grid grid-3x1 _1x3-tablet">
+                        <div class="contact-label"> <img
+                                src="{% static 'images/general-support-icon.svg' %}"
+                                loading="lazy" alt="General Support" class="icon-1x1-large" />
+                            <div>
+                                <div class="heading-5">General Support</div>
+                                <div class="text-link">hello@careerbuilders.com</div>
+                            </div>
+                        </div>
+                        <div class="contact-label"> <img
+                                src="{% static 'images/talent-support-icon.svg' %}"
+                                loading="lazy" alt="Talent Support" class="icon-1x1-large" />
+                            <div>
+                                <div class="heading-5">Talent Support</div>
+                                <div class="text-link">talent@careerbuilders.com</div>
+                            </div>
+                        </div>
+                        <div class="contact-label"> <img
+                                src="{% static 'images/company-support-icon.svg' %}"
+                                loading="lazy" alt="Company Support" class="icon-1x1-large" />
+                            <div>
+                                <div class="heading-5">Company Support</div>
+                                <div class="text-link">partners@careerbuilders.com</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {# FAQ Section #}
+    <section class="faq-section">
+        <div class="padding-vertical padding-huge">
+            <div class="container-60">
+                <div class="faq-component">
+                    <div class="faq-accordion">
+                        <div class="faq-question">
+                            <div class="heading-4">How can I apply for a job listed on your site?</div>
+                            <img src="{% static 'images/faq-icon.svg' %}" loading="lazy" alt="Toggle" class="icon-1x1-xsmall" />
+                        </div>
+                        <div class="faq-answer">
+                            <div class="margin-bottom margin-small">
+                                <p>You can apply directly through the job listing page by clicking the "Apply Now" button. You can also submit your resume through our Submit Resume page to be matched with future opportunities.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="faq-accordion">
+                        <div class="faq-question">
+                            <div class="heading-4">What makes {{ site_name }} unique?</div>
+                            <img src="{% static 'images/faq-icon.svg' %}" loading="lazy" alt="Toggle" class="icon-1x1-xsmall" />
+                        </div>
+                        <div class="faq-answer">
+                            <div class="margin-bottom margin-small">
+                                <p>We focus exclusively on entry-level and early-career opportunities, making it easier for new professionals to find their first roles. Our curated partner companies are committed to nurturing fresh talent.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="faq-accordion">
+                        <div class="faq-question">
+                            <div class="heading-4">Can I submit my resume for future opportunities?</div>
+                            <img src="{% static 'images/faq-icon.svg' %}" loading="lazy" alt="Toggle" class="icon-1x1-xsmall" />
+                        </div>
+                        <div class="faq-answer">
+                            <div class="margin-bottom margin-small">
+                                <p>Absolutely! Visit our Submit Resume page and upload your resume. Our team will review it and match you with relevant openings as they become available.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="faq-accordion">
+                        <div class="faq-question">
+                            <div class="heading-4">How do you match candidates with the right job openings?</div>
+                            <img src="{% static 'images/faq-icon.svg' %}" loading="lazy" alt="Toggle" class="icon-1x1-xsmall" />
+                        </div>
+                        <div class="faq-answer">
+                            <div class="margin-bottom margin-small">
+                                <p>We review each candidate's skills, experience, and career aspirations to connect them with the most suitable positions. Our platform also uses intelligent filtering to help you find jobs that match your profile.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="faq-accordion">
+                        <div class="faq-question">
+                            <div class="heading-4">What industries do you specialize in?</div>
+                            <img src="{% static 'images/faq-icon.svg' %}" loading="lazy" alt="Toggle" class="icon-1x1-xsmall" />
+                        </div>
+                        <div class="faq-answer">
+                            <div class="margin-bottom margin-small">
+                                <p>We cover a wide range of industries including Technology, Finance, Healthcare, Marketing, Design, and more. Our partner companies span various sectors, ensuring diverse career options for all candidates.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="margin-top margin-xxlarge">
+                    <div class="display-vertical-center text-align-center">
+                        <div>
+                            <div class="margin-bottom margin-xsmall">
+                                <h4 class="heading-2">Still have questions?</h4>
+                            </div>
+                            <p>We're just an email away. Reach out any time.</p>
+                            <div class="margin-top margin-medium">
+                                <a href="mailto:hello@careerbuilders.com" class="button w-button">Email Us</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

@@ -1,0 +1,204 @@
+/* Main overrides and custom styles for Career Builders site */
+
+/* Custom Sticky Sidebar */
+.sticky-sidebar {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 100px;
+    align-self: start;
+}
+
+/* Skeleton Loaders */
+.skeleton-image {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+}
+
+@keyframes skeleton-loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+.flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hover-opacity:hover {
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+}
+
+/* Rich Text Styles for Blog Content & Jobs */
+.w-richtext {
+    color: #374151;
+    line-height: 1.75;
+    font-size: 1.125rem;
+    font-family: 'Figtree', sans-serif;
+}
+
+.w-richtext h2, .w-richtext h3 {
+    margin-top: 2.5rem;
+    margin-bottom: 1.25rem;
+    color: #111827;
+    font-weight: 800;
+    letter-spacing: -0.025em;
+}
+
+.w-richtext p {
+    margin-bottom: 1.5rem;
+}
+
+.w-richtext ul, .w-richtext ol {
+    margin-bottom: 2rem;
+    padding-left: 1.5rem;
+    list-style-type: disc;
+}
+
+.w-richtext li {
+    margin-bottom: 0.75rem;
+    padding-left: 0.5rem;
+}
+
+.w-richtext ul li::marker {
+    color: #4ede79; /* Branded green bullets */
+    font-size: 1.2rem;
+}
+
+.w-richtext blockquote {
+    border-left: 4px solid #4ede79;
+    padding: 1rem 1.5rem;
+    font-style: italic;
+    background: #f9fafb;
+    border-radius: 0 8px 8px 0;
+    margin: 2.5rem 0;
+}
+
+/* Logo Styles */
+.navbar-logo-text {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #192d22;
+    letter-spacing: -0.02em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.logo-dot {
+    width: 8px;
+    height: 8px;
+    background-color: #4ede79;
+    border-radius: 50%;
+}
+
+/* Partner Logos */
+.partner-logo-text {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #a0aec0;
+    opacity: 0.6;
+    margin-right: 2rem;
+    transition: opacity 0.3s ease;
+}
+
+.partner-logo-text:hover {
+    opacity: 1;
+}
+
+/* Mobile Menu Styles */
+.mobile-menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: white;
+    z-index: 9999;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.mobile-menu-close {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    font-size: 2rem;
+    cursor: pointer;
+}
+
+.mobile-nav-link {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #192d22;
+    text-decoration: none;
+}
+
+.text-color-green {
+    color: #4ede79 !important;
+}
+
+.navbar-cart-link {
+    position: relative;
+    margin-left: 1.5rem;
+    display: flex;
+    align-items: center;
+    background: #f4f4f4;
+    padding: 10px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.navbar-cart-link:hover {
+    background: #e9e9e9;
+}
+
+.cart-quantity-bubble {
+    position: absolute;
+    top: -5px;
+    right: -8px;
+    background-color: #4ede79;
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 700;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid white;
+}
+
+.pink-hero-badge {
+    position: absolute;
+    top: 22%;
+    right: 26%;
+    width: 140px;
+    height: 140px;
+    background-color: #ffeef3;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 1.2rem;
+    color: #ff5a79;
+    font-weight: 700;
+    font-size: 1.1rem;
+    line-height: 1.2;
+    transform: rotate(-10deg);
+    z-index: 1;
+    /* Professional Wavy shape */
+    clip-path: polygon(100% 50%, 98.08% 59.75%, 92.4% 68.3%, 83.33% 75%, 71.65% 79.39%, 58.05% 81.17%, 43.3% 80.12%, 28.35% 76.24%, 14.2% 69.64%, 1.92% 60.57%, 1.92% 39.43%, 14.2% 30.36%, 28.35% 23.76%, 43.3% 19.88%, 58.05% 18.83%, 71.65% 20.61%, 83.33% 25%, 92.4% 31.7%, 98.08% 40.25%);
+}
+
+@media (max-width: 991px) {
+    .pink-hero-badge {
+        display: none;
+    }
+}

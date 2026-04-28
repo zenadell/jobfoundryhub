@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}404 - Not Found | {{ site_name }}{% endblock %}
+
+{% block content %}
+<div class="min-height-100vh display-vertical-center">
+    <div class="container-60">
+        <div class="padding-vertical padding-huge">
+            <div class="text-align-center">
+                <div class="margin-bottom margin-large">
+                    <img src="{% static 'images/404-icon.svg' %}" loading="lazy" class="icon-404" />
+                    <h1 class="heading-1">Oops...</h1>
+                    <p>The page you are looking for doesn't exist or has been moved.</p>
+                    <div class="margin-top margin-medium">
+                        <a href="/" class="button black w-button">Go back home</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

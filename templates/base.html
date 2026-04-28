@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+{% load static %}
+{% load humanize %}
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>{% block title %}{{ site_name }}{% endblock %}</title>
+    <meta content="{% block meta_description %}{{ site_tagline }}{% endblock %}" name="description" />
+    <meta content="{% block og_title %}{{ site_name }}{% endblock %}" property="og:title" />
+    <meta content="{% block og_description %}{{ site_tagline }}{% endblock %}" property="og:description" />
+    <meta content="{% block og_image %}{% static 'images/og-default.jpg' %}{% endblock %}" property="og:image" />
+    <meta property="og:type" content="website" />
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    
+    <link rel="stylesheet" href="{% static 'css/webflow-base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <link rel="stylesheet" href="{% static 'css/skeletons.css' %}">
+    <style>
+        .w-dropdown-list.w--open { display: block !important; opacity: 1 !important; visibility: visible !important; }
+    </style>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    
+    <link rel="shortcut icon" href="{% static 'images/favicon.png' %}" type="image/png">
+    <link rel="apple-touch-icon" href="{% static 'images/webclip.png' %}" />
+    
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    {% block extra_head %}{% endblock %}
+
+    {% if ADSENSE_ENABLED and ADSENSE_PUBLISHER_ID %}
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ ADSENSE_PUBLISHER_ID }}"
+         crossorigin="anonymous"></script>
+    {% endif %}
+
+    {% block structured_data %}{% endblock %}
+</head>
+
+<body>
+    {% block navbar %}
+    <div class="navbar">
+        <div data-animation="default" data-collapse="medium" data-duration="400" data-easing="ease" data-easing2="ease"
+            role="banner" class="navbar-container w-nav">
+            <div class="container-regular">
+                <div class="navbar-wrapper">
+                    <a href="{% url 'core:home' %}" class="navbar-brand w-nav-brand"> 
+                        <div class="navbar-logo-text">
+                            {% with site_name_parts=site_name.split %}
+                                {% for part in site_name_parts %}
+                                    <span class="{% if forloop.counter == 2 %}text-color-green{% endif %}">{{ part }}</span>{% if not forloop.last %}&nbsp;{% endif %}
+                                {% endfor %}
+                            {% endwith %}
+                            <span class="logo-dot"></span>
+                        </div>
+                    </a>
+                    <nav role="navigation" class="nav-menu-wrapper w-nav-menu">
+                        <ul role="list" class="nav-menu w-list-unstyled">
+                            <li>
+                                <a href="{% url 'core:about' %}" class="nav-link"> About
+                                </a>
+                            </li>
+                            <li x-data="{ open: false }">
+                                <div class="nav-dropdown w-dropdown" @click.outside="open = false">
+                                    <div class="nav-dropdown-toggle w-dropdown-toggle" @click="open = !open">
+                                        <div class="nav-dropdown-icon w-icon-dropdown-toggle">
+                                        </div>
+                                        <div>
+                                            Pages
+                                        </div>
+                                    </div>
+                                    <nav class="nav-dropdown-list shadow-three mobile-shadow-hide w-dropdown-list" 
+                                         :class="open ? 'w--open' : ''"
+                                         x-show="open" 
+                                         x-transition>
+                                        <div class="grid-navbar">
+                                            <div>
+                                                <div class="heading-5 margin-bottom margin-xsmall">
+                                                    Main Pages
+                                                </div>
+                                                <a href="{% url 'core:home' %}" class="nav-dropdown-link w-dropdown-link"> Home
+                                                </a>
+                                                <a href="{% url 'core:about' %}" class="nav-dropdown-link w-dropdown-link"> About Us
+                                                </a>
+                                                <a href="{% url 'jobs:job_list' %}" class="nav-dropdown-link w-dropdown-link"> Jobs
+                                                </a>
+                                                <a href="{% url 'jobs:company_list' %}" class="nav-dropdown-link w-dropdown-link">
+                                                    Companies
+                                                </a>
+                                                <a href="{% url 'blog:post_list' %}" class="nav-dropdown-link w-dropdown-link"> Blog
+                                                </a>
+                                            </div>
+                                            <div>
+                                                <a href="{% url 'core:pricing' %}" class="nav-dropdown-link w-dropdown-link">
+                                                    Pricing
+                                                </a>
+                                                <a href="{% url 'jobs:submit_resume' %}" class="nav-dropdown-link w-dropdown-link">
+                                                    Submit Resume
+                                                </a>
+                                                <a href="{% url 'jobs:post_job' %}" class="nav-dropdown-link w-dropdown-link">
+                                                    Post a Job Offer
+                                                </a>
+                                                <a href="{% url 'core:contact' %}" class="nav-dropdown-link w-dropdown-link"> Contact Us
+                                                </a>
+                                            </div>
+                                            <div>
+                                                <div class="heading-5 margin-bottom margin-xsmall">
+                                                    Utility Pages
+                                                </div>
+                                                <a href="{% url 'core:style_guide' %}"
+                                                    class="nav-dropdown-link w-dropdown-link"> Style Guide
+                                                </a>
+                                                <a href="{% url 'core:licenses' %}"
+                                                    class="nav-dropdown-link w-dropdown-link"> Licenses
+                                                </a>
+                                                <a href="{% url 'core:changelog' %}"
+                                                    class="nav-dropdown-link w-dropdown-link"> Changelog
+                                                </a>
+                                                <a href="{% url 'core:coming_soon' %}" class="nav-dropdown-link w-dropdown-link"> Coming
+                                                    Soon
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </nav>
+                                </div>
+                            </li>
+                            <li>
+                                <a href="{% url 'core:pricing' %}" class="nav-link"> Pricing
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                    <div class="display-ecommerce-navbar" x-data="{ mobileOpen: false }">
+                        <a href="{% url 'jobs:job_list' %}" class="button black button-small hidden-tablet w-button"> Browse Jobs
+                        </a>
+                        <a href="#" class="navbar-cart-link w-inline-block">
+                             <img src="{% static 'images/cart-icon.svg' %}" loading="lazy" alt="Cart" class="icon-1x1-small" style="width: 24px; height: 24px;" />
+                             <div class="cart-quantity-bubble">0</div>
+                        </a>
+                        <div class="menu-button w-nav-button" @click="mobileOpen = true">
+                            <div class="w-icon-nav-menu">
+                            </div>
+                        </div>
+                        
+                        {# Mobile Menu Overlay #}
+                        <div class="mobile-menu-overlay" x-show="mobileOpen" x-transition style="display:none;">
+                            <div class="mobile-menu-close" @click="mobileOpen = false">&times;</div>
+                            <div class="margin-bottom margin-large">
+                                <div class="navbar-logo-text">
+                                    {{ site_name }} <span class="logo-dot"></span>
+                                </div>
+                            </div>
+                            <a href="{% url 'core:home' %}" class="mobile-nav-link" @click="mobileOpen = false">Home</a>
+                            <a href="{% url 'core:about' %}" class="mobile-nav-link" @click="mobileOpen = false">About</a>
+                            <a href="{% url 'jobs:job_list' %}" class="mobile-nav-link" @click="mobileOpen = false">Jobs</a>
+                            <a href="{% url 'jobs:company_list' %}" class="mobile-nav-link" @click="mobileOpen = false">Companies</a>
+                            <a href="{% url 'blog:post_list' %}" class="mobile-nav-link" @click="mobileOpen = false">Blog</a>
+                            <a href="{% url 'core:pricing' %}" class="mobile-nav-link" @click="mobileOpen = false">Pricing</a>
+                            <a href="{% url 'core:contact' %}" class="mobile-nav-link" @click="mobileOpen = false">Contact</a>
+                            <div class="margin-top margin-medium">
+                                <a href="{% url 'jobs:job_list' %}" class="button black w-full w-button">Browse Jobs</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+
+    {% block content %}{% endblock %}
+
+    <section class="footer-section">
+        <div class="background-color-secondary-4">
+            <div class="padding-vertical padding-large">
+                <div class="container-90">
+                    <div class="margin-vertical margin-large">
+                        <div class="w-layout-grid grid-footer">
+                            <div id="w-node-_277fe38a-c5f3-62ea-703c-d1d14a85b8a4-4a85b89e"
+                                class="display-footer-tablet">
+                                <div class="margin-bottom margin-medium">
+                                    <a href="{% url 'core:home' %}" class="w-inline-block"> 
+                                        <div class="navbar-logo-text">
+                                            {% with site_name_parts=site_name.split %}
+                                                {% for part in site_name_parts %}
+                                                    <span class="{% if forloop.counter == 2 %}text-color-green{% endif %}">{{ part }}</span>{% if not forloop.last %}&nbsp;{% endif %}
+                                                {% endfor %}
+                                            {% endwith %}
+                                            <span class="logo-dot"></span>
+                                        </div>
+                                    </a>
+                                </div>
+                                <p>
+                                    Your Trusted Partner in Career Growth. Connecting recent graduates with verified entry-level opportunities at top-tier companies.
+                                </p>
+                                <div id="w-node-_277fe38a-c5f3-62ea-703c-d1d14a85b8aa-4a85b89e"
+                                    class="w-layout-grid grid-3x1">
+                                    <a href="{{ social.linkedin|default:'#' }}" target="_blank" class="w-inline-block"> 
+                                        <img src="{% static 'images/linkedin-icon.svg' %}" loading="lazy" alt="LinkedIn" class="icon-1x1-medium" />
+                                    </a>
+                                    <a href="{{ social.facebook|default:'#' }}" target="_blank" class="w-inline-block"> 
+                                        <img src="{% static 'images/facebook-icon.svg' %}" loading="lazy" alt="Facebook" class="icon-1x1-medium" />
+                                    </a>
+                                    <a href="mailto:{{ site_email|default:'#' }}" target="_blank" class="w-inline-block"> 
+                                        <img src="{% static 'images/email-icon.svg' %}" loading="lazy" alt="Email" class="icon-1x1-medium" />
+                                    </a>
+                                </div>
+                            </div>
+                            <div id="w-node-_277fe38a-c5f3-62ea-703c-d1d14a85b8b1-4a85b89e"
+                                class="display-vertical-center---tablet">
+                                <div class="margin-bottom margin-medium">
+                                    <div class="subtitle black">
+                                        Pages
+                                    </div>
+                                </div>
+                                <div class="margin-bottom margin-xsmall">
+                                    <a href="{% url 'core:about' %}" class="text-link---footer"> About Us
+                                    </a>
+                                </div>
+                                <div class="margin-bottom margin-xsmall">
+                                    <a href="{% url 'jobs:job_list' %}" class="text-link---footer"> Jobs
+                                    </a>
+                                </div>
+                                <div class="margin-bottom margin-xsmall">
+                                    <a href="{% url 'jobs:company_list' %}" class="text-link---footer"> Companies
+                                    </a>
+                                </div>
+                                <div class="margin-bottom margin-xsmall">
+                                    <a href="{% url 'blog:post_list' %}" class="text-link---footer"> Blog
+                                    </a>
+                                </div>
+                                <div class="margin-bottom margin-xsmall">
+                                    <a href="{% url 'core:pricing' %}" class="text-link---footer"> Pricing
+                                    </a>
+                                </div>
+                                <div class="margin-bottom margin-xsmall">
+                                    <a href="{% url 'jobs:submit_resume' %}" class="text-link---footer"> Submit Resume
+                                    </a>
+                                </div>
+                                <div class="margin-bottom margin-xsmall">
+                                    <a href="{% url 'jobs:post_job' %}" class="text-link---footer"> Post a Job Offer
+                                    </a>
+                                </div>
+                                <div class="margin-bottom margin-xsmall">
+                                    <a href="{% url 'core:contact' %}" class="text-link---footer"> Contact Us
+                                    </a>
+                                </div>
+                            </div>
+                            <div id="w-node-_277fe38a-c5f3-62ea-703c-d1d14a85b8c4-4a85b89e"
+                                class="display-vertical-center---tablet">
+                                <div class="margin-bottom margin-medium">
+                                    <div class="subtitle black">
+                                        Utility Pages
+                                    </div>
+                                </div>
+                                <div class="margin-bottom margin-xsmall">
+                                    <a href="{% url 'core:style_guide' %}" class="text-link---footer"> Style Guide
+                                    </a>
+                                </div>
+                                <div class="margin-bottom margin-xsmall">
+                                    <a href="{% url 'core:licenses' %}" class="text-link---footer"> Licenses
+                                    </a>
+                                </div>
+                                <div class="margin-bottom margin-xsmall">
+                                    <a href="{% url 'core:changelog' %}" class="text-link---footer"> Changelog
+                                    </a>
+                                </div>
+                                <div class="margin-bottom margin-xsmall">
+                                    <a href="{% url 'core:coming_soon' %}" class="text-link---footer"> Coming Soon
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="divider-footer">
+                    </div>
+                    <div class="margin-top margin-small">
+                        <div class="display-vertical-center---tablet">
+                            <div>
+                                Copyright © {% now "Y" %} {{ site_name }}. All rights reserved.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {% block extra_scripts %}{% endblock %}
+</body>
+
+</html>

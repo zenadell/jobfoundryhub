@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Partner Companies | {{ site_name }}{% endblock %}
+
+{% block meta_description %}
+    Explore our partner companies: Top-tier organizations hiring entry-level talent.
+{% endblock %}
+
+{% block content %}
+    <section class="companies-section">
+        <div class="margin-bottom margin-huge">
+            <div class="padding-vertical padding-huge">
+                <div class="container-90">
+                    <div class="margin-bottom margin-huge">
+                        <div class="display-vertical-center text-align-center">
+                            <h1>
+                                Our partner companies
+                            </h1>
+                            <div class="container-50">
+                                <p>
+                                    We collaborate with leading organizations dedicated to nurturing the next generation of talent. Explore our partners and find where you belong.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="w-dyn-list">
+                            <div role="list" class="companies-grid w-dyn-items">
+                                {% if companies %}
+                                    {% for company in companies %}
+                                <div role="listitem" class="w-dyn-item">
+                                    <div class="job-offer-wrapper company">
+                                        <div class="display-horizontal-left gap-2rem vertical-left-mobile">
+                                            <div class="company-logo-wrapper">
+                                                {% if company.logo %}
+                                                    <img src="{{ company.logo.url }}" loading="lazy" alt="{{ company.name }}" class="icon-1x1-medium" />
+                                                {% else %}
+                                                    <div class="skeleton skeleton--icon" style="width: 60px; height: 60px;"></div>
+                                                {% endif %}
+                                            </div>
+                                            <h2 class="heading-4 no-margin">
+                                                {{ company.name }}
+                                            </h2>
+                                        </div>
+                                        <div class="margin-top margin-small">
+                                            <div class="department-badge small-grey margin-bottom margin-xsmall">
+                                                <div>{{ company.industry }}</div>
+                                            </div>
+                                            <p>
+                                                {{ company.description|striptags|truncatewords:15 }}
+                                            </p>
+                                        </div>
+                                        <div class="margin-top margin-small">
+                                            <a href="{% url 'jobs:company_detail' slug=company.slug %}" class="button black button-small w-button"> Read more
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                    {% endfor %}
+                                {% else %}
+                                    {# Skeletons for initial state #}
+                                    {% for i in "123456" %}
+                                    <div role="listitem" class="w-dyn-item">
+                                        <div class="job-offer-wrapper company">
+                                            <div class="display-horizontal-left gap-2rem vertical-left-mobile">
+                                                <div class="skeleton skeleton--icon" style="width: 60px; height: 60px;"></div>
+                                                <div class="skeleton skeleton--text-lg" style="width: 150px;"></div>
+                                            </div>
+                                            <div class="margin-top margin-small">
+                                                <div class="skeleton skeleton--text-md"></div>
+                                                <div class="skeleton skeleton--text-md" style="width: 80%;"></div>
+                                            </div>
+                                            <div class="margin-top margin-small">
+                                                <div class="skeleton skeleton--button"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        {# Pagination #}
+                        {% if companies.has_other_pages %}
+                        <div class="margin-top margin-huge display-horizontal-center gap-1rem">
+                            {% if companies.has_previous %}
+                            <a href="?page={{ companies.previous_page_number }}" class="button button-small white w-button">Previous</a>
+                            {% endif %}
+                            <div class="subtitle">Page {{ companies.number }} of {{ companies.paginator.num_pages }}</div>
+                            {% if companies.has_next %}
+                            <a href="?page={{ companies.next_page_number }}" class="button button-small white w-button">Next</a>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="background-cta">
+            <div class="padding-vertical padding-xhuge">
+                <div class="container-90">
+                    <div class="position-relative z-index-100">
+                        <div class="max-width-60">
+                            <div class="display-vertical-left gap-1rem">
+                                <h2>
+                                    Be the first to know about our new job offers
+                                </h2>
+                                <div class="max-width-70">
+                                    <p class="text-color-black---landscape">
+                                        Join our newsletter to receive the latest job openings and career advice directly in your inbox.
+                                    </p>
+                                </div>
+                                <div class="display-vertical-left">
+                                    <div class="w-form">
+                                        <form action="{% url 'newsletter:subscribe' %}" method="POST" class="position-relative newsletter-wrapper">
+                                            {% csrf_token %}
+                                            <input class="form-input newsletter cta w-input" maxlength="256" name="email" placeholder="Enter your email" type="email" required="" />
+                                            <input type="submit" value="Subscribe" class="button button-small newsletter-button w-button" />
+                                        </form>
+                                    </div>
+                                    <p class="paragraph-small">
+                                        Join 9,500+ users already on the newsletter.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

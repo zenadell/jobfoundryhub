@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}{% if category %}{{ category.name }} Articles{% else %}Blog{% endif %} | {{ site_name }}{% endblock %}
+
+{% block meta_description %}
+    {% if category %}{{ category.meta_description }}{% else %}Read career advice, industry insights, and expert tips on our blog. Stay ahead in your job search with {{ site_name }}.{% endif %}
+{% endblock %}
+
+{% block content %}
+    <section class="companies-section">
+        <div class="margin-bottom margin-huge">
+            <div class="padding-vertical padding-huge">
+                <div class="container-90">
+                    <div class="margin-bottom margin-huge">
+                        <div class="display-vertical-center text-align-center">
+                            <h1>
+                                {% if category %}{{ category.name }}{% else %}Our latest blog articles{% endif %}
+                            </h1>
+                            <div class="container-50">
+                                <p>
+                                    {% if category %}{{ category.description }}{% else %}Expert insights, career tips, and industry news to help you navigate your professional journey.{% endif %}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="w-dyn-list">
+                            <div role="list" class="blog-listing-collection w-dyn-items">
+                                {% for post in posts %}
+                                <div role="listitem" class="w-dyn-item">
+                                    <a href="{% url 'blog:post_detail' slug=post.slug %}"
+                                        class="blog-listing-wrapper w-inline-block">
+                                        <div class="position-relative">
+                                            {% if post.featured_image %}
+                                                <img src="{{ post.featured_image.url }}"
+                                                    loading="lazy" alt="{{ post.title }}"
+                                                    class="blog-thumbnail" />
+                                            {% else %}
+                                                <div class="blog-thumbnail skeleton" style="width:100%; height:200px; background:#e9e9eb;"></div>
+                                            {% endif %}
+                                            {% if post.category %}
+                                            <div class="position-absolute item-19">
+                                                <div>
+                                                    {{ post.category.name }}
+                                                </div>
+                                            </div>
+                                            {% endif %}
+                                        </div>
+                                        <div class="margin-top margin-xsmall">
+                                            <h3 class="heading-blog-title">
+                                                {{ post.title }}
+                                            </h3>
+                                            <p>
+                                                {{ post.excerpt|truncatewords:15 }}
+                                            </p>
+                                            <div class="text-link red">
+                                                Read more
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                                {% empty %}
+                                <div class="text-align-center padding-large" style="width: 100%;">
+                                    <p>No articles published yet. Check back soon!</p>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+
+                    {# Pagination #}
+                    {% if posts.has_other_pages %}
+                    <div class="margin-top margin-large display-vertical-center">
+                        <div class="display-horizontal-center gap-1rem">
+                            {% if posts.has_previous %}
+                                <a href="?page={{ posts.previous_page_number }}{% if category %}&category={{ category.slug }}{% endif %}" class="button black button-small w-button">← Previous</a>
+                            {% endif %}
+                            <span class="paragraph-small">Page {{ posts.number }} of {{ posts.paginator.num_pages }}</span>
+                            {% if posts.has_next %}
+                                <a href="?page={{ posts.next_page_number }}{% if category %}&category={{ category.slug }}{% endif %}" class="button black button-small w-button">Next →</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {# Newsletter CTA Section #}
+    <section class="cta-section">
+        <div class="margin-top margin-huge">
+            <div class="background-cta-blog">
+                <div class="padding-vertical padding-huge">
+                    <div class="position-relative">
+                        <div class="container-90">
+                            <div class="container-cta-blog">
+                                <h2 class="heading-1">
+                                    Keep up to date with the latest career news
+                                </h2>
+                                <div class="max-width-80 still-80">
+                                    <p class="text-color-black">
+                                        Subscribe to our newsletter and receive weekly career advice, job market insights, and exclusive opportunities directly in your inbox.
+                                    </p>
+                                </div>
+                                <div class="display-vertical-left">
+                                    <div class="w-form">
+                                        <form action="{% url 'newsletter:subscribe' %}" method="POST"
+                                            class="position-relative newsletter-wrapper">
+                                            {% csrf_token %}
+                                            <input class="form-input newsletter w-input" maxlength="256" name="email"
+                                                placeholder="Enter your email" type="email" required />
+                                            <input type="submit" class="button button-small newsletter-button w-button"
+                                                value="Subscribe" />
+                                        </form>
+                                    </div>
+                                    <p class="paragraph-small">
+                                        Join 9,500+ users already on the newsletter.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <img src="{% static 'images/better-talent-badge.svg' %}"
+                            loading="lazy" alt="" class="position-absolute item-23" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

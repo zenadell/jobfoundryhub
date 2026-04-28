@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}Career Launch Programs for New Graduates{% endblock %}
+{% block meta_description %}Career launch resources, guides, and structured programs to help recent graduates move from graduation to employment faster.{% endblock %}
+
+{% block content %}
+<div class="bg-[var(--color-surface)] min-h-screen">
+    <section class="bg-white border-b border-gray-200 pt-32 pb-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-4xl md:text-5xl font-display font-bold text-gray-900 mb-6">Career Launch Programs</h1>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">Getting a degree was the preparation. Getting the job is the game. And between those two milestones is a gap that most universities don't prepare you for.</p>
+        </div>
+    </section>
+
+    <section class="py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg prose-blue max-w-none text-gray-700">
+                <p>{{ site_name }}'s Career Launch Programs are free, structured resources that walk you through every stage of the job search process. Think of them as the career office your university should have had.</p>
+
+                <h2>What Career Launch Programs Include</h2>
+                
+                <p><strong>The Job Search Playbook</strong> — A step-by-step guide covering how to organize your job search, where to look, how many applications to send per week, and how to track your progress. Most graduates fail in their job search not because of lack of effort but because of lack of system.</p>
+
+                <p><strong>Resume & Cover Letter Workshop</strong> — Written guides, templates, and before/after examples that show you exactly how to translate your academic experience into professional language that hiring managers respond to.</p>
+
+                <p><strong>Interview Preparation Series</strong> — Practice question banks, answer frameworks (like STAR method), and guides to every interview format you'll encounter: phone screens, video interviews, technical assessments, and behavioral panels.</p>
+
+                <p><strong>Salary Research & Negotiation Guide</strong> — A step-by-step framework for researching fair pay, evaluating total compensation packages, and negotiating professionally without jeopardizing the offer.</p>
+
+                <p><strong>First 90 Days at Work</strong> — Most career resources stop at the job offer. This guide covers what to do after you start: how to build relationships quickly, establish your reputation, and set yourself up for early promotion consideration.</p>
+
+                <h2>Who This Is For</h2>
+                <p>Career Launch Programs are designed for any recent graduate or final-year student who is actively searching for their first professional role. They are also useful for anyone returning to work after a gap, or career changers entering a new industry for the first time.</p>
+
+                <p>All resources are available free of charge. No signup required for guides. Create a free account to save progress and access personalized job recommendations.</p>
+
+                <div class="mt-12 text-center">
+                    <a href="{% url 'blog:post_list' %}" class="inline-flex bg-accent text-white px-8 py-3 rounded-full font-medium hover:bg-blue-700 transition-colors">Explore Launch Guides</a>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

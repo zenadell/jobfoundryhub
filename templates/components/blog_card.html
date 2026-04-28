@@ -1,0 +1,37 @@
+<a href="#" class="block bg-white rounded-[20px] overflow-hidden border border-gray-100 hover:shadow-[0_4px_20px_rgba(0,0,0,0.08)] transition-shadow duration-300 group">
+    <div class="relative h-48 bg-gray-100 overflow-hidden">
+        {% if post.featured_image %}
+        <img src="{{ post.featured_image.url }}" alt="{{ post.title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">
+        {% else %}
+        <div class="w-full h-full flex items-center justify-center bg-gray-200">
+            <i data-lucide="image" class="w-12 h-12 text-gray-400"></i>
+        </div>
+        {% endif %}
+        <div class="absolute bottom-4 left-4">
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-accent text-white shadow-sm">
+                {{ post.category.name }}
+            </span>
+        </div>
+    </div>
+    <div class="p-6">
+        <h3 class="text-xl font-semibold text-gray-900 mb-3 line-clamp-2 group-hover:text-accent transition-colors">
+            {{ post.title }}
+        </h3>
+        <p class="text-sm text-gray-600 mb-6 line-clamp-3">
+            {{ post.excerpt }}
+        </p>
+        <div class="flex items-center justify-between mt-auto">
+            <div class="flex items-center">
+                <div class="w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center text-xs font-bold text-gray-600 mr-2">
+                    {{ post.author.username|make_list|first|upper }}
+                </div>
+                <span class="text-xs text-gray-500 font-medium">{{ post.author.get_full_name|default:post.author.username }}</span>
+            </div>
+            <div class="text-xs text-gray-400 flex items-center">
+                <span>{{ post.read_time }} min read</span>
+                <span class="mx-1">&middot;</span>
+                <span>{{ post.published_at|date:"M d" }}</span>
+            </div>
+        </div>
+    </div>
+</a>

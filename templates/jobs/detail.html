@@ -1,0 +1,251 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}{{ job.title }} at {{ job.company.name }} | {{ site_name }}{% endblock %}
+
+{% block meta_description %}
+    {{ job.description|striptags|truncatewords:30 }}
+{% endblock %}
+
+{% block content %}
+    <section class="job-offer-section">
+        <div class="background-color-secondary-4">
+            <div class="position-relative">
+                <div class="padding-top padding-huge">
+                    <div class="padding-vertical padding-huge">
+                        <div class="container-90">
+                            <div class="w-layout-grid grid-jobs">
+                                <div class="job-offer-wrapper">
+                                    <div class="divider-bottom">
+                                        <div class="display-horizontal-space-btw align-items-top">
+                                            <div class="display-horizontal-left gap-2rem vertical-left-mobile">
+                                                <div class="company-logo-wrapper">
+                                                    {% if job.company.logo %}
+                                                        <img src="{{ job.company.logo.url }}" loading="lazy" alt="{{ job.company.name }}" class="icon-1x1-large" />
+                                                    {% else %}
+                                                        <div class="skeleton skeleton--icon" style="width: 80px; height: 80px;"></div>
+                                                    {% endif %}
+                                                </div>
+                                                <div class="display-vertical-left gap-1rem">
+                                                    <div class="subtitle">
+                                                        {{ job.company.name }}
+                                                    </div>
+                                                    <h1 class="heading-4 no-margin">
+                                                        {{ job.title }}
+                                                    </h1>
+                                                    <div class="department-badge small-grey">
+                                                        <div>
+                                                            {{ job.category.name }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div class="job-info-text">
+                                                    {{ job.posted_at|naturaltime }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="w-richtext">
+                                            {{ job.description|safe }}
+                                            
+                                            {% if job.requirements %}
+                                                <h3>Requirements</h3>
+                                                {{ job.requirements|safe }}
+                                            {% endif %}
+                                        </div>
+                                        <div class="margin-top margin-medium">
+                                            <a href="{% url 'jobs:submit_resume' %}" class="button w-button"> Apply now
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="sticky-sidebar">
+                                    <div class="job-offer-wrapper job-offer-page">
+                                        <h3 class="heading-4 no-margin">
+                                            Interested in this job?
+                                        </h3>
+                                        <p>
+                                            Click the button below to start your application process. We'll need your resume and a few details.
+                                        </p>
+                                        <div class="margin-bottom margin-small">
+                                            <div class="display-vertical-left gap-0-5rem">
+                                                <div class="display-horizontal-left gap-1rem">
+                                                    <img src="{% static 'images/location-icon.svg' %}" class="icon-1x1-xsmall" />
+                                                    <div class="job-info-text">{{ job.location }}</div>
+                                                </div>
+                                                <div class="display-horizontal-left gap-1rem">
+                                                    <img src="{% static 'images/job-type-icon.svg' %}" class="icon-1x1-xsmall" />
+                                                    <div class="job-info-text">{{ job.get_job_type_display }}</div>
+                                                </div>
+                                                {% if job.salary_min %}
+                                                <div class="display-horizontal-left gap-1rem">
+                                                    <img src="{% static 'images/cart-icon.svg' %}" class="icon-1x1-xsmall" />
+                                                    <div class="job-info-text">
+                                                        {{ job.salary_min|floatformat:0|intcomma }} 
+                                                        {% if job.salary_max %}- {{ job.salary_max|floatformat:0|intcomma }}{% endif %} 
+                                                        {{ job.salary_currency }} / {{ job.get_salary_period_display }}
+                                                    </div>
+                                                </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <a href="{% url 'jobs:submit_resume' %}" class="button black w-button"> Apply now
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {% if related_jobs %}
+    <section class="featured-jobs-section">
+        <div class="padding-vertical padding-huge">
+            <div class="container-90">
+                <div class="margin-bottom margin-large">
+                    <div class="display-horizontal-space-btw vertical-left-landscape">
+                        <div class="max-width-55 still-55">
+                            <h2 class="heading-3 no-margin">
+                                Discover our other opportunities
+                            </h2>
+                        </div>
+                        <a href="{% url 'jobs:job_list' %}" class="button red w-button"> Browse all
+                        </a>
+                    </div>
+                </div>
+                <div class="w-dyn-list">
+                    <div role="list" class="lisitng-jobs-grid w-dyn-items">
+                        {% for r_job in related_jobs %}
+                        <div role="listitem" class="w-dyn-item">
+                            <div class="job-offer-wrapper static">
+                                <div class="display-vertical-left gap-1rem">
+                                    <div class="company-logo-wrapper">
+                                        {% if r_job.company.logo %}
+                                            <img src="{{ r_job.company.logo.url }}" loading="lazy" alt="{{ r_job.company.name }}" class="icon-1x1-small" />
+                                        {% endif %}
+                                    </div>
+                                    <h3 class="heading-4 no-margin">
+                                        {{ r_job.title }}
+                                    </h3>
+                                    <div class="department-badge">
+                                        <div>
+                                            {{ r_job.category.name }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="margin-vertical margin-xsmall">
+                                    <div class="display-horizontal-left gap-2rem vertical-left-mobile">
+                                        <div class="display-horizontal-left gap-1rem">
+                                            <img src="{% static 'images/location-icon.svg' %}" loading="lazy" alt="Location" class="icon-1x1-xsmall" />
+                                            <div class="job-info-text">
+                                                {{ r_job.location }}
+                                            </div>
+                                        </div>
+                                        <div class="display-horizontal-left gap-1rem">
+                                            <img src="{% static 'images/job-type-icon.svg' %}" loading="lazy" alt="Job Type" class="icon-1x1-xsmall" />
+                                            <div class="job-info-text">
+                                                {{ r_job.get_job_type_display }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="margin-top margin-small">
+                                    <a href="{% url 'jobs:job_detail' slug=r_job.slug %}" class="button button-small w-button">
+                                        Learn more
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    {% endif %}
+
+    <section class="cta-section">
+        <div class="background-cta">
+            <div class="padding-vertical padding-xhuge">
+                <div class="container-90">
+                    <div class="position-relative z-index-100">
+                        <div class="max-width-60">
+                            <div class="display-vertical-left gap-1rem">
+                                <h2>
+                                    Be the first to know about our new job offers
+                                </h2>
+                                <div class="max-width-70">
+                                    <p class="text-color-black---landscape">
+                                        Join our newsletter to receive the latest job openings and career advice directly in your inbox.
+                                    </p>
+                                </div>
+                                <div class="display-vertical-left">
+                                    <div class="w-form">
+                                        <form action="{% url 'newsletter:subscribe' %}" method="POST" class="position-relative newsletter-wrapper">
+                                            {% csrf_token %}
+                                            <input class="form-input newsletter cta w-input" maxlength="256" name="email" placeholder="Enter your email" type="email" required="" />
+                                            <input type="submit" value="Subscribe" class="button button-small newsletter-button w-button" />
+                                        </form>
+                                    </div>
+                                    <p class="paragraph-small">
+                                        Join 9,500+ users already on the newsletter.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block structured_data %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org/",
+  "@type": "JobPosting",
+  "title": "{{ job.title|escapejs }}",
+  "description": "{{ job.description|striptags|escapejs }}",
+  "datePosted": "{{ job.posted_at|date:'c' }}",
+  "validThrough": "{{ job.expires_at|date:'c' }}",
+  "employmentType": "{{ job.get_job_type_schema }}",
+  "hiringOrganization": {
+    "@type": "Organization",
+    "name": "{{ job.company.name|escapejs }}",
+    "sameAs": "{{ job.company.website }}"
+    {% if job.company.logo %},"logo": "{{ request.scheme }}://{{ request.get_host }}{{ job.company.logo.url }}"{% endif %}
+  },
+  "jobLocation": {
+    "@type": "Place",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "{{ job.location|escapejs }}",
+      "addressRegion": "{{ job.region|escapejs }}",
+      "addressCountry": "{{ job.country|default:'US' }}"
+    }
+  }
+  {% if job.is_remote %},"jobLocationType": "TELECOMMUTE"{% endif %}
+  {% if job.salary_min %},
+  "baseSalary": {
+    "@type": "MonetaryAmount",
+    "currency": "{{ job.salary_currency }}",
+    "value": {
+      "@type": "QuantitativeValue",
+      "minValue": {{ job.salary_min }},
+      "maxValue": {{ job.salary_max|default:job.salary_min }},
+      "unitText": "{{ job.get_salary_period_schema }}"
+    }
+  }
+  {% endif %}
+}
+</script>
+{% endblock %}
+

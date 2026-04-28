@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Success | {{ site_name }}{% endblock %}
+
+{% block content %}
+<div class="min-height-100vh display-vertical-center">
+    <div class="container-50">
+        <div class="padding-vertical padding-huge">
+            <div class="text-align-center">
+                <div class="margin-bottom margin-large">
+                    {% if type == 'job' %}
+                        <img src="{% static 'images/confirmation-letter.svg' %}" loading="lazy" alt="Thanks" class="icon-404" style="max-width: 250px; margin-bottom: 2rem;" />
+                        <h1 class="heading-1">Thanks !</h1>
+                        <p>We have received your new job offer. We will get back to you when it is published on our website.</p>
+                    {% elif type == 'resume' %}
+                        <img src="{% static 'images/confirmation-card.svg' %}" loading="lazy" alt="Thanks" class="icon-404" style="max-width: 250px; margin-bottom: 2rem;" />
+                        <h1 class="heading-1">Thanks !</h1>
+                        <p>We have received your application. We will get back to you as soon as a new vacancy becomes available.</p>
+                    {% else %}
+                        <img src="{% static 'images/confirmation-message.svg' %}" loading="lazy" alt="Thanks" class="icon-404" style="max-width: 250px; margin-bottom: 2rem;" />
+                        <h1 class="heading-1">Thanks !</h1>
+                        <p>We have received your request. We will get back to you as soon as possible.</p>
+                    {% endif %}
+                </div>
+                <div class="margin-top margin-medium">
+                    <a href="{% url 'core:home' %}" class="button black w-button">Back to Home</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

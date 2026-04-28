@@ -36,3 +36,5 @@ local_settings.py
 # Backup files
 *.bak
 *.css.bak
+venv/
+*.zip

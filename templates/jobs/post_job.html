@@ -1,0 +1,233 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Post a Job Offer | {{ site_name }}{% endblock %}
+
+{% block meta_description %}
+    Reach thousands of entry-level professionals. Post your job opening today and find the perfect talent for your company.
+{% endblock %}
+
+{% block content %}
+    <section class="contact-section">
+        <div class="padding-vertical padding-huge">
+            <div class="container-90">
+                <div class="w-layout-grid grid-contact">
+                    <div class="display-vertical-left gap-1rem text-display-center-landscape">
+                        <h1 class="heading-2">
+                            Find your next talent today
+                        </h1>
+                        <p>
+                            Submit your job opening to our platform and connect with motivated, entry-level professionals ready to make an impact in your organization.
+                        </p>
+                    </div>
+                    <div class="form-wrapper">
+                        <div class="w-form">
+                            <form action="{% url 'jobs:post_job' %}" method="POST" enctype="multipart/form-data" class="contact-form-grid">
+                                {% csrf_token %}
+                                <h3 id="w-node-_69b7f8cb-9b6b-31f8-6ffe-a4412a7c1f17-8bcb98a8">
+                                    Contact informations
+                                </h3>
+                                <div>
+                                    <label for="Full-Name" class="field-label">
+                                        Full Name
+                                    </label>
+                                    <input class="form-input w-input" maxlength="256" name="full_name"
+                                        placeholder="James Dean" type="text" id="Full-Name" required />
+                                </div>
+                                <div>
+                                    <label for="email" class="field-label">
+                                        Email
+                                    </label>
+                                    <input class="form-input w-input" maxlength="256" name="email"
+                                        placeholder="your@mail.com" type="email" id="email" required />
+                                </div>
+                                <div id="w-node-_20062a7b-fec7-409d-3839-0eea0f3d1526-8bcb98a8" class="divider-bottom">
+                                </div>
+                                <h3 id="w-node-cad5e090-0fe4-28a2-b56b-af22bd4af9aa-8bcb98a8">
+                                    Job informations
+                                </h3>
+                                <div>
+                                    <label for="Job-Title" class="field-label">
+                                        Job Title
+                                    </label>
+                                    <input class="form-input w-input" maxlength="256" name="job_title"
+                                        placeholder="Webflow Developer" type="text" id="Job-Title" required />
+                                </div>
+                                <div>
+                                    <label for="Job-Department" class="field-label">
+                                        Job Category
+                                    </label>
+                                    <input class="form-input w-input" maxlength="256" name="job_department"
+                                        placeholder="e.g. Technology, Design" type="text" id="Job-Department" />
+                                </div>
+                                <div>
+                                    <label for="Job-Location" class="field-label">
+                                        Job location
+                                    </label>
+                                    <input class="form-input w-input" maxlength="256" name="job_location"
+                                        placeholder="San Francisco or Remote" type="text" id="Job-Location" />
+                                </div>
+                                <div>
+                                    <label for="Job-Salary" class="field-label">
+                                        Job Salary
+                                    </label>
+                                    <input class="form-input w-input" maxlength="256" name="job_salary"
+                                        placeholder="60,000$" type="text" id="Job-Salary" />
+                                </div>
+                                <div id="w-node-bff27705-2cd0-957a-627b-5de26614532c-8bcb98a8">
+                                    <label for="Job-Description" class="field-label">
+                                        Job Description
+                                    </label>
+                                    <textarea id="Job-Description" name="job_description" maxlength="5000"
+                                        placeholder="Describe the job briefly..."
+                                        class="form-input text-area w-input" required></textarea>
+                                </div>
+                                <div id="w-node-fb1991f2-8b78-5f3f-5d89-19817abc6f84-8bcb98a8" class="divider-bottom">
+                                </div>
+                                <h3 id="w-node-_77defa3c-6da7-a43f-e4ce-d1faf7b1e6d1-8bcb98a8">
+                                    Company informations
+                                </h3>
+                                <div>
+                                    <label for="Company-Name" class="field-label">
+                                        Company Name
+                                    </label>
+                                    <input class="form-input w-input" maxlength="256" name="company_name"
+                                        placeholder="We-R. Studio" type="text" id="Company-Name" required />
+                                </div>
+                                <div>
+                                    <label for="Company-Industry" class="field-label">
+                                        Company Industry
+                                    </label>
+                                    <input class="form-input w-input" maxlength="256" name="company_industry"
+                                        placeholder="Digital Marketing" type="text" id="Company-Industry" />
+                                </div>
+                                <div>
+                                    <label for="Company-Website" class="field-label">
+                                        Company Website
+                                    </label>
+                                    <input class="form-input w-input" maxlength="256" name="company_website"
+                                        placeholder="www.we-r.be" type="url" id="Company-Website" />
+                                </div>
+                                <div>
+                                    <label for="LinkedIn-Page" class="field-label">
+                                        LinkedIn Page
+                                    </label>
+                                    <input class="form-input w-input" maxlength="256" name="linkedin_page"
+                                        placeholder="www.linkedin.com" type="url" id="LinkedIn-Page" />
+                                </div>
+                                <div>
+                                    <label for="Company-Logo" class="field-label">
+                                        Company Logo (Image)
+                                    </label>
+                                    <input class="form-input w-input" type="file" name="company_logo" id="Company-Logo" accept="image/*" />
+                                </div>
+                                <div>
+                                    <label for="Number-of-Employees" class="field-label">
+                                        Number of Employees
+                                    </label>
+                                    <input class="form-input w-input" maxlength="256" name="employee_count"
+                                        placeholder="1500" type="number" id="Number-of-Employees" />
+                                </div>
+                                <div id="w-node-e32c023b-9e69-ce96-65dc-a8af7d8c8e45-8bcb98a8">
+                                    <label for="Company-Description" class="field-label">
+                                        Company Description
+                                    </label>
+                                    <textarea id="Company-Description" name="company_description" maxlength="5000"
+                                        placeholder="Describe your company briefly..."
+                                        class="form-input text-area w-input"></textarea>
+                                </div>
+                                <div>
+                                    <input type="submit" value="Submit Job" class="button w-button" />
+                                </div>
+                            </form>
+                            {% if messages %}
+                                {% for message in messages %}
+                                    <div class="w-form-done" style="display: block; margin-top: 20px;">
+                                        <div>{{ message }}</div>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="padding-top padding-huge">
+                    <div class="margin-bottom margin-large">
+                        <h2 class="display-vertical-center text-align-center heading-3">
+                            Contact our team directly
+                        </h2>
+                        <div class="container-50">
+                            <p class="text-align-center">
+                                Our partnership teams are available to help you optimize your recruitment strategy.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="w-layout-grid grid-3x1 _1x3-tablet">
+                        <div class="contact-label"> <img
+                                src="{% static 'images/general-support-icon.svg' %}"
+                                loading="lazy" alt="Support" class="icon-1x1-large" />
+                            <div>
+                                <div class="heading-5">
+                                    General Support
+                                </div>
+                                <div class="text-link">
+                                    partners@careerbuilders.com
+                                </div>
+                            </div>
+                        </div>
+                        <div class="contact-label"> <img
+                                src="{% static 'images/talent-support-icon.svg' %}"
+                                loading="lazy" alt="Talent" class="icon-1x1-large" />
+                            <div>
+                                <div class="heading-5">
+                                    Talent Acquisition
+                                </div>
+                                <div class="text-link">
+                                    recruitment@careerbuilders.com
+                                </div>
+                            </div>
+                        </div>
+                        <div class="contact-label"> <img
+                                src="{% static 'images/company-support-icon.svg' %}"
+                                loading="lazy" alt="Partners" class="icon-1x1-large" />
+                            <div>
+                                <div class="heading-5">
+                                    Company Partnership
+                                </div>
+                                <div class="text-link">
+                                    growth@careerbuilders.com
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="faq-section">
+        <div class="padding-vertical padding-huge">
+            <div class="container-60">
+                <div class="faq-component">
+                    <div class="faq-accordion">
+                        <div class="faq-question">
+                            <div class="heading-4">Can I post job listings directly through your platform?</div>
+                            <img src="{% static 'images/faq-icon.svg' %}" loading="lazy" alt="Toggle" class="icon-1x1-xsmall" />
+                        </div>
+                        <div class="faq-answer">
+                            <p>Yes, once you submit this form, our team will review your posting and it will go live within 24 hours. You can manage your listings via our partner dashboard.</p>
+                        </div>
+                    </div>
+                    <div class="faq-accordion">
+                        <div class="faq-question">
+                            <div class="heading-4">What types of professionals use {{ site_name }}?</div>
+                            <img src="{% static 'images/faq-icon.svg' %}" loading="lazy" alt="Toggle" class="icon-1x1-xsmall" />
+                        </div>
+                        <div class="faq-answer">
+                            <p>We host a diverse pool of entry-level talent, from software engineers and designers to marketing specialists and project managers, all looking for their first major career break.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

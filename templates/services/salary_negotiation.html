@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}Salary Negotiation for Recent Graduates: Get Paid What You're Worth{% endblock %}
+{% block meta_description %}Most graduates don't negotiate their first salary. Here's why you should and exactly how to do it without losing the offer.{% endblock %}
+
+{% block content %}
+<div class="bg-[var(--color-surface)] min-h-screen">
+    <section class="bg-white border-b border-gray-200 pt-32 pb-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-4xl md:text-5xl font-display font-bold text-gray-900 mb-6">Salary Negotiation Guide</h1>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">The salary you accept in your first job becomes the anchor for every salary conversation you have for years afterward. The number you agree to today echoes throughout your career.</p>
+        </div>
+    </section>
+
+    <section class="py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg prose-blue max-w-none text-gray-700">
+                <p>This is why salary negotiation — even on your very first offer — is not optional if you care about your financial trajectory.</p>
+
+                <h2>What You Leave on the Table</h2>
+                <p>Studies consistently show that candidates who negotiate their first salary earn, on average, $5,000–$10,000 more per year than those who don't. Over ten years, with compounding raises, that difference can exceed $150,000 in lifetime earnings.</p>
+                <p>The fear of "seeming ungrateful" or "losing the offer" costs you real money. Employers almost never rescind an offer because a candidate negotiated professionally. In fact, many hiring managers expect it.</p>
+
+                <h2>The Three Steps to a Successful Negotiation</h2>
+                
+                <p><strong>Research first.</strong> Know the market rate for your role in your location before you respond to any offer. Use Glassdoor, LinkedIn Salary, and our Salary Insights page to determine a fair range.</p>
+
+                <p><strong>Counter professionally.</strong> Express enthusiasm for the role, reference your research, name a specific target number (not a range — a number), and reaffirm your interest in joining the team.</p>
+
+                <p><strong>Negotiate the full package.</strong> Base salary isn't everything. PTO, remote flexibility, signing bonus, professional development budget, and health insurance contributions are all negotiable.</p>
+
+                <div class="mt-12 bg-blue-50 border border-blue-100 p-8 rounded-2xl text-center">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">Get the Exact Email Script</h3>
+                    <p class="mb-6">Read our full salary negotiation guide in our blog — including the exact email script you can send to counter any offer.</p>
+                    <a href="{% url 'blog:post_list' %}" class="inline-flex bg-accent text-white px-8 py-3 rounded-full font-medium hover:bg-blue-700 transition-colors">Read the Full Guide</a>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

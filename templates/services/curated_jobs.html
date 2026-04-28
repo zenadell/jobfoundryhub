@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}Curated Entry-Level Jobs for Recent Graduates{% endblock %}
+{% block meta_description %}Browse hundreds of verified entry-level jobs, internships, and graduate positions. Filtered for recent graduates. Updated daily.{% endblock %}
+
+{% block content %}
+<div class="bg-[var(--color-surface)] min-h-screen">
+    <section class="bg-white border-b border-gray-200 pt-32 pb-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-4xl md:text-5xl font-display font-bold text-gray-900 mb-6">Curated Entry-Level Jobs</h1>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">Finding a job that genuinely fits your experience level shouldn't require scrolling through hundreds of postings that list "5 years of experience" under the "entry-level" filter.</p>
+        </div>
+    </section>
+
+    <section class="py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg prose-blue max-w-none text-gray-700">
+                <h2>What Makes Our Job Listings Different</h2>
+                <p>Every job on {{ site_name }} goes through a basic qualification check before it's published. We verify that the role is genuinely entry-level — typically requiring 0–2 years of professional experience. We reject postings that use "entry-level" as a label while requiring a decade of specialized knowledge. This curation saves you time and prevents the frustration of applying to jobs you can't realistically land.</p>
+
+                <h2>What You'll Find</h2>
+                <p>Our listings span every major industry and career category. Whether you're a Business graduate looking for your first marketing role, a Computer Science student seeking a junior engineering position, or a nursing graduate searching for clinical openings, our platform covers your field.</p>
+                <ul>
+                    <li><strong>Job type:</strong> Full-time, part-time, internship, contract, freelance</li>
+                    <li><strong>Location:</strong> By state, city, or remote status</li>
+                    <li><strong>Category:</strong> Technology, Marketing, Finance, Healthcare, Education, Creative, and more</li>
+                    <li><strong>Salary range:</strong> Filter to only see roles with disclosed compensation</li>
+                    <li><strong>Remote:</strong> Fully remote, hybrid, or on-site</li>
+                </ul>
+
+                <h2>How to Use the Job Board Effectively</h2>
+                <p>Set up a Job Alert for your target role and location. Our system monitors new postings daily and emails you a digest the moment a matching role appears. This means you'll often know about new opportunities before most applicants.</p>
+                <p>Create a free profile to save jobs, track your applications, and upload your resume so you're ready to apply quickly when the right opportunity appears.</p>
+
+                <h2>For Employers</h2>
+                <p>If you represent a company looking to hire recent graduates, our platform is purpose-built for your audience. Our candidates are motivated, educated, and actively searching — not passively browsing. To post a job or inquire about featured placement, visit our Contact page.</p>
+
+                <div class="mt-12 text-center">
+                    <a href="{% url 'jobs:job_list' %}" class="inline-flex bg-accent text-white px-8 py-3 rounded-full font-medium hover:bg-blue-700 transition-colors">Browse Curated Jobs Now</a>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

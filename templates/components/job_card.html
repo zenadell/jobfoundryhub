@@ -1,0 +1,36 @@
+<div class="job-offer-wrapper">
+    <div class="display-horizontal-space-btw vertical-left-mobile">
+        <h3 class="no-margin">{{ job.title }}</h3>
+        <div class="department-badge">
+            <div>{{ job.category.name }}</div>
+        </div>
+    </div>
+    <div class="margin-vertical margin-xsmall">
+        <p>{{ job.description|striptags|truncatewords:20 }}</p>
+    </div>
+    <div class="display-horizontal-left gap-2rem vertical-left-mobile">
+        <div class="display-horizontal-left gap-1rem">
+            <img src="{% static 'images/location-pin-icon.svg' %}" loading="lazy" alt="" class="icon-1x1-xsmall" />
+            <div class="job-info-text">{{ job.location }}</div>
+        </div>
+        <div class="display-horizontal-left gap-1rem">
+            <img src="{% static 'images/document-icon.svg' %}" loading="lazy" alt="" class="icon-1x1-xsmall" />
+            <div class="job-info-text">{{ job.get_job_type_display }}</div>
+        </div>
+        {% if job.company.slug %}
+        <a href="{% url 'jobs:company_detail' job.company.slug %}" class="display-horizontal-left gap-1rem w-inline-block">
+            {% if job.company.logo %}
+            <img src="{{ job.company.logo.url }}" loading="lazy" alt="" class="icon-1x1-xsmall" />
+            {% endif %}
+            <div class="job-info-text">{{ job.company.name }}</div>
+        </a>
+        {% else %}
+        <div class="display-horizontal-left gap-1rem">
+            <div class="job-info-text">{{ job.company.name }}</div>
+        </div>
+        {% endif %}
+    </div>
+    <div class="margin-top margin-small">
+        <a href="{% url 'jobs:job_detail' job.slug %}" class="button button-small w-button">Learn more</a>
+    </div>
+</div>

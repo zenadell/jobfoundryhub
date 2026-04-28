@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Dashboard | {{ site_name }}{% endblock %}
+
+{% block meta_description %}Manage your {{ site_name }} profile, view saved jobs, and track your applications.{% endblock %}
+
+{% block content %}
+<section class="hero-section">
+    <div class="padding-vertical padding-huge">
+        <div class="container-90">
+            <div class="margin-bottom margin-large">
+                <div class="w-layout-grid grid-2x1 gap-2rem align-items-bottom">
+                    <div>
+                        <h1 class="no-margin">Welcome, {{ request.user.first_name|default:request.user.username }}</h1>
+                    </div>
+                    <div class="display-horizontal-right">
+                        <a href="{% url 'accounts:logout' %}" class="button black button-small w-button">Log Out</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="w-layout-grid grid-3x1 _1x3-tablet">
+                {# Profile Card #}
+                <div class="job-offer-wrapper">
+                    {% if profile.avatar %}
+                        <img src="{{ profile.avatar.url }}" loading="lazy" alt="{{ request.user.username }}" class="icon-1x1-large borders-100px" />
+                    {% else %}
+                        <div class="icon-1x1-large borders-100px" style="width:80px;height:80px;background:#e9e9eb;display:flex;align-items:center;justify-content:center;font-size:2rem;color:#999;">
+                            {{ request.user.username|make_list|first|upper }}
+                        </div>
+                    {% endif %}
+                    <div class="heading-4">{{ request.user.get_full_name|default:request.user.username }}</div>
+                    <div class="subtitle">{{ profile.current_title|default:"Job Seeker" }}</div>
+                    <p class="paragraph-small">{{ profile.bio|default:"No bio yet. Update your profile in the admin panel." }}</p>
+                    {% if profile.linkedin_url %}
+                        <a href="{{ profile.linkedin_url }}" target="_blank" class="text-link red">LinkedIn Profile →</a>
+                    {% endif %}
+                </div>
+
+                {# Quick Stats #}
+                <div class="job-offer-wrapper">
+                    <div class="heading-4">Your Activity</div>
+                    <div class="margin-top margin-small">
+                        <div class="display-vertical-left gap-1rem">
+                            <div>
+                                <div class="heading-2">{{ saved_jobs|length }}</div>
+                                <p class="paragraph-small">Saved Jobs</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {# Quick Links #}
+                <div class="job-offer-wrapper">
+                    <div class="heading-4">Quick Links</div>
+                    <div class="margin-top margin-small display-vertical-left gap-1rem">
+                        <a href="{% url 'jobs:job_list' %}" class="text-link red">Browse Jobs →</a>
+                        <a href="{% url 'jobs:submit_resume' %}" class="text-link red">Submit Resume →</a>
+                        <a href="{% url 'blog:post_list' %}" class="text-link red">Read Blog →</a>
+                    </div>
+                </div>
+            </div>
+
+            {# Saved Jobs #}
+            {% if saved_jobs %}
+            <div class="margin-top margin-huge">
+                <div class="margin-bottom margin-large">
+                    <h2>Saved Jobs</h2>
+                </div>
+                <div class="w-layout-grid grid-3x1 _1x3-tablet">
+                    {% for job in saved_jobs %}
+                    <a href="{% url 'jobs:job_detail' slug=job.slug %}" class="job-card-wrapper w-inline-block">
+                        <div class="display-horizontal-left gap-1rem">
+                            {% if job.company.logo %}
+                                <img src="{{ job.company.logo.url }}" loading="lazy" alt="{{ job.company.name }}" class="icon-1x1-medium" />
+                            {% endif %}
+                            <div>
+                                <div class="heading-5">{{ job.title }}</div>
+                                <div class="paragraph-small">{{ job.company.name }}</div>
+                            </div>
+                        </div>
+                        <div class="margin-top margin-xsmall">
+                            <div class="paragraph-small">{{ job.location }} · {{ job.get_job_type_display }}</div>
+                        </div>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %}Interview Preparation Guide for Entry-Level Job Seekers{% endblock %}
+{% block meta_description %}Ace your first job interview with our comprehensive prep guide covering common questions, STAR method, behavioral responses, and follow-up strategies.{% endblock %}
+
+{% block content %}
+<div class="bg-[var(--color-surface)] min-h-screen">
+    <section class="bg-white border-b border-gray-200 pt-32 pb-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-4xl md:text-5xl font-display font-bold text-gray-900 mb-6">Interview Preparation Guide</h1>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">The interview is the moment all your preparation converges. A strong resume gets you in the door. A strong interview gets you the offer.</p>
+        </div>
+    </section>
+
+    <section class="py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg prose-blue max-w-none text-gray-700">
+                <p>Unlike the resume — which hiring managers read at their own pace — the interview happens in real time, with no opportunity to revise your answer after you've given it.</p>
+
+                <p>Preparation is the only reliable way to perform well in an interview. Not preparation that turns you into a robot reciting scripted answers, but preparation that helps you think clearly under pressure, recall specific examples quickly, and communicate your thinking in a structured, confident way.</p>
+
+                <h2>The STAR Method: Your Interview Framework</h2>
+                
+                <p>STAR stands for <strong>Situation, Task, Action, Result</strong>. It's the most effective framework for answering behavioral interview questions — questions that begin with "Tell me about a time when..." or "Give me an example of..."</p>
+
+                <p>For each STAR answer, aim for 90–120 seconds. Long enough to be substantive, short enough to stay interesting.</p>
+
+                <p>Prepare 8–10 STAR stories from your academic, volunteer, or work experience that you can adapt to different questions. The most versatile stories involve: leading or working in a group, overcoming a challenge, dealing with a difficult person or situation, managing time pressure, and achieving a measurable result.</p>
+
+                <h2>Our Full Interview Prep Resources</h2>
+                <p>Visit our blog for complete guides on:</p>
+                <ul>
+                    <li>10 Common First Job Interview Questions (with sample answers)</li>
+                    <li>How to Ace a Video Interview</li>
+                    <li>What to Do After an Interview (follow-up templates)</li>
+                    <li>Questions You Should Ask the Interviewer</li>
+                </ul>
+
+                <div class="mt-12 text-center">
+                    <a href="{% url 'blog:post_list' %}" class="inline-flex bg-accent text-white px-8 py-3 rounded-full font-medium hover:bg-blue-700 transition-colors">Read Interview Guides</a>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Style Guide | {{ site_name }}{% endblock %}
+
+{% block content %}
+<section class="style-guide-section">
+    <div class="margin-bottom margin-huge">
+        <div class="background-color-secondary-4">
+            <div class="padding-top padding-huge">
+                <div class="padding-huge">
+                    <div class="display-vertical-center text-align-center">
+                        <div class="margin-bottom margin-xsmall">
+                            <img src="{% static 'images/logo.svg' %}" loading="lazy" class="icon-style-guide" />
+                        </div>
+                        <h1 class="heading-1">Style Guide</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-wrapper">
+        <div class="page-padding">
+            <div class="padding-vertical padding-huge">
+                <div class="container-90">
+                    <section id="Typography" class="cloneable-header">
+                        <h2 class="heading-3">Headings Types</h2>
+                    </section>
+                    <div class="we-r-styleguide-wrapper margin-top margin-medium">
+                        <div class="w-layout-grid styleguide-list">
+                            <h1>Heading 1</h1>
+                            <h2>Heading 2</h2>
+                            <h3>Heading 3</h3>
+                            <h4>Heading 4</h4>
+                            <h5>Heading 5</h5>
+                            <h6>Heading 6</h6>
+                        </div>
+                    </div>
+
+                    <div class="divider-footer margin-vertical margin-large"></div>
+
+                    <section id="Colors" class="cloneable-header">
+                        <h2 class="heading-3">Buttons</h2>
+                    </section>
+                    <div class="margin-top margin-medium">
+                        <div class="display-horizontal-left gap-2rem">
+                            <a href="#" class="button black w-button">Primary Button</a>
+                            <a href="#" class="button w-button">Secondary Button</a>
+                            <a href="#" class="button button-small w-button">Small Button</a>
+                        </div>
+                    </div>
+
+                    <div class="divider-footer margin-vertical margin-large"></div>
+
+                    <section id="Text" class="cloneable-header">
+                        <h2 class="heading-3">Text Styles</h2>
+                    </section>
+                    <div class="margin-top margin-medium">
+                        <p class="text-size-large">Large text: Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                        <p>Regular text: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>
+                        <p class="text-size-small">Small text: Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

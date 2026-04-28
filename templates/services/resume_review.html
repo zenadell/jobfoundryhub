@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}Free Resume Review for Recent Graduates{% endblock %}
+{% block meta_description %}Upload your resume and get actionable feedback. Our guide shows you exactly what to fix to make your resume pass ATS filters and impress hiring managers.{% endblock %}
+
+{% block content %}
+<div class="bg-[var(--color-surface)] min-h-screen">
+    <section class="bg-white border-b border-gray-200 pt-32 pb-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-4xl md:text-5xl font-display font-bold text-gray-900 mb-6">Free Resume Review</h1>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">Your resume is the only version of you that a hiring manager sees before they decide whether to invite you to an interview. Getting this document right is everything.</p>
+        </div>
+    </section>
+
+    <section class="py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg prose-blue max-w-none text-gray-700">
+                <p>At {{ site_name }}, we've reviewed hundreds of entry-level resumes. These are the most common issues we find, and what you should do about them.</p>
+
+                <h2>Common Resume Problems We See</h2>
+                
+                <p><strong>Generic objective statements</strong> — "Seeking a challenging position that allows me to grow" tells a hiring manager nothing. Replace with a two-sentence professional summary that states your specific skills and the type of role you're targeting.</p>
+
+                <p><strong>Missing ATS keywords</strong> — Applicant Tracking Systems scan your resume for keywords before a human ever reads it. If the job posting says "Google Analytics" and your resume says "web analytics tools," the ATS may filter you out. Mirror the exact language in the job description where it's accurate to your experience.</p>
+
+                <p><strong>Responsibilities instead of achievements</strong> — "Responsible for social media accounts" is weak. "Grew Instagram engagement by 42% over one semester through a consistent content calendar" is compelling. Quantify everything you can.</p>
+
+                <p><strong>Poor formatting</strong> — Unusual fonts, colors, graphics, and columns often break ATS parsing. Use a clean, single-column format for any role at a company that uses an ATS (most mid-to-large companies do).</p>
+
+                <p><strong>Too long or too short</strong> — For recent graduates, one page is the correct length. Fill it with relevant content. Padding with filler language wastes the reviewer's time.</p>
+
+                <h2>Use Our Resume Guide</h2>
+                <p>Our comprehensive Resume Writing Guide for Recent Graduates walks you through every section of your resume — header, summary, education, experience, projects, skills, and optional extras — with specific instructions and example language for each. Find it in our Career Resources Hub.</p>
+
+                <div class="mt-12 text-center bg-gray-50 p-8 rounded-2xl border border-gray-200">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">Want a Personalized Review?</h3>
+                    <p class="mb-6">Create a free profile to upload your resume. Our system and experts will highlight areas for improvement.</p>
+                    <a href="#" class="inline-flex bg-accent text-white px-8 py-3 rounded-full font-medium hover:bg-blue-700 transition-colors">Create Free Profile</a>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

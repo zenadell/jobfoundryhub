@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block title %}Career Services Built for Recent Graduates{% endblock %}
+{% block meta_description %}From curated job listings to resume reviews and salary negotiation coaching, {{ site_name }} offers services designed to help you land your first job.{% endblock %}
+
+{% block content %}
+<div class="bg-[var(--color-surface)] min-h-screen">
+    <!-- Hero -->
+    <section class="bg-[var(--color-primary)] py-24 relative overflow-hidden text-center text-white">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <h1 class="text-4xl md:text-6xl font-display font-bold mb-6">Career Services Built for Recent Graduates</h1>
+            <p class="text-xl text-white/80 max-w-2xl mx-auto">Breaking into the job market as a recent graduate is harder than it should be. We built tools designed exactly for where you are right now.</p>
+        </div>
+    </section>
+
+    <!-- Services Grid -->
+    <section class="py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Curated Jobs -->
+                <a href="{% url 'services:curated_jobs' %}" class="bg-white p-8 rounded-2xl border border-gray-200 hover:border-accent hover:shadow-lg transition-all group">
+                    <div class="w-14 h-14 rounded-xl bg-blue-50 text-accent flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                        <i data-lucide="briefcase" class="w-7 h-7"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3 group-hover:text-accent transition-colors">Curated Entry-Level Jobs</h3>
+                    <p class="text-gray-600 mb-6">Browse hundreds of verified entry-level jobs. No "5 years experience required" hidden in the details.</p>
+                    <span class="text-accent font-medium flex items-center">Learn more <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i></span>
+                </a>
+
+                <!-- Career Launch -->
+                <a href="{% url 'services:career_launch' %}" class="bg-white p-8 rounded-2xl border border-gray-200 hover:border-accent hover:shadow-lg transition-all group">
+                    <div class="w-14 h-14 rounded-xl bg-green-50 text-success flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                        <i data-lucide="rocket" class="w-7 h-7"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3 group-hover:text-accent transition-colors">Career Launch Programs</h3>
+                    <p class="text-gray-600 mb-6">Structured resources that walk you through every stage of the job search process.</p>
+                    <span class="text-accent font-medium flex items-center">Learn more <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i></span>
+                </a>
+
+                <!-- Resume Review -->
+                <a href="{% url 'services:resume_review' %}" class="bg-white p-8 rounded-2xl border border-gray-200 hover:border-accent hover:shadow-lg transition-all group">
+                    <div class="w-14 h-14 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                        <i data-lucide="file-text" class="w-7 h-7"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3 group-hover:text-accent transition-colors">Free Resume Review</h3>
+                    <p class="text-gray-600 mb-6">Upload your resume and get actionable feedback to make it pass ATS filters.</p>
+                    <span class="text-accent font-medium flex items-center">Learn more <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i></span>
+                </a>
+
+                <!-- Interview Coaching -->
+                <a href="{% url 'services:interview_coaching' %}" class="bg-white p-8 rounded-2xl border border-gray-200 hover:border-accent hover:shadow-lg transition-all group">
+                    <div class="w-14 h-14 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                        <i data-lucide="users" class="w-7 h-7"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3 group-hover:text-accent transition-colors">Interview Prep Guide</h3>
+                    <p class="text-gray-600 mb-6">Ace your first job interview with our comprehensive prep guide covering the STAR method.</p>
+                    <span class="text-accent font-medium flex items-center">Learn more <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i></span>
+                </a>
+
+                <!-- Salary Negotiation -->
+                <a href="{% url 'services:salary_negotiation' %}" class="bg-white p-8 rounded-2xl border border-gray-200 hover:border-accent hover:shadow-lg transition-all group">
+                    <div class="w-14 h-14 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                        <i data-lucide="badge-dollar-sign" class="w-7 h-7"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3 group-hover:text-accent transition-colors">Salary Negotiation</h3>
+                    <p class="text-gray-600 mb-6">Learn exactly how to negotiate your first salary without losing the offer.</p>
+                    <span class="text-accent font-medium flex items-center">Learn more <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i></span>
+                </a>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

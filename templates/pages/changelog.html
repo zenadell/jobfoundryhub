@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Changelog | {{ site_name }}{% endblock %}
+
+{% block content %}
+<section class="changelog-section">
+    <div class="margin-bottom margin-huge">
+        <div class="background-color-200">
+            <div class="padding-top padding-huge">
+                <div class="padding-huge">
+                    <div class="container-70">
+                        <div class="display-vertical-center text-align-center">
+                            <div class="margin-bottom margin-xsmall">
+                                <img src="{% static 'images/logo.svg' %}" loading="lazy" class="icon-style-guide" />
+                            </div>
+                            <h1 class="heading-1">Changelog</h1>
+                            <p><em>Here you will find all changes and new versions of the template.</em></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="padding-vertical padding-huge">
+        <div class="container-60">
+            <div class="changelog-wrapper">
+                <h2 class="heading-3">V1</h2>
+                <div class="margin-top margin-small">
+                    <p>Initial version of {{ site_name }} platform.</p>
+                    <ul class="margin-top margin-xsmall">
+                        <li>Premium Job Portal architecture</li>
+                        <li>SSR for optimal SEO & AdSense</li>
+                        <li>Automated Sitemap & Robots.txt</li>
+                        <li>Dynamic Blog & Job listings</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

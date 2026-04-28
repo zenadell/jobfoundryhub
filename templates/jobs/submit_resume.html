@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Submit Resume | {{ site_name }}{% endblock %}
+
+{% block meta_description %}
+    Submit your resume to our database and let top companies find you. Start your career journey today.
+{% endblock %}
+
+{% block content %}
+    <section class="contact-section">
+        <div class="padding-vertical padding-huge">
+            <div class="container-90">
+                <div class="w-layout-grid grid-contact">
+                    <div id="w-node-_8d7475f6-5584-e8fc-f491-a4c18a3ae32a-c4cb56eb"
+                        class="display-vertical-left gap-1rem text-display-center-landscape">
+                        <h1 class="heading-2">
+                            Find your dream job today
+                        </h1>
+                        <p>
+                            Join our talent pool and get noticed by leading companies looking for entry-level professionals. Simply fill out the form below and upload your resume.
+                        </p>
+                    </div>
+                    <div class="form-wrapper">
+                        <div class="w-form">
+                            <form action="{% url 'jobs:submit_resume' %}" method="POST" enctype="multipart/form-data" class="contact-form-grid">
+                                {% csrf_token %}
+                                <div>
+                                    <label for="Full-Name" class="field-label">
+                                        Full Name
+                                    </label>
+                                    <input class="form-input w-input" maxlength="256" name="full_name"
+                                        placeholder="James Dean" type="text" id="Full-Name" required />
+                                </div>
+                                <div>
+                                    <label for="email" class="field-label">
+                                        Email
+                                    </label>
+                                    <input class="form-input w-input" maxlength="256" name="email"
+                                        placeholder="your@mail.com" type="email" id="email" required />
+                                </div>
+                                <div>
+                                    <label for="Phone-Number" class="field-label">
+                                        Phone Number
+                                    </label>
+                                    <input class="form-input w-input" maxlength="256" name="phone"
+                                        placeholder="(123) 456 78 90" type="tel" id="Phone-Number" />
+                                </div>
+                                <div>
+                                    <label for="Job-Category" class="field-label">
+                                        Job Category
+                                    </label>
+                                    <input class="form-input w-input" maxlength="256" name="category"
+                                        placeholder="Technology" type="text" id="Job-Category" />
+                                </div>
+                                <div id="w-node-b6122837-b3e1-c1cd-f307-bf9cc27ce44b-c4cb56eb">
+                                    <label for="LinkedIn-Profile" class="field-label">
+                                        LinkedIn Profile
+                                    </label>
+                                    <input class="form-input w-input" maxlength="256" name="linkedin"
+                                        placeholder="Link to your linkedin profile" type="url" id="LinkedIn-Profile" />
+                                </div>
+                                
+                                {# Resume Upload Field - Custom Added #}
+                                <div id="w-node-resume-upload">
+                                    <label for="resume" class="field-label">
+                                        Resume (PDF)
+                                    </label>
+                                    <input class="form-input w-input" type="file" name="resume" id="resume" accept=".pdf" required />
+                                </div>
+
+                                <div id="w-node-_909efe48-16eb-77fe-ef0c-fac9478290e8-c4cb56eb">
+                                    <label for="Message" class="field-label">
+                                        Message
+                                    </label>
+                                    <textarea id="Message" name="message" maxlength="5000"
+                                        placeholder="Briefly introduce yourself here"
+                                        class="form-input text-area w-input"></textarea>
+                                </div>
+                                <div>
+                                    <input type="submit" value="Submit" class="button w-button" />
+                                </div>
+                            </form>
+                            {% if messages %}
+                                {% for message in messages %}
+                                    <div class="w-form-done" style="display: block; margin-top: 20px;">
+                                        <div>{{ message }}</div>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="padding-top padding-huge">
+                    <div class="margin-bottom margin-large">
+                        <h2 class="display-vertical-center text-align-center heading-3">
+                            Contact our team directly
+                        </h2>
+                        <div class="container-50">
+                            <p class="text-align-center">
+                                Have questions? Reach out to our specialized support teams for assistance.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="w-layout-grid grid-3x1 _1x3-tablet">
+                        <div class="contact-label"> <img
+                                src="{% static 'images/general-support-icon.svg' %}"
+                                loading="lazy" alt="General Support" class="icon-1x1-large" />
+                            <div>
+                                <div class="heading-5">
+                                    General Support
+                                </div>
+                                <div class="text-link">
+                                    hello@careerbuilders.com
+                                </div>
+                            </div>
+                        </div>
+                        <div class="contact-label"> <img
+                                src="{% static 'images/talent-support-icon.svg' %}"
+                                loading="lazy" alt="Talent Support" class="icon-1x1-large" />
+                            <div>
+                                <div class="heading-5">
+                                    Talent Support
+                                </div>
+                                <div class="text-link">
+                                    talent@careerbuilders.com
+                                </div>
+                            </div>
+                        </div>
+                        <div class="contact-label"> <img
+                                src="{% static 'images/company-support-icon.svg' %}"
+                                loading="lazy" alt="Company Support" class="icon-1x1-large" />
+                            <div>
+                                <div class="heading-5">
+                                    Company Support
+                                </div>
+                                <div class="text-link">
+                                    partners@careerbuilders.com
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="faq-section">
+        <div class="padding-vertical padding-huge">
+            <div class="container-60">
+                <div class="faq-component">
+                    {# FAQ Accordions - Standard Design #}
+                    <div class="faq-accordion">
+                        <div class="faq-question">
+                            <div class="heading-4">How can I apply for a job listed on your site?</div>
+                            <img src="{% static 'images/faq-icon.svg' %}" loading="lazy" alt="Toggle" class="icon-1x1-xsmall" />
+                        </div>
+                        <div class="faq-answer">
+                            <p>You can apply directly through the job detail page by clicking the 'Apply Now' button, or by submitting your resume through this page to be included in our talent pool.</p>
+                        </div>
+                    </div>
+                    <div class="faq-accordion">
+                        <div class="faq-question">
+                            <div class="heading-4">What makes our recruitment process unique?</div>
+                            <img src="{% static 'images/faq-icon.svg' %}" loading="lazy" alt="Toggle" class="icon-1x1-xsmall" />
+                        </div>
+                        <div class="faq-answer">
+                            <p>We focus exclusively on entry-level and early-career talent, matching you with companies that are specifically looking to nurture and grow new professionals.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

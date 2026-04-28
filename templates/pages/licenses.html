@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Licenses | {{ site_name }}{% endblock %}
+
+{% block content %}
+<section class="licenses-section">
+    <div class="margin-bottom margin-huge">
+        <div class="background-color-200">
+            <div class="padding-top padding-huge">
+                <div class="padding-huge">
+                    <div class="container-70">
+                        <div class="display-vertical-center text-align-center">
+                            <div class="margin-bottom margin-xsmall">
+                                <img src="{% static 'images/logo.svg' %}" loading="lazy" class="icon-style-guide" />
+                            </div>
+                            <h1 class="heading-1">Licenses</h1>
+                            <p><em>All graphical assets in this template are licensed for personal and commercial use. If you'd like to use a specific asset, please check the license below.</em></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="padding-vertical padding-large">
+        <div class="container-90">
+            <div class="margin-bottom margin-large">
+                <h2 class="heading-2">Images</h2>
+                <p>All images in this template are from Pexels. You will find the whole collection <a href="https://www.pexels.com" target="_blank">here</a>.</p>
+                <div class="w-layout-grid grid-6x1 margin-top margin-medium">
+                    <img src="{% static 'images/cta-background.jpg' %}" loading="lazy" class="license-image" />
+                    <img src="{% static 'images/about-image-1.png' %}" loading="lazy" class="license-image" />
+                </div>
+            </div>
+
+            <div class="divider-footer"></div>
+
+            <div class="margin-bottom margin-large margin-top margin-large">
+                <h2 class="heading-2">Icons</h2>
+                <p>The icons below are from Flaticon and Blendicons. They have all been modified to match the style of the template.</p>
+                <div class="w-layout-grid grid-10x1 margin-top margin-medium">
+                    <img src="{% static 'images/confirmation-letter.svg' %}" loading="lazy" class="icon-1x1-medium" />
+                    <img src="{% static 'images/password-icon.svg' %}" loading="lazy" class="icon-1x1-medium" />
+                </div>
+            </div>
+
+            <div class="divider-footer"></div>
+
+            <div class="margin-bottom margin-large margin-top margin-large">
+                <h2 class="heading-2">Fonts</h2>
+                <p>The font used for paragraphs is <strong>DM Sans</strong>. The font used for titles is <strong>Figtree</strong>.</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

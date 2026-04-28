@@ -1,0 +1,38 @@
+services:
+  - type: web
+    name: jobfoundryhub
+    env: python
+    region: oregon
+    plan: free
+    buildCommand: |
+      pip install -r requirements/base.txt &&
+      python manage.py collectstatic --noinput &&
+      python manage.py migrate &&
+      python manage.py seed_data &&
+      python manage.py load_initial_blog_posts
+    startCommand: gunicorn config.wsgi:application --bind 0.0.0.0:$PORT --workers 2 --timeout 120
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: config.settings.production
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ALLOWED_HOSTS
+        value: jobfoundryhub.onrender.com,jobfoundryhub.com,www.jobfoundryhub.com
+      - key: TURSO_DATABASE_URL
+        sync: false
+      - key: TURSO_AUTH_TOKEN
+        sync: false
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+      - key: SITE_NAME
+        value: Job Foundry Hub
+      - key: SITE_TAGLINE
+        value: Entry-Level Jobs for Recent Graduates
+      - key: SITE_URL
+        value: https://jobfoundryhub.com
+      - key: DEFAULT_FROM_EMAIL
+        value: hello@jobfoundryhub.com

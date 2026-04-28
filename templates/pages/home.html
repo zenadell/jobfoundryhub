@@ -1,0 +1,731 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}Find the Right Talent | {{ site_name }}{% endblock %}
+
+{% block meta_description %}
+    Find entry-level jobs and launch your career with {{ site_name }}. Browse thousands of opportunities from top companies. 
+    Tailored for HR professionals, we're dedicated to serving the recruitment needs 
+    of companies and organizations of all sizes.
+{% endblock %}
+
+{% block navbar %}
+{# Transparent Navbar inside the Hero section below #}
+{% endblock %}
+
+{% block content %}
+    <section class="hero-section">
+        <div class="background-image-hero">
+            <div class="navbar">
+                <div data-animation="default" data-collapse="medium" data-duration="400" data-easing="ease"
+                    data-easing2="ease" role="banner" class="navbar-container w-nav">
+                    <div class="container-regular">
+                        <div class="navbar-wrapper">
+                            <a href="{% url 'core:home' %}" aria-current="page" class="navbar-brand w-nav-brand w--current"> 
+                                <div class="navbar-logo-text">
+                                    {% with site_name_parts=site_name.split %}
+                                        {% for part in site_name_parts %}
+                                            <span class="{% if forloop.counter == 2 %}text-color-green{% endif %}">{{ part }}</span>{% if not forloop.last %}&nbsp;{% endif %}
+                                        {% endfor %}
+                                    {% endwith %}
+                                    <span class="logo-dot"></span>
+                                </div>
+                            </a>
+                            <nav role="navigation" class="nav-menu-wrapper w-nav-menu">
+                                <ul role="list" class="nav-menu w-list-unstyled">
+                                    <li>
+                                        <a href="{% url 'core:about' %}" class="nav-link"> About
+                                        </a>
+                                    </li>
+                            <li x-data="{ open: false }">
+                                <div class="nav-dropdown w-dropdown" @click.outside="open = false">
+                                    <div class="nav-dropdown-toggle w-dropdown-toggle" @click="open = !open">
+                                        <div class="nav-dropdown-icon w-icon-dropdown-toggle">
+                                        </div>
+                                        <div>
+                                            Pages
+                                        </div>
+                                    </div>
+                                    <nav class="nav-dropdown-list shadow-three mobile-shadow-hide w-dropdown-list" 
+                                         :class="open ? 'w--open' : ''"
+                                         x-show="open" 
+                                         x-transition
+                                         style="display: none;">
+                                        <div class="grid-navbar">
+                                            <div>
+                                                <div class="heading-5 margin-bottom margin-xsmall">
+                                                    Main Pages
+                                                </div>
+                                                <a href="{% url 'core:home' %}" aria-current="page"
+                                                    class="nav-dropdown-link w-dropdown-link w--current"> Home
+                                                </a>
+                                                <a href="{% url 'core:about' %}" class="nav-dropdown-link w-dropdown-link">
+                                                    About Us
+                                                </a>
+                                                <a href="{% url 'jobs:job_list' %}" class="nav-dropdown-link w-dropdown-link"> Jobs
+                                                </a>
+                                                <a href="{% url 'jobs:company_list' %}" class="nav-dropdown-link w-dropdown-link">
+                                                    Companies
+                                                </a>
+                                                <a href="{% url 'blog:post_list' %}" class="nav-dropdown-link w-dropdown-link"> Blog
+                                                </a>
+                                            </div>
+                                            <div>
+                                                <a href="{% url 'core:pricing' %}"
+                                                    class="nav-dropdown-link w-dropdown-link"> Pricing
+                                                </a>
+                                                <a href="{% url 'jobs:submit_resume' %}"
+                                                    class="nav-dropdown-link w-dropdown-link"> Submit Resume
+                                                </a>
+                                                <a href="{% url 'jobs:post_job' %}"
+                                                    class="nav-dropdown-link w-dropdown-link"> Post a Job Offer
+                                                </a>
+                                                <a href="{% url 'core:contact' %}" class="nav-dropdown-link w-dropdown-link">
+                                                    Contact Us
+                                                </a>
+                                            </div>
+                                            <div>
+                                                <div class="heading-5 margin-bottom margin-xsmall">
+                                                    Utility Pages
+                                                </div>
+                                                <a href="{% url 'core:style_guide' %}"
+                                                    class="nav-dropdown-link w-dropdown-link"> Style Guide
+                                                </a>
+                                                <a href="{% url 'core:licenses' %}"
+                                                    class="nav-dropdown-link w-dropdown-link"> Licenses
+                                                </a>
+                                                <a href="{% url 'core:changelog' %}"
+                                                    class="nav-dropdown-link w-dropdown-link"> Changelog
+                                                </a>
+                                                <a href="{% url 'core:coming_soon' %}"
+                                                    class="nav-dropdown-link w-dropdown-link"> Coming Soon
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </nav>
+                                </div>
+                            </li>
+                            <li>
+                                <a href="{% url 'core:pricing' %}" class="nav-link"> Pricing
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                    <div class="display-ecommerce-navbar" x-data="{ mobileOpen: false }">
+                        <a href="{% url 'jobs:job_list' %}" class="button black button-small hidden-tablet w-button"> Browse Jobs
+                        </a>
+                        <a href="#" class="navbar-cart-link w-inline-block">
+                             <img src="{% static 'images/cart-icon.svg' %}" loading="lazy" alt="Cart" class="icon-1x1-small" style="width: 24px; height: 24px;" />
+                             <div class="cart-quantity-bubble">0</div>
+                        </a>
+                        <div class="menu-button w-nav-button" @click="mobileOpen = true">
+                            <div class="w-icon-nav-menu">
+                            </div>
+                        </div>
+                        {# Mobile Menu Overlay #}
+                        <div class="mobile-menu-overlay" x-show="mobileOpen" x-transition style="display:none; color: black;">
+                            <div class="mobile-menu-close" @click="mobileOpen = false">&times;</div>
+                            <div class="margin-bottom margin-large">
+                                <div class="navbar-logo-text">
+                                    {% with site_name_parts=site_name.split %}
+                                        {% for part in site_name_parts %}
+                                            <span class="{% if forloop.counter == 2 %}text-color-green{% endif %}">{{ part }}</span>{% if not forloop.last %}&nbsp;{% endif %}
+                                        {% endfor %}
+                                    {% endwith %}
+                                    <span class="logo-dot"></span>
+                                </div>
+                            </div>
+                            <a href="{% url 'core:home' %}" class="mobile-nav-link" @click="mobileOpen = false">Home</a>
+                            <a href="{% url 'core:about' %}" class="mobile-nav-link" @click="mobileOpen = false">About</a>
+                            <a href="{% url 'jobs:job_list' %}" class="mobile-nav-link" @click="mobileOpen = false">Jobs</a>
+                            <a href="{% url 'jobs:company_list' %}" class="mobile-nav-link" @click="mobileOpen = false">Companies</a>
+                            <a href="{% url 'blog:post_list' %}" class="mobile-nav-link" @click="mobileOpen = false">Blog</a>
+                            <a href="{% url 'core:pricing' %}" class="mobile-nav-link" @click="mobileOpen = false">Pricing</a>
+                            <a href="{% url 'core:contact' %}" class="mobile-nav-link" @click="mobileOpen = false">Contact</a>
+                            <div class="margin-top margin-medium">
+                                <a href="{% url 'jobs:job_list' %}" class="button black w-full w-button">Browse Jobs</a>
+                            </div>
+                        </div>
+                    </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <div class="position-relative" style="overflow: hidden;">
+            <div class="padding-top padding-large no-padding-tablet">
+                <div class="padding-vertical padding-hero">
+                    <div class="max-width-60 container-90-tablet">
+                        <div class="display-vertical-left gap-1rem">
+                            <h1>
+                                Find the right talent for your company
+                            </h1>
+                            <div class="max-width-70">
+                                <p class="text-color-black">
+                                    Launch your career with confidence. Browse {{ stats.active_jobs_count }}+ verified 
+                                    entry-level jobs curated for recent graduates and professionals.
+                                </p>
+                            </div>
+                            <div class="display-horizontal-left gap-1rem vertical-left-mobile">
+                                <a href="{% url 'core:contact' %}" class="button w-button"> Contact us
+                                </a>
+                                <a href="#learn-more" class="button black w-button"> Learn more
+                                </a>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="pink-hero-badge">
+                    Find a career that suits you
+                </div>
+                <img src="{% static 'images/hero-illustration.svg' %}"
+                    loading="lazy" alt="{{ site_name }}"
+                    class="position-absolute item-27" style="bottom: -32% !important; left: 38% !important; width: 75% !important; max-width: none; transform: rotate(-5deg); z-index: 2;" />
+            </div>
+        </div>
+    </section>
+
+    <section class="stats-section">
+        <div class="container-85">
+            <div class="margin-top margin-large">
+                <div>
+                    <div class="w-layout-grid grid-3x1 _1x3-tablet">
+                        <div class="divider-right-stats">
+                            <div class="padding-vertical padding-large">
+                                <div class="display-vertical-center text-align-center">
+                                    <div class="heading-2">
+                                        {{ stats.active_jobs_count }}+
+                                    </div>
+                                    <p>
+                                        Active Job Listings
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="divider-right-stats">
+                            <div class="padding-vertical padding-large">
+                                <div class="display-vertical-center text-align-center">
+                                    <div class="heading-2">
+                                        {{ stats.companies_count }}+
+                                    </div>
+                                    <p>
+                                        Hiring Companies
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="padding-vertical padding-large">
+                            <div class="display-vertical-center text-align-center">
+                                <div class="heading-2">
+                                    {{ stats.users_count }}+
+                                </div>
+                                <p>
+                                    Registered Job Seekers
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="learn-more" class="features-section">
+        <div class="padding-vertical padding-huge">
+            <div class="container-90">
+                <div class="margin-bottom margin-medium">
+                    <div class="w-layout-grid grid-2x1 align-items-bottom">
+                        <h2 class="no-margin">
+                            Key features of our approach
+                        </h2>
+                        <p>
+                            We provide a streamlined recruitment experience for both candidates and employers, 
+                            ensuring the perfect match every time.
+                        </p>
+                    </div>
+                </div>
+                <div class="w-layout-grid grid-3x2 gap-30px">
+                    <div class="w-layout-grid grid-feature-v1">
+                        <div class="feature-wrapper---v1">
+                            <div>
+                                <h2 class="heading-3">
+                                    Connect with opportunities
+                                </h2>
+                                <div class="margin-vertical margin-xsmall">
+                                    <div class="padding-top padding-medium">
+                                        <p>
+                                            Access a wide range of job offers from top-tier companies across multiple industries.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <img src="{% static 'images/feature-coworking.jpg' %}"
+                                loading="lazy"
+                                alt="Connect with opportunities"
+                                class="image-style---feature-v1" />
+                        </div>
+                        <a href="{% url 'jobs:post_job' %}" class="feature-wrapper---v3 w-inline-block">
+                            <div class="display-horizontal-left gap-0-5rem align-items-bottom">
+                                <h2 class="heading-4 no-margin">
+                                    Unlock your potential
+                                    <span class="text-color-secondary-3"> now
+                                    </span>
+                                </h2>
+                                <img src="{% static 'images/arrow-right-icon.svg' %}"
+                                    loading="lazy"
+                                    alt="Unlock your potential"
+                                    class="icon-1x1-medium" />
+                            </div>
+                        </a>
+                    </div>
+                    <div class="feature-wrapper---v2">
+                        <div class="w-layout-grid grid-2x1 left-column-1-5fr align-items-bottom _1x2-tablet">
+                            <h2 class="heading-3 no-margin">
+                                Transforming candidates into leaders
+                            </h2>
+                            <p class="text-color-white">
+                                Our platform provides the tools and resources needed to advance your career.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="feature-wrapper---v4">
+                        <div>
+                            <div class="margin-bottom margin-small">
+                                <h2 class="heading-4 no-margin">
+                                    Partnering with leading companies.
+                                </h2>
+                            </div>
+                            <p class="text-color-white">
+                                We work with industry leaders to bring you the best career opportunities.
+                            </p>
+                        </div>
+                        <div>
+                            <div class="margin-bottom margin-xxsmall">
+                                <div class="subtitle">
+                                    Partners
+                                </div>
+                            </div>
+                            <div class="display-horizontal-left">
+                                <div class="partner-logo-text">TechCorp</div>
+                                <div class="partner-logo-text">Innovate.ai</div>
+                                <div class="partner-logo-text">GlobalSoft</div>
+                                <div class="partner-logo-text">FutureLink</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="feature-wrapper---v5">
+                        <img src="{% static 'images/feature-background.svg' %}"
+                            loading="lazy" alt="Insights"
+                            class="feature-v5-image" />
+                        <div class="padding-small">
+                            <h2 class="heading-4 text-align-center text-color-white">
+                                Stay ahead of the curve with our insights.
+                            </h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="about-section">
+        <div class="padding-vertical padding-huge">
+            <div class="container-90">
+                <div class="w-layout-grid grid-2x1 align-items-center gap-30px">
+                    <div class="position-relative">
+                        <img src="{% static 'images/about-image.png' %}"
+                            loading="lazy" alt="About {{ site_name }}"
+                            class="about-image-style" />
+                    </div>
+                    <div class="display-vertical-space-btw">
+                        <div>
+                            <h2 class="no-margin">
+                                Transform your business with our solutions
+                            </h2>
+                            <div class="margin-vertical margin-medium">
+                                <p>
+                                    At {{ site_name }}, we understand that people are the heart of every successful business. 
+                                    Our mission is to connect top talent with visionary companies.
+                                    <br />
+                                    <br />
+                                    We offer comprehensive recruitment solutions tailored to your specific needs, 
+                                    helping you build a high-performing team.
+                                </p>
+                            </div>
+                            <div class="display-horizontal-left gap-1rem vertical-left-mobile">
+                                <a href="{% url 'core:contact' %}" class="button w-button"> Contact us
+                                </a>
+                                <a href="{% url 'jobs:post_job' %}" class="button black w-button"> Post a job
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="job-offers-section">
+        <div class="position-relative">
+            <div class="padding-vertical padding-large">
+                <div class="container-90">
+                    <div class="container-70">
+                        <div class="margin-bottom margin-medium">
+                            <div class="display-vertical-center text-align-center">
+                                <h2>
+                                    Our latest job offers
+                                </h2>
+                                <div class="container-60">
+                                    <p>
+                                        Explore our curated list of recent job opportunities and find your next career move.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="w-layout-grid grid-jobs">
+                        <div class="w-dyn-list">
+                            <div role="list" class="job-offers-listing-collection w-dyn-items">
+                                {% if featured_jobs %}
+                                    {% for job in featured_jobs %}
+                                    <div role="listitem" class="w-dyn-item">
+                                        <div class="job-offer-wrapper">
+                                            <div class="display-horizontal-space-btw vertical-left-mobile">
+                                                <h3 class="no-margin">
+                                                    {{ job.title }}
+                                                </h3>
+                                                <div class="department-badge">
+                                                    <div>
+                                                        {{ job.category.name }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="margin-vertical margin-xsmall">
+                                                <p>
+                                                    {{ job.description|striptags|truncatewords:20 }}
+                                                </p>
+                                            </div>
+                                            <div class="display-horizontal-left gap-2rem vertical-left-mobile">
+                                                <div class="display-horizontal-left gap-1rem">
+                                                    <img src="{% static 'images/location-icon.svg' %}"
+                                                        loading="lazy" alt="Location" class="icon-1x1-xsmall" />
+                                                    <div class="job-info-text">
+                                                        {% if job.is_remote %}Remote{% else %}{{ job.location }}{% endif %}
+                                                    </div>
+                                                </div>
+                                                <div class="display-horizontal-left gap-1rem">
+                                                    <img src="{% static 'images/job-type-icon.svg' %}"
+                                                        loading="lazy" alt="Job Type" class="icon-1x1-xsmall" />
+                                                    <div class="job-info-text">
+                                                        {{ job.get_job_type_display }}
+                                                    </div>
+                                                </div>
+                                                <a href="{% url 'jobs:company_detail' slug=job.company.slug %}"
+                                                    class="display-horizontal-left gap-1rem w-inline-block"> 
+                                                    {% if job.company.logo %}
+                                                        <img src="{{ job.company.logo.url }}" loading="lazy" alt="{{ job.company.name }}" class="icon-1x1-xsmall" />
+                                                    {% else %}
+                                                        <div class="skeleton skeleton--logo-xsmall"></div>
+                                                    {% endif %}
+                                                    <div class="job-info-text">
+                                                        {{ job.company.name }}
+                                                    </div>
+                                                </a>
+                                            </div>
+                                            <div class="margin-top margin-small">
+                                                {% if job.slug %}
+                                                <a href="{% url 'jobs:job_detail' slug=job.slug %}"
+                                                    class="button button-small w-button"> Learn more
+                                                </a>
+                                                {% else %}
+                                                <span class="button button-small w-button disabled" style="opacity:0.5; cursor:not-allowed;">Missing Link</span>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                {% else %}
+                                    {# Skeleton cards #}
+                                    {% for i in "123456" %}
+                                    <div role="listitem" class="w-dyn-item">
+                                        <div class="job-offer-wrapper">
+                                            <div class="display-horizontal-space-btw vertical-left-mobile">
+                                                <div class="skeleton skeleton--text skeleton--text-xl no-margin"></div>
+                                                <div class="skeleton skeleton--badge"></div>
+                                            </div>
+                                            <div class="margin-vertical margin-xsmall">
+                                                <div class="skeleton skeleton--text skeleton--text-md"></div>
+                                                <div class="skeleton skeleton--text skeleton--text-sm" style="margin-top:6px"></div>
+                                            </div>
+                                            <div class="display-horizontal-left gap-2rem vertical-left-mobile" style="margin-top:12px">
+                                                <div class="skeleton skeleton--text skeleton--text-sm"></div>
+                                                <div class="skeleton skeleton--text skeleton--text-sm"></div>
+                                                <div class="skeleton skeleton--text skeleton--text-sm"></div>
+                                            </div>
+                                            <div class="margin-top margin-small">
+                                                <div class="skeleton skeleton--badge" style="width:100px;height:36px;border-radius:4px"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div class="job-offer-wrapper">
+                                <h3 class="heading-4 no-margin">
+                                    Can't find anything?
+                                </h3>
+                                <p>
+                                    Submit your resume and we'll get back to you.
+                                </p>
+                                <div class="w-form">
+                                    <form id="wf-form-Job-Offer---Form" name="wf-form-Job-Offer---Form"
+                                        method="post" action="{% url 'jobs:submit_resume' %}">
+                                        {% csrf_token %}
+                                        <label for="Full-Name" class="field-label">
+                                            Full Name
+                                        </label>
+                                        <input class="form-input w-input" maxlength="256" name="Full-Name"
+                                            placeholder="" type="text" id="Full-Name" required />
+                                        <label for="email" class="field-label">
+                                            Email Address
+                                        </label>
+                                        <input class="form-input w-input" maxlength="256" name="email"
+                                            placeholder="" type="email" id="email" required />
+                                        <input type="submit" data-wait="Please wait..."
+                                            class="button black button-small w-button" value="Submit" />
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="padding-vertical padding-huge">
+            <div class="container-90">
+                <div class="cta-wrapper">
+                    <img src="{% static 'images/cta-badge-red.svg' %}"
+                        loading="lazy" alt="CTA Badge"
+                        class="position-absolute item-22" />
+                    <div class="position-relative z-index-100">
+                        <div class="display-vertical-center text-align-center">
+                            <div class="margin-bottom margin-small">
+                                <h2>
+                                    Ready to launch your career?
+                                </h2>
+                                <div class="container-50">
+                                    <p>
+                                        Join thousands of professionals who have found their dream career through {{ site_name }}.
+                                    </p>
+                                </div>
+                            </div>
+                            <a href="{% url 'jobs:submit_resume' %}" class="button red w-button"> Join us now
+                            </a>
+                        </div>
+                    </div>
+                    <img src="{% static 'images/cta-illustration-left.svg' %}"
+                        loading="lazy" alt=""
+                        class="position-absolute item-20" />
+                    <img src="{% static 'images/cta-illustration-right.svg' %}"
+                        loading="lazy" alt=""
+                        class="position-absolute item-21" />
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="blog-section">
+        <div class="padding-vertical padding-large">
+            <div class="container-90">
+                <div class="w-layout-grid grid-2x1 gap-4rem align-items-bottom">
+                    <h2 class="no-margin">
+                        Latest insights from our experts
+                    </h2>
+                    <p>
+                        Stay informed with the latest trends, tips, and advice in recruitment and career development.
+                    </p>
+                </div>
+                <div class="margin-vertical margin-large">
+                    <div class="w-dyn-list">
+                        <div role="list" class="blog-listing-collection w-dyn-items">
+                            {% if recent_posts %}
+                                {% for post in recent_posts %}
+                                <div role="listitem" class="w-dyn-item">
+                                    <a href="{% url 'blog:post_detail' slug=post.slug %}"
+                                        class="blog-listing-wrapper w-inline-block">
+                                        <div class="position-relative">
+                                            {% if post.featured_image %}
+                                                <img src="{{ post.featured_image.url }}"
+                                                    loading="lazy" alt="{{ post.title }}"
+                                                    class="blog-thumbnail" />
+                                            {% else %}
+                                                <div class="skeleton skeleton--blog-img"></div>
+                                            {% endif %}
+                                            <div class="position-absolute item-19">
+                                                <div>
+                                                    {{ post.category.name }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="margin-top margin-xsmall">
+                                            <h3 class="heading-blog-title">
+                                                {{ post.title }}
+                                            </h3>
+                                            <p>
+                                                {{ post.excerpt|truncatewords:15 }}
+                                            </p>
+                                            <div class="text-link red">
+                                                Read more
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                                {% endfor %}
+                            {% else %}
+                                {# Blog skeletons #}
+                                {% for i in "123" %}
+                                <div role="listitem" class="w-dyn-item">
+                                    <div class="blog-listing-wrapper">
+                                        <div class="skeleton skeleton--blog-img"></div>
+                                        <div class="margin-top margin-xsmall">
+                                            <div class="skeleton skeleton--text skeleton--text-lg" style="margin-bottom:8px"></div>
+                                            <div class="skeleton skeleton--text skeleton--text-md"></div>
+                                            <div class="skeleton skeleton--text skeleton--text-sm" style="margin-top:6px"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="display-vertical-center">
+                    <a href="{% url 'blog:post_list' %}" class="button black w-button"> See all
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="faq-section">
+        <div class="padding-vertical padding-huge">
+            <div class="container-60">
+                <div class="faq-component">
+                    <div class="faq-accordion">
+                        <div class="faq-question">
+                            <div class="heading-4">
+                                How can I apply for a job listed on your site?
+                            </div>
+                            <img src="{% static 'images/faq-icon.svg' %}"
+                                loading="lazy" alt="FAQ"
+                                class="icon-1x1-xsmall" />
+                        </div>
+                        <div class="faq-answer">
+                            <div class="margin-bottom margin-small">
+                                <p>
+                                    To apply for a job, simply click on the "Learn more" button on the job card, 
+                                    which will take you to the job detail page where you'll find the "Apply Now" button.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="faq-accordion">
+                        <div class="faq-question">
+                            <div class="heading-4">
+                                What makes your recruitment process unique?
+                            </div>
+                            <img src="{% static 'images/faq-icon.svg' %}"
+                                loading="lazy" alt="FAQ"
+                                class="icon-1x1-xsmall" />
+                        </div>
+                        <div class="faq-answer">
+                            <div class="margin-bottom margin-small">
+                                <p>
+                                    We use a combination of advanced AI matching and human expertise to ensure 
+                                    that every candidate is a perfect fit for the role and the company culture.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="faq-accordion">
+                        <div class="faq-question">
+                            <div class="heading-4">
+                                Can I submit my resume for future opportunities?
+                            </div>
+                            <img src="{% static 'images/faq-icon.svg' %}"
+                                loading="lazy" alt="FAQ"
+                                class="icon-1x1-xsmall" />
+                        </div>
+                        <div class="faq-answer">
+                            <div class="margin-bottom margin-small">
+                                <p>
+                                    Yes! Use the "Submit Resume" form on our home page or the dedicated 
+                                    Submit Resume page to join our talent pool.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="margin-top margin-xxlarge">
+                    <div class="display-vertical-center text-align-center">
+                        <div>
+                            <div class="margin-bottom margin-xsmall">
+                                <h4 class="heading-2">
+                                    Still have questions?
+                                </h4>
+                            </div>
+                            <p>
+                                We're here to help you navigate your career journey.
+                            </p>
+                            <div class="margin-top margin-medium">
+                                <a href="{% url 'core:contact' %}" class="button w-button"> Contact
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="margin-top margin-huge">
+            <div class="background-image-cta-footer">
+                <div class="padding-vertical padding-huge">
+                    <div class="position-relative">
+                        <div class="container-90">
+                            <div class="container-cta-footer">
+                                <h2 class="heading-1">
+                                    Find your dream job in less than a week
+                                </h2>
+                                <div class="max-width-80 still-80">
+                                    <p class="text-color-black">
+                                        Our streamlined process helps you skip the line and get in front of the right 
+                                        hiring managers faster than ever.
+                                    </p>
+                                </div>
+                                <div class="display-horizontal-left gap-1rem vertical-left-mobile">
+                                    <a href="{% url 'core:contact' %}" class="button red w-button"> Contact us
+                                    </a>
+                                    <a href="{% url 'core:about' %}" class="button black w-button"> Learn more
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

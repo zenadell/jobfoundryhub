@@ -1,0 +1,211 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}About {{ site_name }}{% endblock %}
+
+{% block meta_description %}
+    Learn about {{ site_name }} — our mission, our team, and how we connect entry-level professionals with leading companies worldwide.
+{% endblock %}
+
+{% block content %}
+    {# Hero Section with Background Image #}
+    <section class="hero-section">
+        <div class="margin-top margin-small">
+            <div class="container-95">
+                <div class="background-image-about">
+                    <div class="padding-vertical padding-huge">
+                        <div class="position-relative">
+                            <div class="container-90">
+                                <div class="container-about-hero">
+                                    <h2 class="heading-1">
+                                        A team of experts dedicated to your career growth
+                                    </h2>
+                                    <div class="max-width-80 still-80">
+                                        <p class="text-color-black">
+                                            We believe everyone deserves a fair shot at building a career they love. {{ site_name }} connects ambitious entry-level professionals with companies that value fresh talent and new perspectives.
+                                        </p>
+                                    </div>
+                                    <div class="display-horizontal-left gap-1rem vertical-left-mobile">
+                                        <a href="{% url 'core:contact' %}" class="button red w-button">Contact us</a>
+                                        <a href="#learn-more" class="button black w-button">Learn more</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {# Stats Section #}
+    <section class="stats-section">
+        <div class="container-85">
+            <div>
+                <div class="stats-wrapper">
+                    <div class="w-layout-grid grid-3x1 _1x3-landscape">
+                        <div class="divider-right-stats about">
+                            <div class="padding-vertical padding-large">
+                                <div class="display-vertical-center text-align-center">
+                                    <div class="heading-2">
+                                        100%
+                                    </div>
+                                    <p>satisfied job seekers</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="divider-right-stats about">
+                            <div class="padding-vertical padding-large">
+                                <div class="display-vertical-center text-align-center">
+                                    <div class="heading-2">
+                                        500+
+                                    </div>
+                                    <p>partner companies</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="padding-vertical padding-large">
+                            <div class="display-vertical-center text-align-center">
+                                <div class="heading-2">
+                                    10K+
+                                </div>
+                                <p>jobs posted monthly</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {# About Grid Section #}
+    <section id="learn-more" class="about-section">
+        <div class="padding-vertical padding-huge">
+            <div class="container-90">
+                <div class="w-layout-grid grid-about">
+                    <div class="position-relative">
+                        <img src="{% static 'images/about-image-1.png' %}"
+                            loading="lazy"
+                            alt="{{ site_name }} Team"
+                            class="about-image-style" />
+                    </div>
+                    <div class="display-vertical-space-btw">
+                        <div>
+                            <div class="margin-bottom margin-large">
+                                <h2>Unlocking your career potential</h2>
+                            </div>
+                            <p>
+                                At {{ site_name }}, we specialize in connecting entry-level talent with companies who understand the value of investing in new professionals. Our platform streamlines the job search process, matching you with opportunities tailored to your skills and ambitions.
+                                <br /><br />
+                                Whether you're a recent graduate or making a career transition, we provide the tools, resources, and connections you need to launch a fulfilling career.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="display-vertical-space-btw">
+                        <div>
+                            <p>
+                                For employers, {{ site_name }} offers a premium recruitment experience. We curate a diverse pool of motivated, entry-level candidates who are ready to contribute from day one. Our partner companies benefit from a streamlined hiring process that saves time and delivers results.
+                                <br /><br />
+                                We believe that the right match between talent and opportunity creates lasting impact — for individuals, companies, and communities.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="position-relative">
+                        <img src="{% static 'images/about-image-2.png' %}"
+                            loading="lazy"
+                            alt="{{ site_name }} Opportunities"
+                            class="about-image-style" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {# Benefits Section #}
+    <section class="benefits-section">
+        <div class="background-color-secondary-4 position-relative overflow-hidden">
+            <div class="container-90 position-relative z-index-10">
+                <div class="padding-vertical padding-huge">
+                    <div class="display-vertical-left">
+                        <div class="margin-bottom margin-xxlarge">
+                            <div class="w-layout-grid grid-2x1 gap-2rem align-items-bottom">
+                                <div>
+                                    <h2 class="no-margin">Empowering growth through innovation</h2>
+                                </div>
+                                <div>
+                                    <p class="no-margin">
+                                        We're committed to building the most effective career platform for emerging professionals. Here's what drives us.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="w-layout-grid grid-3x1 _1x3-tablet">
+                            <div>
+                                <div class="margin-bottom margin-small">
+                                    <img src="{% static 'images/inspiration-icon.svg' %}"
+                                        loading="lazy" alt="Inspiration" class="icon-large" />
+                                </div>
+                                <div class="margin-bottom margin-small">
+                                    <h3 class="heading-4">Inspiration</h3>
+                                </div>
+                                <p>
+                                    We inspire new professionals to dream big and pursue meaningful careers, providing resources and mentorship every step of the way.
+                                </p>
+                            </div>
+                            <div>
+                                <div class="margin-bottom margin-small">
+                                    <img src="{% static 'images/collaboration-icon.svg' %}"
+                                        loading="lazy" alt="Collaboration" class="icon-large" />
+                                </div>
+                                <div class="margin-bottom margin-small">
+                                    <h3 class="heading-4">Collaboration</h3>
+                                </div>
+                                <p>
+                                    We work hand-in-hand with companies and candidates to create lasting, mutually beneficial partnerships that drive real growth.
+                                </p>
+                            </div>
+                            <div>
+                                <div class="margin-bottom margin-small">
+                                    <img src="{% static 'images/excellence-icon.svg' %}"
+                                        loading="lazy" alt="Excellence" class="icon-large" />
+                                </div>
+                                <div class="margin-bottom margin-small">
+                                    <h3 class="heading-4">Excellence</h3>
+                                </div>
+                                <p>
+                                    We hold ourselves to the highest standards, continually refining our platform and services to deliver exceptional value to every user.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {# CTA Section #}
+    <section class="cta-section">
+        <div class="background-cta">
+            <div class="padding-vertical padding-xhuge">
+                <div class="container-90">
+                    <div class="position-relative z-index-100">
+                        <div class="max-width-60">
+                            <div class="display-vertical-left gap-1rem">
+                                <h2>Ready to find your next opportunity?</h2>
+                                <div class="max-width-70">
+                                    <p class="text-color-black---landscape">
+                                        Join thousands of professionals who have launched their careers through {{ site_name }}.
+                                    </p>
+                                </div>
+                                <div class="display-horizontal-left gap-1rem vertical-left-mobile">
+                                    <a href="{% url 'jobs:job_list' %}" class="button red w-button">Browse Jobs</a>
+                                    <a href="{% url 'core:contact' %}" class="button black w-button">Contact Us</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

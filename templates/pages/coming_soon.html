@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Coming Soon | {{ site_name }}{% endblock %}
+
+{% block content %}
+<section class="hero-section">
+    <div class="margin-top margin-small coming-soon-margin">
+        <div class="container-95">
+            <div class="background-image-about coming-soon">
+                <div class="padding-vertical padding-huge">
+                    <div class="position-relative">
+                        <div class="container-90">
+                            <div class="container-about-hero">
+                                <h1 class="heading-1">Our website will be online very soon</h1>
+                                <div class="max-width-80 still-80">
+                                    <div class="margin-bottom margin-small">
+                                        <p class="text-color-black">We're working hard to finish the development of our new site. Stay tuned for something amazing!</p>
+                                    </div>
+                                    <div class="display-vertical-left">
+                                        <div class="w-form">
+                                            <div class="margin-bottom margin-xsmall">
+                                                <div class="subtitle black">Sign up to be notified when we are online</div>
+                                            </div>
+                                            <form id="coming-soon-form" method="post" action="{% url 'newsletter:subscribe' %}" class="position-relative newsletter-wrapper">
+                                                {% csrf_token %}
+                                                <input class="form-input newsletter coming-soon w-input" maxlength="256" name="email" placeholder="Enter your email" type="email" id="Email" required />
+                                                <input type="submit" class="button button-small newsletter-button w-button" value="Subscribe" />
+                                            </form>
+                                        </div>
+                                        <p class="paragraph-small">Join 1,000+ people waiting for the launch.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <img src="{% static 'images/better-talent-badge.svg' %}" loading="lazy" alt="{{ site_name }} badge" class="position-absolute item-61" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

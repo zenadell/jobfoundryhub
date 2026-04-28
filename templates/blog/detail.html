@@ -1,0 +1,201 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}{{ post.meta_title|default:post.title }} | {{ site_name }}{% endblock %}
+
+{% block meta_description %}{{ post.meta_description|default:post.excerpt }}{% endblock %}
+
+{% block content %}
+    {# Hero Section with Title + Featured Image #}
+    <section class="hero-section">
+        <div class="padding-vertical padding-huge">
+            <div class="container-90">
+                <h1 class="text-align-center heading-2">
+                    {{ post.title }}
+                </h1>
+                {% if post.featured_image %}
+                    <img src="{{ post.featured_image.url }}"
+                        loading="lazy" alt="{{ post.title }}" 
+                        class="blog-feature-image" />
+                {% else %}
+                    <div class="blog-feature-image skeleton" style="width:100%; height:400px; background:#e9e9eb; border-radius:12px;"></div>
+                {% endif %}
+                <div class="margin-top margin-huge">
+                    <div class="w-layout-grid grid-blog">
+                        {# Main Content Column #}
+                        <div>
+                            <div class="w-richtext">
+                                {{ post.content|safe }}
+                            </div>
+                        </div>
+                        {# Author Sidebar Card - "moves" like the job post card #}
+                        <div class="job-offer-wrapper blog" style="position: sticky; top: 100px;">
+                            {% if post.author.profile_image %}
+                                <img src="{{ post.author.profile_image.url }}"
+                                    loading="lazy" alt="{{ post.author.get_full_name }}"
+                                    class="icon-1x1-large borders-100px" />
+                            {% else %}
+                                <div class="icon-1x1-large borders-100px skeleton" 
+                                     style="width:80px; height:80px; background:#e9e9eb; display:inline-block;"></div>
+                            {% endif %}
+                            <div class="heading-4">
+                                {{ post.author.get_full_name|default:post.author.username }}
+                            </div>
+                            <div class="subtitle">
+                                {% if post.author.title %}{{ post.author.title }}{% else %}Staff Writer{% endif %}
+                            </div>
+                            <p>
+                                {% if post.author.bio %}{{ post.author.bio|truncatewords:20 }}{% else %}Contributing author at {{ site_name }}, sharing insights on career growth and professional development.{% endif %}
+                            </p>
+                            <div class="display-vertical-left">
+                                <div class="w-layout-grid grid-3x1">
+                                    <a href="{{ social.facebook|default:'#' }}" class="w-inline-block"> <img
+                                            src="{% static 'images/facebook-icon.svg' %}"
+                                            loading="lazy" alt="Facebook" class="icon-1x1-small" />
+                                    </a>
+                                    <a href="{{ social.linkedin|default:'#' }}" class="w-inline-block"> <img
+                                            src="{% static 'images/linkedin-icon.svg' %}"
+                                            loading="lazy" alt="LinkedIn" class="icon-1x1-small" />
+                                    </a>
+                                    <a href="mailto:{{ site_email|default:'hello@careerbuildershub.com' }}" class="w-inline-block"> <img
+                                            src="{% static 'images/email-icon.svg' %}"
+                                            loading="lazy" alt="Email" class="icon-1x1-small" />
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {# Related Articles Section #}
+    {% if related_posts %}
+    <section class="blog-section">
+        <div class="padding-vertical padding-large">
+            <div class="container-90">
+                <div class="w-layout-grid grid-2x1 gap-4rem align-items-bottom">
+                    <h2 class="no-margin">
+                        Latest insights from our experts
+                    </h2>
+                    <p>
+                        Continue reading with these related articles from our team.
+                    </p>
+                </div>
+                <div class="margin-vertical margin-large">
+                    <div class="w-dyn-list">
+                        <div role="list" class="two-blog-listing w-dyn-items">
+                            {% for related in related_posts %}
+                            <div role="listitem" class="w-dyn-item">
+                                <a href="{% url 'blog:post_detail' slug=related.slug %}"
+                                    class="blog-listing-wrapper w-inline-block">
+                                    <div class="position-relative">
+                                        {% if related.featured_image %}
+                                            <img src="{{ related.featured_image.url }}"
+                                                loading="lazy" alt="{{ related.title }}"
+                                                class="blog-thumbnail" />
+                                        {% else %}
+                                            <div class="blog-thumbnail skeleton" style="width:100%; height:200px; background:#e9e9eb;"></div>
+                                        {% endif %}
+                                        {% if related.category %}
+                                        <div class="position-absolute item-19">
+                                            <div>{{ related.category.name }}</div>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="margin-top margin-xsmall">
+                                        <h3 class="heading-blog-title">
+                                            {{ related.title }}
+                                        </h3>
+                                        <p>
+                                            {{ related.excerpt|truncatewords:15 }}
+                                        </p>
+                                        <div class="text-link red">
+                                            Read more
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <div class="display-vertical-center">
+                    <a href="{% url 'blog:post_list' %}" class="button black w-button">See all</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    {% endif %}
+
+    {# Newsletter CTA #}
+    <section class="cta-section">
+        <div class="margin-top margin-huge">
+            <div class="background-cta-blog">
+                <div class="padding-vertical padding-huge">
+                    <div class="position-relative">
+                        <div class="container-90">
+                            <div class="container-cta-blog">
+                                <h2 class="heading-1">
+                                    Keep up to date with the latest career news
+                                </h2>
+                                <div class="max-width-80 still-80">
+                                    <p class="text-color-black">
+                                        Subscribe to our newsletter for weekly career tips, industry news, and exclusive opportunities.
+                                    </p>
+                                </div>
+                                <div class="display-vertical-left">
+                                    <div class="w-form">
+                                        <form action="{% url 'newsletter:subscribe' %}" method="POST"
+                                            class="position-relative newsletter-wrapper">
+                                            {% csrf_token %}
+                                            <input class="form-input newsletter w-input" maxlength="256" name="email"
+                                                placeholder="Enter your email" type="email" required />
+                                            <input type="submit" class="button button-small newsletter-button w-button"
+                                                value="Subscribe" />
+                                        </form>
+                                    </div>
+                                    <p class="paragraph-small">
+                                        Join 9,500+ users already on the newsletter.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block structured_data %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "{{ post.title|escapejs }}",
+  "description": "{{ post.excerpt|escapejs }}",
+  "image": "{% if post.featured_image %}{{ request.scheme }}://{{ request.get_host }}{{ post.featured_image.url }}{% endif %}",
+  "author": {
+    "@type": "Person",
+    "name": "{{ post.author.get_full_name|default:post.author.username|escapejs }}"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "{{ site_name }}"
+  },
+  "datePublished": "{{ post.published_at|date:'c' }}",
+  "dateModified": "{{ post.updated_at|date:'c' }}",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "{{ request.build_absolute_uri }}"
+  },
+  "keywords": "{{ post.focus_keyword }}"
+}
+</script>
+{% endblock %}

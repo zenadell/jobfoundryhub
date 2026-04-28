@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Log In | {{ site_name }}{% endblock %}
+
+{% block meta_description %}Log in to your {{ site_name }} account to manage saved jobs, applications, and your profile.{% endblock %}
+
+{% block content %}
+<section class="contact-section">
+    <div class="padding-vertical padding-huge">
+        <div class="container-90">
+            <div class="w-layout-grid grid-contact">
+                <div class="display-vertical-left gap-1rem text-display-center-landscape">
+                    <h1 class="heading-2">Welcome back</h1>
+                    <p>Log in to your account to access saved jobs, track your applications, and manage your profile.</p>
+                </div>
+                <div class="form-wrapper">
+                    <div class="w-form">
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div class="w-form-fail" style="display:block; margin-bottom:20px;">
+                                    <div>{{ message }}</div>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                        <form action="{% url 'accounts:login' %}" method="POST" class="contact-form-grid">
+                            {% csrf_token %}
+                            <div>
+                                <label for="email" class="field-label">Email</label>
+                                <input class="form-input w-input" maxlength="256" name="email"
+                                    placeholder="your@email.com" type="email" id="email" required />
+                            </div>
+                            <div>
+                                <label for="password" class="field-label">Password</label>
+                                <input class="form-input w-input" maxlength="128" name="password"
+                                    placeholder="••••••••" type="password" id="password" required />
+                            </div>
+                            <div>
+                                <input type="submit" value="Log In" class="button w-button" />
+                            </div>
+                        </form>
+                        <div class="margin-top margin-small">
+                            <p class="paragraph-small">Don't have an account? <a href="{% url 'accounts:register' %}" class="text-link red">Create one</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
