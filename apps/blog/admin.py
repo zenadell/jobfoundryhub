@@ -163,7 +163,7 @@ class PostAdmin(admin.ModelAdmin):
             'border:1px solid #ddd;padding:16px;border-radius:8px;background:#fff;">'
             '<div style="color:#1a0dab;font-size:18px;margin-bottom:4px;">{}</div>'
             '<div style="color:#006621;font-size:13px;margin-bottom:4px;">'
-            'careerbuildershub.com{}</div>'
+            'jobfoundryhub.com{}</div>'
             '<div style="color:#545454;font-size:13px;">{}</div>'
             '</div>',
             title, url, desc[:160]

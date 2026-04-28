@@ -50,15 +50,19 @@
                             </p>
                             <div class="display-vertical-left">
                                 <div class="w-layout-grid grid-3x1">
-                                    <a href="{{ social.facebook|default:'#' }}" class="w-inline-block"> <img
+                                    {% if social.facebook %}
+                                    <a href="{{ social.facebook }}" class="w-inline-block"> <img
                                             src="{% static 'images/facebook-icon.svg' %}"
                                             loading="lazy" alt="Facebook" class="icon-1x1-small" />
                                     </a>
-                                    <a href="{{ social.linkedin|default:'#' }}" class="w-inline-block"> <img
+                                    {% endif %}
+                                    {% if social.linkedin %}
+                                    <a href="{{ social.linkedin }}" class="w-inline-block"> <img
                                             src="{% static 'images/linkedin-icon.svg' %}"
                                             loading="lazy" alt="LinkedIn" class="icon-1x1-small" />
                                     </a>
-                                    <a href="mailto:{{ site_email|default:'hello@careerbuildershub.com' }}" class="w-inline-block"> <img
+                                    {% endif %}
+                                    <a href="mailto:{{ contact_email }}" class="w-inline-block"> <img
                                             src="{% static 'images/email-icon.svg' %}"
                                             loading="lazy" alt="Email" class="icon-1x1-small" />
                                     </a>

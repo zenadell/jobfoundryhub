@@ -85,23 +85,7 @@
                                                     Contact Us
                                                 </a>
                                             </div>
-                                            <div>
-                                                <div class="heading-5 margin-bottom margin-xsmall">
-                                                    Utility Pages
-                                                </div>
-                                                <a href="{% url 'core:style_guide' %}"
-                                                    class="nav-dropdown-link w-dropdown-link"> Style Guide
-                                                </a>
-                                                <a href="{% url 'core:licenses' %}"
-                                                    class="nav-dropdown-link w-dropdown-link"> Licenses
-                                                </a>
-                                                <a href="{% url 'core:changelog' %}"
-                                                    class="nav-dropdown-link w-dropdown-link"> Changelog
-                                                </a>
-                                                <a href="{% url 'core:coming_soon' %}"
-                                                    class="nav-dropdown-link w-dropdown-link"> Coming Soon
-                                                </a>
-                                            </div>
+
                                         </div>
                                     </nav>
                                 </div>
@@ -115,10 +99,7 @@
                     <div class="display-ecommerce-navbar" x-data="{ mobileOpen: false }">
                         <a href="{% url 'jobs:job_list' %}" class="button black button-small hidden-tablet w-button"> Browse Jobs
                         </a>
-                        <a href="#" class="navbar-cart-link w-inline-block">
-                             <img src="{% static 'images/cart-icon.svg' %}" loading="lazy" alt="Cart" class="icon-1x1-small" style="width: 24px; height: 24px;" />
-                             <div class="cart-quantity-bubble">0</div>
-                        </a>
+
                         <div class="menu-button w-nav-button" @click="mobileOpen = true">
                             <div class="w-icon-nav-menu">
                             </div>
@@ -619,16 +600,16 @@
         <div class="padding-vertical padding-huge">
             <div class="container-60">
                 <div class="faq-component">
-                    <div class="faq-accordion">
-                        <div class="faq-question">
+                    <div class="faq-accordion" x-data="{ open: false }">
+                        <div class="faq-question" @click="open = !open">
                             <div class="heading-4">
                                 How can I apply for a job listed on your site?
                             </div>
                             <img src="{% static 'images/faq-icon.svg' %}"
                                 loading="lazy" alt="FAQ"
-                                class="icon-1x1-xsmall" />
+                                class="icon-1x1-xsmall" :style="open ? 'transform: rotate(180deg)' : ''" />
                         </div>
-                        <div class="faq-answer">
+                        <div class="faq-answer" x-show="open" x-collapse>
                             <div class="margin-bottom margin-small">
                                 <p>
                                     To apply for a job, simply click on the "Learn more" button on the job card, 
@@ -637,16 +618,16 @@
                             </div>
                         </div>
                     </div>
-                    <div class="faq-accordion">
-                        <div class="faq-question">
+                    <div class="faq-accordion" x-data="{ open: false }">
+                        <div class="faq-question" @click="open = !open">
                             <div class="heading-4">
                                 What makes your recruitment process unique?
                             </div>
                             <img src="{% static 'images/faq-icon.svg' %}"
                                 loading="lazy" alt="FAQ"
-                                class="icon-1x1-xsmall" />
+                                class="icon-1x1-xsmall" :style="open ? 'transform: rotate(180deg)' : ''" />
                         </div>
-                        <div class="faq-answer">
+                        <div class="faq-answer" x-show="open" x-collapse>
                             <div class="margin-bottom margin-small">
                                 <p>
                                     We use a combination of advanced AI matching and human expertise to ensure 
@@ -655,16 +636,16 @@
                             </div>
                         </div>
                     </div>
-                    <div class="faq-accordion">
-                        <div class="faq-question">
+                    <div class="faq-accordion" x-data="{ open: false }">
+                        <div class="faq-question" @click="open = !open">
                             <div class="heading-4">
                                 Can I submit my resume for future opportunities?
                             </div>
                             <img src="{% static 'images/faq-icon.svg' %}"
                                 loading="lazy" alt="FAQ"
-                                class="icon-1x1-xsmall" />
+                                class="icon-1x1-xsmall" :style="open ? 'transform: rotate(180deg)' : ''" />
                         </div>
-                        <div class="faq-answer">
+                        <div class="faq-answer" x-show="open" x-collapse>
                             <div class="margin-bottom margin-small">
                                 <p>
                                     Yes! Use the "Submit Resume" form on our home page or the dedicated 

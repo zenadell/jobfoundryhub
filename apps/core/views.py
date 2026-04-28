@@ -74,6 +74,7 @@ def style_guide(request):
 def changelog(request):
     return render(request, 'pages/changelog.html')
 
+@staff_member_required
 def coming_soon(request):
     return render(request, 'pages/coming_soon.html')
 

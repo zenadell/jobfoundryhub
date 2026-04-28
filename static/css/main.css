@@ -1,4 +1,4 @@
-/* Main overrides and custom styles for Career Builders site */
+/* Main overrides and custom styles for Job Foundry Hub */
 
 /* Custom Sticky Sidebar */
 .sticky-sidebar {
@@ -201,4 +201,23 @@
     .pink-hero-badge {
         display: none;
     }
+}
+
+/* FAQ Accordion Styles */
+.faq-accordion {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.faq-question {
+    cursor: pointer;
+    user-select: none;
+}
+
+.faq-question img {
+    transition: transform 0.3s ease;
+    flex-shrink: 0;
+}
+
+.faq-answer {
+    overflow: hidden;
 }

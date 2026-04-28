@@ -9,7 +9,7 @@
     <meta content="{% block meta_description %}{{ site_tagline }}{% endblock %}" name="description" />
     <meta content="{% block og_title %}{{ site_name }}{% endblock %}" property="og:title" />
     <meta content="{% block og_description %}{{ site_tagline }}{% endblock %}" property="og:description" />
-    <meta content="{% block og_image %}{% static 'images/og-default.jpg' %}{% endblock %}" property="og:image" />
+    <meta content="{% block og_image %}{% static 'images/favicon.png' %}{% endblock %}" property="og:image" />
     <meta property="og:type" content="website" />
     <meta content="width=device-width, initial-scale=1" name="viewport" />
     
@@ -25,7 +25,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
     
     <link rel="shortcut icon" href="{% static 'images/favicon.png' %}" type="image/png">
-    <link rel="apple-touch-icon" href="{% static 'images/webclip.png' %}" />
+    <link rel="apple-touch-icon" href="{% static 'images/favicon.png' %}" />
     
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     {% block extra_head %}{% endblock %}
@@ -104,23 +104,7 @@
                                                 <a href="{% url 'core:contact' %}" class="nav-dropdown-link w-dropdown-link"> Contact Us
                                                 </a>
                                             </div>
-                                            <div>
-                                                <div class="heading-5 margin-bottom margin-xsmall">
-                                                    Utility Pages
-                                                </div>
-                                                <a href="{% url 'core:style_guide' %}"
-                                                    class="nav-dropdown-link w-dropdown-link"> Style Guide
-                                                </a>
-                                                <a href="{% url 'core:licenses' %}"
-                                                    class="nav-dropdown-link w-dropdown-link"> Licenses
-                                                </a>
-                                                <a href="{% url 'core:changelog' %}"
-                                                    class="nav-dropdown-link w-dropdown-link"> Changelog
-                                                </a>
-                                                <a href="{% url 'core:coming_soon' %}" class="nav-dropdown-link w-dropdown-link"> Coming
-                                                    Soon
-                                                </a>
-                                            </div>
+
                                         </div>
                                     </nav>
                                 </div>
@@ -134,10 +118,7 @@
                     <div class="display-ecommerce-navbar" x-data="{ mobileOpen: false }">
                         <a href="{% url 'jobs:job_list' %}" class="button black button-small hidden-tablet w-button"> Browse Jobs
                         </a>
-                        <a href="#" class="navbar-cart-link w-inline-block">
-                             <img src="{% static 'images/cart-icon.svg' %}" loading="lazy" alt="Cart" class="icon-1x1-small" style="width: 24px; height: 24px;" />
-                             <div class="cart-quantity-bubble">0</div>
-                        </a>
+
                         <div class="menu-button w-nav-button" @click="mobileOpen = true">
                             <div class="w-icon-nav-menu">
                             </div>
@@ -196,13 +177,17 @@
                                 </p>
                                 <div id="w-node-_277fe38a-c5f3-62ea-703c-d1d14a85b8aa-4a85b89e"
                                     class="w-layout-grid grid-3x1">
-                                    <a href="{{ social.linkedin|default:'#' }}" target="_blank" class="w-inline-block"> 
+                                    {% if social.linkedin %}
+                                    <a href="{{ social.linkedin }}" target="_blank" class="w-inline-block"> 
                                         <img src="{% static 'images/linkedin-icon.svg' %}" loading="lazy" alt="LinkedIn" class="icon-1x1-medium" />
                                     </a>
-                                    <a href="{{ social.facebook|default:'#' }}" target="_blank" class="w-inline-block"> 
+                                    {% endif %}
+                                    {% if social.facebook %}
+                                    <a href="{{ social.facebook }}" target="_blank" class="w-inline-block"> 
                                         <img src="{% static 'images/facebook-icon.svg' %}" loading="lazy" alt="Facebook" class="icon-1x1-medium" />
                                     </a>
-                                    <a href="mailto:{{ site_email|default:'#' }}" target="_blank" class="w-inline-block"> 
+                                    {% endif %}
+                                    <a href="mailto:{{ contact_email }}" class="w-inline-block"> 
                                         <img src="{% static 'images/email-icon.svg' %}" loading="lazy" alt="Email" class="icon-1x1-medium" />
                                     </a>
                                 </div>
@@ -247,30 +232,7 @@
                                     </a>
                                 </div>
                             </div>
-                            <div id="w-node-_277fe38a-c5f3-62ea-703c-d1d14a85b8c4-4a85b89e"
-                                class="display-vertical-center---tablet">
-                                <div class="margin-bottom margin-medium">
-                                    <div class="subtitle black">
-                                        Utility Pages
-                                    </div>
-                                </div>
-                                <div class="margin-bottom margin-xsmall">
-                                    <a href="{% url 'core:style_guide' %}" class="text-link---footer"> Style Guide
-                                    </a>
-                                </div>
-                                <div class="margin-bottom margin-xsmall">
-                                    <a href="{% url 'core:licenses' %}" class="text-link---footer"> Licenses
-                                    </a>
-                                </div>
-                                <div class="margin-bottom margin-xsmall">
-                                    <a href="{% url 'core:changelog' %}" class="text-link---footer"> Changelog
-                                    </a>
-                                </div>
-                                <div class="margin-bottom margin-xsmall">
-                                    <a href="{% url 'core:coming_soon' %}" class="text-link---footer"> Coming Soon
-                                    </a>
-                                </div>
-                            </div>
+
                         </div>
                     </div>
                     <div class="divider-footer">

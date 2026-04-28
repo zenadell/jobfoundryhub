@@ -98,45 +98,17 @@
                         </h2>
                         <div class="container-50">
                             <p class="text-align-center">
-                                Have questions? Reach out to our specialized support teams for assistance.
+                                Have questions? Reach out to our support team for assistance.
                             </p>
                         </div>
                     </div>
-                    <div class="w-layout-grid grid-3x1 _1x3-tablet">
-                        <div class="contact-label"> <img
-                                src="{% static 'images/general-support-icon.svg' %}"
+                    <div class="display-vertical-center">
+                        <div class="contact-label" style="max-width: 400px; margin: 0 auto;">
+                            <img src="{% static 'images/general-support-icon.svg' %}"
                                 loading="lazy" alt="General Support" class="icon-1x1-large" />
                             <div>
-                                <div class="heading-5">
-                                    General Support
-                                </div>
-                                <div class="text-link">
-                                    hello@careerbuilders.com
-                                </div>
-                            </div>
-                        </div>
-                        <div class="contact-label"> <img
-                                src="{% static 'images/talent-support-icon.svg' %}"
-                                loading="lazy" alt="Talent Support" class="icon-1x1-large" />
-                            <div>
-                                <div class="heading-5">
-                                    Talent Support
-                                </div>
-                                <div class="text-link">
-                                    talent@careerbuilders.com
-                                </div>
-                            </div>
-                        </div>
-                        <div class="contact-label"> <img
-                                src="{% static 'images/company-support-icon.svg' %}"
-                                loading="lazy" alt="Company Support" class="icon-1x1-large" />
-                            <div>
-                                <div class="heading-5">
-                                    Company Support
-                                </div>
-                                <div class="text-link">
-                                    partners@careerbuilders.com
-                                </div>
+                                <div class="heading-5">General Support</div>
+                                <a href="mailto:{{ contact_email }}" class="text-link">{{ contact_email }}</a>
                             </div>
                         </div>
                     </div>
@@ -149,22 +121,22 @@
         <div class="padding-vertical padding-huge">
             <div class="container-60">
                 <div class="faq-component">
-                    {# FAQ Accordions - Standard Design #}
-                    <div class="faq-accordion">
-                        <div class="faq-question">
+                    {# FAQ Accordions - With Alpine.js Toggle #}
+                    <div class="faq-accordion" x-data="{ open: false }">
+                        <div class="faq-question" @click="open = !open">
                             <div class="heading-4">How can I apply for a job listed on your site?</div>
-                            <img src="{% static 'images/faq-icon.svg' %}" loading="lazy" alt="Toggle" class="icon-1x1-xsmall" />
+                            <img src="{% static 'images/faq-icon.svg' %}" loading="lazy" alt="Toggle" class="icon-1x1-xsmall" :style="open ? 'transform: rotate(180deg)' : ''" />
                         </div>
-                        <div class="faq-answer">
+                        <div class="faq-answer" x-show="open" x-collapse>
                             <p>You can apply directly through the job detail page by clicking the 'Apply Now' button, or by submitting your resume through this page to be included in our talent pool.</p>
                         </div>
                     </div>
-                    <div class="faq-accordion">
-                        <div class="faq-question">
+                    <div class="faq-accordion" x-data="{ open: false }">
+                        <div class="faq-question" @click="open = !open">
                             <div class="heading-4">What makes our recruitment process unique?</div>
-                            <img src="{% static 'images/faq-icon.svg' %}" loading="lazy" alt="Toggle" class="icon-1x1-xsmall" />
+                            <img src="{% static 'images/faq-icon.svg' %}" loading="lazy" alt="Toggle" class="icon-1x1-xsmall" :style="open ? 'transform: rotate(180deg)' : ''" />
                         </div>
-                        <div class="faq-answer">
+                        <div class="faq-answer" x-show="open" x-collapse>
                             <p>We focus exclusively on entry-level and early-career talent, matching you with companies that are specifically looking to nurture and grow new professionals.</p>
                         </div>
                     </div>

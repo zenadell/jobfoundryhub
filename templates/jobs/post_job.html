@@ -157,45 +157,17 @@
                         </h2>
                         <div class="container-50">
                             <p class="text-align-center">
-                                Our partnership teams are available to help you optimize your recruitment strategy.
+                                Our partnership team is available to help you optimize your recruitment strategy.
                             </p>
                         </div>
                     </div>
-                    <div class="w-layout-grid grid-3x1 _1x3-tablet">
-                        <div class="contact-label"> <img
-                                src="{% static 'images/general-support-icon.svg' %}"
+                    <div class="display-vertical-center">
+                        <div class="contact-label" style="max-width: 400px; margin: 0 auto;">
+                            <img src="{% static 'images/general-support-icon.svg' %}"
                                 loading="lazy" alt="Support" class="icon-1x1-large" />
                             <div>
-                                <div class="heading-5">
-                                    General Support
-                                </div>
-                                <div class="text-link">
-                                    partners@careerbuilders.com
-                                </div>
-                            </div>
-                        </div>
-                        <div class="contact-label"> <img
-                                src="{% static 'images/talent-support-icon.svg' %}"
-                                loading="lazy" alt="Talent" class="icon-1x1-large" />
-                            <div>
-                                <div class="heading-5">
-                                    Talent Acquisition
-                                </div>
-                                <div class="text-link">
-                                    recruitment@careerbuilders.com
-                                </div>
-                            </div>
-                        </div>
-                        <div class="contact-label"> <img
-                                src="{% static 'images/company-support-icon.svg' %}"
-                                loading="lazy" alt="Partners" class="icon-1x1-large" />
-                            <div>
-                                <div class="heading-5">
-                                    Company Partnership
-                                </div>
-                                <div class="text-link">
-                                    growth@careerbuilders.com
-                                </div>
+                                <div class="heading-5">General Support</div>
+                                <a href="mailto:{{ contact_email }}" class="text-link">{{ contact_email }}</a>
                             </div>
                         </div>
                     </div>
@@ -208,21 +180,21 @@
         <div class="padding-vertical padding-huge">
             <div class="container-60">
                 <div class="faq-component">
-                    <div class="faq-accordion">
-                        <div class="faq-question">
+                    <div class="faq-accordion" x-data="{ open: false }">
+                        <div class="faq-question" @click="open = !open">
                             <div class="heading-4">Can I post job listings directly through your platform?</div>
-                            <img src="{% static 'images/faq-icon.svg' %}" loading="lazy" alt="Toggle" class="icon-1x1-xsmall" />
+                            <img src="{% static 'images/faq-icon.svg' %}" loading="lazy" alt="Toggle" class="icon-1x1-xsmall" :style="open ? 'transform: rotate(180deg)' : ''" />
                         </div>
-                        <div class="faq-answer">
+                        <div class="faq-answer" x-show="open" x-collapse>
                             <p>Yes, once you submit this form, our team will review your posting and it will go live within 24 hours. You can manage your listings via our partner dashboard.</p>
                         </div>
                     </div>
-                    <div class="faq-accordion">
-                        <div class="faq-question">
+                    <div class="faq-accordion" x-data="{ open: false }">
+                        <div class="faq-question" @click="open = !open">
                             <div class="heading-4">What types of professionals use {{ site_name }}?</div>
-                            <img src="{% static 'images/faq-icon.svg' %}" loading="lazy" alt="Toggle" class="icon-1x1-xsmall" />
+                            <img src="{% static 'images/faq-icon.svg' %}" loading="lazy" alt="Toggle" class="icon-1x1-xsmall" :style="open ? 'transform: rotate(180deg)' : ''" />
                         </div>
-                        <div class="faq-answer">
+                        <div class="faq-answer" x-show="open" x-collapse>
                             <p>We host a diverse pool of entry-level talent, from software engineers and designers to marketing specialists and project managers, all looking for their first major career break.</p>
                         </div>
                     </div>

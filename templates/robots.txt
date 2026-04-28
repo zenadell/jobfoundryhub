@@ -3,5 +3,9 @@ Allow: /
 Disallow: /admin/
 Disallow: /accounts/dashboard/
 Disallow: /accounts/settings/
+Disallow: /style-guide/
+Disallow: /licenses/
+Disallow: /changelog/
+Disallow: /coming-soon/
 
-Sitemap: https://careerbuildershub.com/sitemap.xml
+Sitemap: https://jobfoundryhub.com/sitemap.xml

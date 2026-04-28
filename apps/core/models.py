@@ -51,7 +51,7 @@ class SiteSettings(models.Model):
     hero_subtext   = models.TextField(default='Browse verified entry-level jobs curated for recent graduates.')
     hero_cta_text  = models.CharField(max_length=100, default='Browse All Jobs')
     about_intro    = RichTextField(blank=True)
-    contact_email  = models.EmailField(default='hello@jobfoundryhub.com')
+    contact_email  = models.EmailField(default='support@jobfoundryhub.com')
     linkedin_url   = models.URLField(blank=True)
     twitter_url    = models.URLField(blank=True)
     instagram_url  = models.URLField(blank=True)
