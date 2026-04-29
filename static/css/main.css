@@ -223,10 +223,9 @@
     overflow: hidden;
 }
 
-html, body { overflow-x: hidden; }
-
 /* Responsive Typography and Layout Fixes for Mobile */
 @media screen and (max-width: 767px) {
+    html, body { overflow-x: hidden; }
 
     /* ── HEADINGS ─────────────────────────────── */
     /* Target both the HTML tag AND the webflow 
