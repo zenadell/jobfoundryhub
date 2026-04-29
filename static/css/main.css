@@ -225,3 +225,31 @@
 
 html, body { overflow-x: hidden; }
 
+/* Responsive Typography and Layout Fixes for Mobile */
+@media screen and (max-width: 767px) {
+    /* Scale down giant headings */
+    .heading-1 { font-size: 38px !important; line-height: 1.2 !important; }
+    .heading-2 { font-size: 32px !important; line-height: 1.2 !important; }
+    .heading-3 { font-size: 26px !important; line-height: 1.3 !important; }
+    .heading-4 { font-size: 22px !important; line-height: 1.3 !important; }
+    .heading-5 { font-size: 18px !important; line-height: 1.4 !important; }
+    
+    /* Prevent long words or nowrap from breaking layout */
+    h1, h2, h3, h4, h5, h6, 
+    .heading-1, .heading-2, .heading-3, .heading-4, .heading-5,
+    p, a, span, div {
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
+        white-space: normal !important;
+    }
+    
+    /* Ensure containers don't overflow */
+    .container-regular, .feature-wrapper---v1, .feature-wrapper---v2, 
+    .feature-wrapper---v3, .feature-wrapper---v4, .feature-wrapper---v5,
+    .job-offer-wrapper, .blog-listing-wrapper, .cta-wrapper {
+        width: 100% !important;
+        max-width: 100vw !important;
+        box-sizing: border-box !important;
+    }
+}
+
