@@ -26,7 +26,7 @@
                                 <div class="navbar-logo-text">
                                     {% with site_name_parts=site_name.split %}
                                         {% for part in site_name_parts %}
-                                            <span class="{% if forloop.counter == 2 %}text-color-green{% endif %}">{{ part }}</span>{% if not forloop.last %}&nbsp;{% endif %}
+                                            <span class="{% if forloop.counter == 2 %}text-color-green{% endif %}">{{ part }}</span>
                                         {% endfor %}
                                     {% endwith %}
                                     <span class="logo-dot"></span>
@@ -106,7 +106,7 @@
                                 <div class="navbar-logo-text">
                                     {% with site_name_parts=site_name.split %}
                                         {% for part in site_name_parts %}
-                                            <span class="{% if forloop.counter == 2 %}text-color-green{% endif %}">{{ part }}</span>{% if not forloop.last %}&nbsp;{% endif %}
+                                            <span class="{% if forloop.counter == 2 %}text-color-green{% endif %}">{{ part }}</span>
                                         {% endfor %}
                                     {% endwith %}
                                     <span class="logo-dot"></span>
