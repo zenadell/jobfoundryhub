@@ -20,7 +20,7 @@ urlpatterns = [
     path('privacy-policy/', views.privacy, name='privacy'),
     path('terms-of-service/', views.terms, name='terms'),
     path('faq/', views.faq, name='faq'),
-    path('pricing/', views.pricing, name='pricing'),
+
     path('newsletter-signup/', views.newsletter_signup, name='newsletter_signup'),
     path('licenses/', views.licenses, name='licenses'),
     path('style-guide/', views.style_guide, name='style_guide'),

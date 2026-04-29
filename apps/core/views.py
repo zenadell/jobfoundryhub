@@ -82,8 +82,7 @@ def confirmation(request):
     type_param = request.GET.get('type', 'contact')
     return render(request, 'pages/confirmation.html', {'type': type_param})
 
-def pricing(request):
-    return render(request, 'pages/pricing.html')
+
 
 def newsletter_signup(request):
     if request.method == 'POST':

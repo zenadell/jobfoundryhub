@@ -72,9 +72,7 @@
                                                 </a>
                                             </div>
                                             <div>
-                                                <a href="{% url 'core:pricing' %}"
-                                                    class="nav-dropdown-link w-dropdown-link"> Pricing
-                                                </a>
+
                                                 <a href="{% url 'jobs:submit_resume' %}"
                                                     class="nav-dropdown-link w-dropdown-link"> Submit Resume
                                                 </a>
@@ -90,10 +88,7 @@
                                     </nav>
                                 </div>
                             </li>
-                            <li>
-                                <a href="{% url 'core:pricing' %}" class="nav-link"> Pricing
-                                </a>
-                            </li>
+
                         </ul>
                     </nav>
                     <div class="display-ecommerce-navbar" x-data="{ mobileOpen: false }">
@@ -122,7 +117,7 @@
                             <a href="{% url 'jobs:job_list' %}" class="mobile-nav-link" @click="mobileOpen = false">Jobs</a>
                             <a href="{% url 'jobs:company_list' %}" class="mobile-nav-link" @click="mobileOpen = false">Companies</a>
                             <a href="{% url 'blog:post_list' %}" class="mobile-nav-link" @click="mobileOpen = false">Blog</a>
-                            <a href="{% url 'core:pricing' %}" class="mobile-nav-link" @click="mobileOpen = false">Pricing</a>
+
                             <a href="{% url 'core:contact' %}" class="mobile-nav-link" @click="mobileOpen = false">Contact</a>
                             <div class="margin-top margin-medium">
                                 <a href="{% url 'jobs:job_list' %}" class="button black w-full w-button">Browse Jobs</a>
@@ -160,9 +155,7 @@
                 <div class="pink-hero-badge">
                     Find a career that suits you
                 </div>
-                <img src="{% static 'images/hero-illustration.svg' %}"
-                    loading="lazy" alt="{{ site_name }}"
-                    class="position-absolute item-27" style="bottom: -32% !important; left: 38% !important; width: 75% !important; max-width: none; transform: rotate(-5deg); z-index: 2;" />
+
             </div>
         </div>
     </section>
