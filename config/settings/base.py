@@ -90,7 +90,7 @@ TURSO_AUTH_TOKEN   = env('TURSO_AUTH_TOKEN', default='')
 if TURSO_DATABASE_URL:
     DATABASES = {
         'default': {
-            'ENGINE': 'django_libsql',
+            'ENGINE': 'libsql',
             'NAME': TURSO_DATABASE_URL,
             'OPTIONS': {
                 'authToken': TURSO_AUTH_TOKEN,
