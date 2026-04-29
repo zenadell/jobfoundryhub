@@ -315,7 +315,6 @@ html, body { overflow-x: hidden; }
         max-width: 100% !important;
         min-width: 0 !important;
         box-sizing: border-box !important;
-        overflow: hidden !important;
     }
 
     /* "Unlock your potential now" row — 
@@ -337,7 +336,6 @@ html, body { overflow-x: hidden; }
     .grid-3x1 {
         grid-template-columns: 1fr !important;
         width: 100% !important;
-        overflow: hidden !important;
     }
 
     /* ── ALL CONTAINERS ───────────────────────── */
@@ -351,7 +349,6 @@ html, body { overflow-x: hidden; }
         padding-left: 1.25rem !important;
         padding-right: 1.25rem !important;
         box-sizing: border-box !important;
-        overflow: hidden !important;
     }
 
     /* ── ALL IMAGES ───────────────────────────── */
@@ -367,28 +364,13 @@ html, body { overflow-x: hidden; }
     .blog-section,
     .faq-section,
     section {
-        overflow: hidden !important;
         width: 100% !important;
         box-sizing: border-box !important;
     }
 
-    /* ── FIX BACKGROUND IMAGE CDN REFS ───────── 
-       webflow-base.css still points to Webflow 
-       CDN for these at mobile — override with 
-       local static files */
+    /* Fix hero image crop on mobile */
     .background-image-hero {
-        background-image: none !important;
-        background-color: #192d22 !important;
         background-position: center bottom !important;
-        min-height: auto !important;
-    }
-
-    .background-image-cta-footer,
-    .background-cta-blog,
-    .background-cta {
-        background-image: none !important;
-        background-color: #192d22 !important;
-        min-height: auto !important;
     }
 }
 
