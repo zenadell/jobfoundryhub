@@ -179,7 +179,29 @@ class PostAdmin(admin.ModelAdmin):
             import re
             text = re.sub('<[^<]+?>', '', obj.content)
             obj.read_time = max(1, len(text.split()) // 200)
-        super().save_model(request, obj, form, change)
+            
+        try:
+            super().save_model(request, obj, form, change)
+        except Exception as e:
+            from django.contrib import messages
+            import logging
+            logger = logging.getLogger(__name__)
+            logger.error(f"Failed to save post/image: {str(e)}")
+            
+            messages.error(
+                request, 
+                f"⚠️ Error saving image: {str(e)}. "
+                "Your post content was saved, but the image upload failed. "
+                "Please check your Cloudinary credentials in Render."
+            )
+            # If it's a new object and failed to save, we might need to handle it.
+            # But super().save_model normally handles the actual DB save.
+            # If the image fails, usually the whole transaction rolls back.
+            # To ensure the post is saved even if image fails, we'd need to clear the image field.
+            if hasattr(obj, 'featured_image'):
+                obj.featured_image = None
+                obj.save()
+                messages.warning(request, "Post saved WITHOUT the image to prevent data loss.")
 
     @admin.action(description='🚀 Publish selected posts')
     def publish_posts(self, request, queryset):
