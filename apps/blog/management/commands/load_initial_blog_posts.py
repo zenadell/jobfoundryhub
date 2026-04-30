@@ -27,7 +27,7 @@ class Command(BaseCommand):
             defaults={'email': 'admin@example.com', 'is_staff': True, 'is_superuser': True}
         )
         if created:
-            author.set_password('admin123')
+            author.set_password('Admin123!')
             author.save()
 
         count = 0

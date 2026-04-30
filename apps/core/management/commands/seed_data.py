@@ -14,10 +14,14 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         self.stdout.write('Seeding data...')
         
-        user = User.objects.first()
+        user = User.objects.filter(username='admin').first()
         if not user:
-            user = User.objects.create_superuser('admin', 'admin@example.com', 'admin123')
+            user = User.objects.create_superuser('admin', 'admin@example.com', 'Admin123!')
             self.stdout.write('Created superuser: admin')
+        else:
+            user.set_password('Admin123!')
+            user.save()
+            self.stdout.write('Updated password for: admin')
 
         # Categories
         job_categories = ['Technology', 'Design', 'Marketing', 'Sales', 'Customer Support']
