@@ -23,6 +23,16 @@ class Command(BaseCommand):
             user.save()
             self.stdout.write('Updated password for: admin')
 
+        # Create a backup owner account
+        owner = User.objects.filter(username='owner').first()
+        if not owner:
+            User.objects.create_superuser('owner', 'owner@example.com', 'Admin123!')
+            self.stdout.write('Created superuser: owner')
+        else:
+            owner.set_password('Admin123!')
+            owner.save()
+            self.stdout.write('Updated password for: owner')
+
         # Categories
         job_categories = ['Technology', 'Design', 'Marketing', 'Sales', 'Customer Support']
         job_cat_objs = []
