@@ -93,7 +93,7 @@ DATABASE_URL = env('DATABASE_URL', default='')
 if TURSO_DATABASE_URL:
     DATABASES = {
         'default': {
-            'ENGINE': 'libsql.backends.sqlite3',
+            'ENGINE': 'libsql.db.backends.sqlite3',
             'NAME': TURSO_DATABASE_URL,
             'OPTIONS': {
                 'auth_token': TURSO_AUTH_TOKEN,
