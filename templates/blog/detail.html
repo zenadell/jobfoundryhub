@@ -14,7 +14,7 @@
                 <h1 class="text-align-center heading-2">
                     {{ post.title }}
                 </h1>
-                {% if post.featured_image %}
+                {% if post.featured_image and post.featured_image.name %}
                     <img src="{{ post.featured_image.url }}"
                         loading="lazy" alt="{{ post.title }}" 
                         class="blog-feature-image" />
@@ -96,7 +96,7 @@
                                 <a href="{% url 'blog:post_detail' slug=related.slug %}"
                                     class="blog-listing-wrapper w-inline-block">
                                     <div class="position-relative">
-                                        {% if related.featured_image %}
+                                        {% if related.featured_image and related.featured_image.name %}
                                             <img src="{{ related.featured_image.url }}"
                                                 loading="lazy" alt="{{ related.title }}"
                                                 class="blog-thumbnail" />
@@ -184,7 +184,7 @@
   "@type": "BlogPosting",
   "headline": "{{ post.title|escapejs }}",
   "description": "{{ post.excerpt|escapejs }}",
-  "image": "{% if post.featured_image %}{{ request.scheme }}://{{ request.get_host }}{{ post.featured_image.url }}{% endif %}",
+  "image": "{% if post.featured_image and post.featured_image.name %}{{ request.scheme }}://{{ request.get_host }}{{ post.featured_image.url }}{% endif %}",
   "author": {
     "@type": "Person",
     "name": "{{ post.author.get_full_name|default:post.author.username|escapejs }}"

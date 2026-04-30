@@ -33,7 +33,7 @@
                                     <a href="{% url 'blog:post_detail' slug=post.slug %}"
                                         class="blog-listing-wrapper w-inline-block">
                                         <div class="position-relative">
-                                            {% if post.featured_image %}
+                                            {% if post.featured_image and post.featured_image.name %}
                                                 <img src="{{ post.featured_image.url }}"
                                                     loading="lazy" alt="{{ post.title }}"
                                                     class="blog-thumbnail" />

@@ -11,8 +11,8 @@ python manage.py collectstatic --no-input
 # Run migrations
 python manage.py migrate
 
-# Load initial data from local dump (Only run this manually if needed)
-# if [ -f datadump.json ]; then
-#     echo "Loading data from datadump.json..."
-#     python manage.py loaddata datadump.json
-# fi
+# Load initial data from local dump
+if [ -f datadump.json ]; then
+    echo "Loading data from datadump.json..."
+    python manage.py loaddata datadump.json
+fi
