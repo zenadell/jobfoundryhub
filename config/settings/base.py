@@ -86,9 +86,21 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # ── Database ──────────────────────────────────────────────────
 import dj_database_url
 
+TURSO_DATABASE_URL = env('TURSO_DATABASE_URL', default='')
+TURSO_AUTH_TOKEN = env('TURSO_AUTH_TOKEN', default='')
 DATABASE_URL = env('DATABASE_URL', default='')
 
-if DATABASE_URL:
+if TURSO_DATABASE_URL:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'libsql.backends.sqlite3',
+            'NAME': TURSO_DATABASE_URL,
+            'OPTIONS': {
+                'auth_token': TURSO_AUTH_TOKEN,
+            },
+        }
+    }
+elif DATABASE_URL:
     DATABASES = {
         'default': dj_database_url.config(
             default=DATABASE_URL,
@@ -142,19 +154,26 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # ── Cloudinary Media Storage ───────────────────────────────────
-CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': env('CLOUDINARY_CLOUD_NAME', default=''),
-    'API_KEY': env('CLOUDINARY_API_KEY', default=''),
-    'API_SECRET': env('CLOUDINARY_API_SECRET', default=''),
-}
+_c_name = env('CLOUDINARY_CLOUD_NAME', default='')
+_c_key = env('CLOUDINARY_API_KEY', default='')
+_c_secret = env('CLOUDINARY_API_SECRET', default='')
 
-import cloudinary
-cloudinary.config(
-    cloud_name = CLOUDINARY_STORAGE['CLOUD_NAME'],
-    api_key    = CLOUDINARY_STORAGE['API_KEY'],
-    api_secret = CLOUDINARY_STORAGE['API_SECRET'],
-    secure     = True,
-)
+if _c_name and _c_key and _c_secret:
+    CLOUDINARY_STORAGE = {
+        'CLOUD_NAME': _c_name,
+        'API_KEY': _c_key,
+        'API_SECRET': _c_secret,
+    }
+    import cloudinary
+    cloudinary.config(
+        cloud_name = CLOUDINARY_STORAGE['CLOUD_NAME'],
+        api_key    = CLOUDINARY_STORAGE['API_KEY'],
+        api_secret = CLOUDINARY_STORAGE['API_SECRET'],
+        secure     = True,
+    )
+else:
+    # Use local media storage safely if keys are missing
+    DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
 
 # Local development fallback
 MEDIA_URL  = '/media/'
