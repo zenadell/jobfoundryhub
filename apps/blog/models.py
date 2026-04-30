@@ -6,8 +6,8 @@ class BlogCategory(models.Model):
     name = models.CharField(max_length=100)
     slug = models.SlugField(unique=True)
     description = models.TextField()
-    meta_title = models.CharField(max_length=70)
-    meta_description = models.CharField(max_length=160)
+    meta_title = models.CharField(max_length=200)
+    meta_description = models.TextField(max_length=500)
 
     def __str__(self):
         return self.name
@@ -36,9 +36,9 @@ class Post(models.Model):
     read_time = models.PositiveIntegerField()  # minutes, auto-calculated
     
     # SEO
-    meta_title = models.CharField(max_length=70)
-    meta_description = models.CharField(max_length=160)
-    focus_keyword = models.CharField(max_length=100)
+    meta_title = models.CharField(max_length=200)
+    meta_description = models.TextField(max_length=500)
+    focus_keyword = models.CharField(max_length=200)
     
     # Status
     status = models.CharField(choices=[('draft','Draft'),('published','Published')], max_length=20)
