@@ -154,15 +154,15 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # ── Cloudinary Media Storage ───────────────────────────────────
-_c_name = env('CLOUDINARY_CLOUD_NAME', default='')
-_c_key = env('CLOUDINARY_API_KEY', default='')
-_c_secret = env('CLOUDINARY_API_SECRET', default='')
+CLOUDINARY_CLOUD_NAME = env('CLOUDINARY_CLOUD_NAME', default='')
+CLOUDINARY_API_KEY = env('CLOUDINARY_API_KEY', default='')
+CLOUDINARY_API_SECRET = env('CLOUDINARY_API_SECRET', default='')
 
-if _c_name and _c_key and _c_secret:
+if CLOUDINARY_CLOUD_NAME and CLOUDINARY_API_KEY and CLOUDINARY_API_SECRET:
     CLOUDINARY_STORAGE = {
-        'CLOUD_NAME': _c_name,
-        'API_KEY': _c_key,
-        'API_SECRET': _c_secret,
+        'CLOUD_NAME': CLOUDINARY_CLOUD_NAME,
+        'API_KEY': CLOUDINARY_API_KEY,
+        'API_SECRET': CLOUDINARY_API_SECRET,
     }
     import cloudinary
     cloudinary.config(
