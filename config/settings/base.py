@@ -22,8 +22,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'whitenoise.runserver_nostatic',
-    'django.contrib.staticfiles',
     'cloudinary_storage',
+    'django.contrib.staticfiles',
     'django.contrib.sites',
     'django.contrib.sitemaps',
     'django.contrib.humanize',
@@ -137,18 +137,19 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 # ── Cloudinary Media Storage ───────────────────────────────────
-CLOUDINARY_CLOUD_NAME = env('CLOUDINARY_CLOUD_NAME', default='')
-CLOUDINARY_API_KEY    = env('CLOUDINARY_API_KEY', default='')
-CLOUDINARY_API_SECRET = env('CLOUDINARY_API_SECRET', default='')
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': env('CLOUDINARY_CLOUD_NAME', default=''),
+    'API_KEY': env('CLOUDINARY_API_KEY', default=''),
+    'API_SECRET': env('CLOUDINARY_API_SECRET', default=''),
+}
 
-if CLOUDINARY_CLOUD_NAME:
-    import cloudinary
-    cloudinary.config(
-        cloud_name = CLOUDINARY_CLOUD_NAME,
-        api_key    = CLOUDINARY_API_KEY,
-        api_secret = CLOUDINARY_API_SECRET,
-        secure     = True,
-    )
+import cloudinary
+cloudinary.config(
+    cloud_name = CLOUDINARY_STORAGE['CLOUD_NAME'],
+    api_key    = CLOUDINARY_STORAGE['API_KEY'],
+    api_secret = CLOUDINARY_STORAGE['API_SECRET'],
+    secure     = True,
+)
 
 # Local development fallback
 MEDIA_URL  = '/media/'
