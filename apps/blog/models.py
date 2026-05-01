@@ -74,3 +74,11 @@ class Post(models.Model):
 
     def get_absolute_url(self):
         return reverse('blog:post_detail', kwargs={'slug': self.slug})
+
+
+class TrashedPost(Post):
+    """Proxy model so trashed posts get their own admin section."""
+    class Meta:
+        proxy = True
+        verbose_name = 'Trashed Post'
+        verbose_name_plural = '🗑️ Trash'

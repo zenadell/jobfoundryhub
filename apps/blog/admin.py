@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.utils import timezone
 from django.utils.html import format_html
 from django.urls import reverse
-from .models import BlogCategory, Tag, Post
+from .models import BlogCategory, Tag, Post, TrashedPost
 
 
 @admin.register(BlogCategory)
@@ -38,20 +38,21 @@ class TagAdmin(admin.ModelAdmin):
     search_fields       = ('name',)
 
 
+# ─────────────────────────────────────────────────────────────
+#  POSTS — only Draft + Published (trashed posts hidden here)
+# ─────────────────────────────────────────────────────────────
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
     list_display  = ('title', 'category', 'author', 'status_badge',
-                     'seo_health', 'read_time', 'views_count',
-                     'trash_timer', 'published_at')
+                     'seo_health', 'read_time', 'views_count', 'published_at')
     list_display_links = ('title',)
     list_filter   = ('status', 'category', 'author', 'tags')
     search_fields = ('title', 'content', 'excerpt', 'focus_keyword')
     prepopulated_fields = {'slug': ('title',)}
     filter_horizontal   = ('tags',)
     date_hierarchy      = 'published_at'
-    readonly_fields     = ('views_count', 'seo_preview', 'word_count_display', 'deleted_at')
-    actions = ['publish_posts', 'unpublish_posts', 'trash_posts',
-               'restore_posts', 'permanently_delete_posts']
+    readonly_fields     = ('views_count', 'seo_preview', 'word_count_display')
+    actions = ['publish_posts', 'unpublish_posts', 'trash_posts']
 
     fieldsets = (
         ('Content', {
@@ -72,23 +73,17 @@ class PostAdmin(admin.ModelAdmin):
         ('Publishing', {
             'fields': ('status', 'published_at')
         }),
-        ('Trash Info', {
-            'fields': ('deleted_at',),
-            'classes': ('collapse',),
-            'description': '📌 Posts in the Trash are auto-deleted after 30 days.'
-        }),
         ('Stats', {
             'fields': ('views_count',),
             'classes': ('collapse',)
         }),
     )
 
+    def get_queryset(self, request):
+        """Hide trashed posts from the main Posts list."""
+        return super().get_queryset(request).exclude(status='trashed')
+
     def status_badge(self, obj):
-        if obj.status == 'trashed':
-            return format_html(
-                '<span style="background:#e74c3c;color:white;padding:2px 8px;'
-                'border-radius:100px;font-size:11px;font-weight:600;">🗑️ TRASHED</span>'
-            )
         if obj.status == 'published':
             return format_html(
                 '<span style="background:#2ecc71;color:white;padding:2px 8px;'
@@ -99,23 +94,6 @@ class PostAdmin(admin.ModelAdmin):
             'border-radius:100px;font-size:11px;font-weight:600;">DRAFT</span>'
         )
     status_badge.short_description = 'Status'
-
-    def trash_timer(self, obj):
-        """Shows how many days left before permanent deletion."""
-        if obj.status != 'trashed' or not obj.deleted_at:
-            return '—'
-        days_in_trash = (timezone.now() - obj.deleted_at).days
-        days_left = max(0, 30 - days_in_trash)
-        if days_left == 0:
-            return format_html(
-                '<span style="color:#e74c3c;font-weight:600;">⏰ EXPIRED — will be purged</span>'
-            )
-        colour = '#e74c3c' if days_left <= 7 else '#f39c12'
-        return format_html(
-            '<span style="color:{};font-weight:600;">🗑️ {} days left</span>',
-            colour, days_left
-        )
-    trash_timer.short_description = 'Auto-Delete'
 
     def seo_health(self, obj):
         """
@@ -271,51 +249,112 @@ class PostAdmin(admin.ModelAdmin):
     @admin.action(description='🚀 Publish selected posts')
     def publish_posts(self, request, queryset):
         updated = 0
-        for post in queryset.exclude(status='trashed'):
+        for post in queryset:
             if not post.published_at:
                 post.published_at = timezone.now()
             post.status = 'published'
-            post.deleted_at = None  # clear trash timestamp
-            post.save(update_fields=['status', 'published_at', 'deleted_at'])
+            post.save(update_fields=['status', 'published_at'])
             updated += 1
-        self.message_user(request, f'{updated} posts published.')
+        self.message_user(request, f'✅ {updated} post(s) published.')
 
     @admin.action(description='📥 Unpublish (return to draft)')
     def unpublish_posts(self, request, queryset):
-        queryset.exclude(status='trashed').update(status='draft')
+        queryset.update(status='draft')
+        self.message_user(request, f'📥 {queryset.count()} post(s) returned to draft.')
 
-    @admin.action(description='🗑️ Move to Trash (recoverable for 30 days)')
+    @admin.action(description='🗑️ Move to Trash')
     def trash_posts(self, request, queryset):
-        count = 0
-        for post in queryset.exclude(status='trashed'):
-            post.status = 'trashed'
-            post.deleted_at = timezone.now()
-            post.save(update_fields=['status', 'deleted_at'])
-            count += 1
+        count = queryset.count()
+        queryset.update(status='trashed', deleted_at=timezone.now())
         self.message_user(
             request,
             f'🗑️ {count} post(s) moved to Trash. '
-            f'They will be permanently deleted after 30 days.'
+            f'They will be permanently deleted after 30 days. '
+            f'Go to 🗑️ Trash to restore or permanently delete them.'
         )
 
-    @admin.action(description='♻️ Restore from Trash (back to Draft)')
-    def restore_posts(self, request, queryset):
-        count = 0
-        for post in queryset.filter(status='trashed'):
-            post.status = 'draft'
-            post.deleted_at = None
-            post.save(update_fields=['status', 'deleted_at'])
-            count += 1
-        self.message_user(request, f'♻️ {count} post(s) restored to Draft.')
 
-    @admin.action(description='❌ Permanently delete (cannot be undone!)')
-    def permanently_delete_posts(self, request, queryset):
-        # Only allow permanent deletion of trashed posts
-        trashed = queryset.filter(status='trashed')
-        count = trashed.count()
-        trashed.delete()
+# ─────────────────────────────────────────────────────────────
+#  🗑️ TRASH — separate section, only trashed posts
+# ─────────────────────────────────────────────────────────────
+@admin.register(TrashedPost)
+class TrashedPostAdmin(admin.ModelAdmin):
+    list_display  = ('title', 'category', 'author', 'trash_timer',
+                     'deleted_at')
+    list_display_links = ('title',)
+    list_filter   = ('category',)
+    search_fields = ('title',)
+    readonly_fields = ('title', 'slug', 'category', 'author', 'excerpt',
+                       'content', 'featured_image', 'read_time',
+                       'meta_title', 'meta_description', 'focus_keyword',
+                       'status', 'published_at', 'views_count', 'deleted_at')
+    actions = ['restore_to_draft', 'restore_and_publish', 'permanently_delete']
+
+    fieldsets = (
+        ('⚠️ This post is in the Trash', {
+            'description': (
+                'Posts in the Trash are automatically deleted after 30 days. '
+                'Use the actions above to restore or permanently delete.'
+            ),
+            'fields': ('title', 'slug', 'category', 'author', 'deleted_at')
+        }),
+        ('Content Preview', {
+            'fields': ('excerpt', 'featured_image'),
+            'classes': ('collapse',),
+        }),
+    )
+
+    def get_queryset(self, request):
+        """Only show trashed posts here."""
+        return super().get_queryset(request).filter(status='trashed')
+
+    def has_add_permission(self, request):
+        """Can't create posts directly in trash."""
+        return False
+
+    def trash_timer(self, obj):
+        """Shows how many days left before permanent deletion."""
+        if not obj.deleted_at:
+            return '—'
+        days_in_trash = (timezone.now() - obj.deleted_at).days
+        days_left = max(0, 30 - days_in_trash)
+        if days_left == 0:
+            return format_html(
+                '<span style="color:#e74c3c;font-weight:600;">⏰ EXPIRED</span>'
+            )
+        colour = '#e74c3c' if days_left <= 7 else '#f39c12'
+        return format_html(
+            '<span style="color:{};font-weight:600;">⏳ {} days left</span>',
+            colour, days_left
+        )
+    trash_timer.short_description = 'Auto-Delete In'
+
+    # ── Trash Actions ────────────────────────────────────────
+
+    @admin.action(description='♻️ Restore to Draft')
+    def restore_to_draft(self, request, queryset):
+        count = queryset.count()
+        queryset.update(status='draft', deleted_at=None)
+        self.message_user(request, f'♻️ {count} post(s) restored to Draft. Find them under Posts.')
+
+    @admin.action(description='🚀 Restore & Publish immediately')
+    def restore_and_publish(self, request, queryset):
+        count = 0
+        for post in queryset:
+            post.status = 'published'
+            post.deleted_at = None
+            if not post.published_at:
+                post.published_at = timezone.now()
+            post.save(update_fields=['status', 'deleted_at', 'published_at'])
+            count += 1
+        self.message_user(request, f'🚀 {count} post(s) restored and published live!')
+
+    @admin.action(description='❌ Permanently delete (CANNOT be undone!)')
+    def permanently_delete(self, request, queryset):
+        count = queryset.count()
+        queryset.delete()
         self.message_user(
             request,
-            f'❌ {count} post(s) permanently deleted.',
+            f'❌ {count} post(s) permanently deleted. This cannot be undone.',
             level='warning'
         )
