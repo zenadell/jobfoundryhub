@@ -32,8 +32,8 @@ class Post(models.Model):
     # Content
     excerpt = models.TextField(max_length=300)
     content = models.TextField()  # HTML content
-    featured_image = models.ImageField(upload_to='blog/images/')
-    read_time = models.PositiveIntegerField()  # minutes, auto-calculated
+    featured_image = models.ImageField(upload_to='blog/images/', blank=True, null=True)
+    read_time = models.PositiveIntegerField(default=1)  # minutes, auto-calculated
     
     # SEO
     meta_title = models.CharField(max_length=200)

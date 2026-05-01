@@ -179,29 +179,64 @@ class PostAdmin(admin.ModelAdmin):
             import re
             text = re.sub('<[^<]+?>', '', obj.content)
             obj.read_time = max(1, len(text.split()) // 200)
+
+        # Check if a new image was uploaded in this save
+        has_new_image = 'featured_image' in form.changed_data
+
+        if has_new_image:
+            # Strategy: save the post WITHOUT the new image first,
+            # then try to attach the image in a second step.
+            # This ensures the post content is never lost.
+            uploaded_image = obj.featured_image  # hold the new file
             
-        try:
-            super().save_model(request, obj, form, change)
-        except Exception as e:
-            from django.contrib import messages
-            import logging
-            logger = logging.getLogger(__name__)
-            logger.error(f"Failed to save post/image: {str(e)}")
-            
-            messages.error(
-                request, 
-                f"⚠️ Error saving image: {str(e)}. "
-                "Your post content was saved, but the image upload failed. "
-                "Please check your Cloudinary credentials in Render."
-            )
-            # If it's a new object and failed to save, we might need to handle it.
-            # But super().save_model normally handles the actual DB save.
-            # If the image fails, usually the whole transaction rolls back.
-            # To ensure the post is saved even if image fails, we'd need to clear the image field.
-            if hasattr(obj, 'featured_image'):
+            # Keep the old image (or None) for the initial safe save
+            if change and obj.pk:
+                try:
+                    from .models import Post
+                    old_obj = Post.objects.get(pk=obj.pk)
+                    obj.featured_image = old_obj.featured_image
+                except Post.DoesNotExist:
+                    obj.featured_image = None
+            else:
                 obj.featured_image = None
-                obj.save()
-                messages.warning(request, "Post saved WITHOUT the image to prevent data loss.")
+            
+            # Save the post content safely (no image upload involved)
+            try:
+                super().save_model(request, obj, form, change)
+            except Exception as e:
+                import logging
+                logger = logging.getLogger(__name__)
+                logger.error(f"Failed to save post content: {e}")
+                from django.contrib import messages
+                messages.error(request, f"⚠️ Failed to save post: {e}")
+                return
+            
+            # Now try to attach the uploaded image
+            try:
+                obj.featured_image = uploaded_image
+                obj.save(update_fields=['featured_image'])
+                from django.contrib import messages
+                messages.success(request, "✅ Post and image saved successfully.")
+            except Exception as e:
+                import logging
+                logger = logging.getLogger(__name__)
+                logger.error(f"Image upload failed: {e}")
+                from django.contrib import messages
+                messages.warning(
+                    request,
+                    f"⚠️ Your post was saved, but the image upload failed: {e}. "
+                    "Please check your Cloudinary credentials on Render, or try re-uploading."
+                )
+        else:
+            # No new image — standard save, still protected
+            try:
+                super().save_model(request, obj, form, change)
+            except Exception as e:
+                import logging
+                logger = logging.getLogger(__name__)
+                logger.error(f"Failed to save post: {e}")
+                from django.contrib import messages
+                messages.error(request, f"⚠️ Error saving post: {e}")
 
     @admin.action(description='🚀 Publish selected posts')
     def publish_posts(self, request, queryset):

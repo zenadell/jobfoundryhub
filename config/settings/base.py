@@ -171,6 +171,8 @@ if CLOUDINARY_CLOUD_NAME and CLOUDINARY_API_KEY and CLOUDINARY_API_SECRET:
         api_secret = CLOUDINARY_STORAGE['API_SECRET'],
         secure     = True,
     )
+    # Tell Django to use Cloudinary for all media uploads
+    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 else:
     # Use local media storage safely if keys are missing
     DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
