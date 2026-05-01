@@ -102,8 +102,9 @@ class Command(BaseCommand):
                 defaults={'slug': category_name.lower().replace(' ', '-')}
             )
 
-            # Create Post
-            post, created = Post.objects.update_or_create(
+            # Create Post — only if it doesn't already exist
+            # This prevents overwriting posts you've edited or created via admin
+            post, created = Post.objects.get_or_create(
                 slug=slug,
                 defaults={
                     'title': title,
@@ -118,6 +119,9 @@ class Command(BaseCommand):
                     'read_time': read_time
                 }
             )
-            count += 1
+            if created:
+                count += 1
+            else:
+                self.stdout.write(f'  Skipped (already exists): {title}')
             
-        self.stdout.write(self.style.SUCCESS(f'Successfully loaded {count} blog posts.'))
+        self.stdout.write(self.style.SUCCESS(f'Created {count} new blog posts (skipped existing).'))
