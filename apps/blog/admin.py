@@ -51,7 +51,7 @@ class PostAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('title',)}
     filter_horizontal   = ('tags',)
     date_hierarchy      = 'published_at'
-    readonly_fields     = ('views_count', 'seo_preview', 'word_count_display')
+    readonly_fields     = ('views_count', 'seo_preview', 'word_count_display', 'seo_report')
     actions = ['publish_posts', 'unpublish_posts', 'trash_posts']
 
     fieldsets = (
@@ -63,7 +63,7 @@ class PostAdmin(admin.ModelAdmin):
             )
         }),
         ('SEO — Fill ALL fields before publishing', {
-            'fields': ('meta_title', 'meta_description', 'focus_keyword', 'seo_preview'),
+            'fields': ('seo_report', 'meta_title', 'meta_description', 'focus_keyword', 'seo_preview'),
             'description': (
                 '🎯 AdSense Requirement: Every published post MUST have a unique '
                 'meta_title (50–60 chars), meta_description (150–160 chars), '
@@ -107,43 +107,63 @@ class PostAdmin(admin.ModelAdmin):
             if 50 <= len(obj.meta_title) <= 60:
                 score += 1
             else:
-                issues.append(f'title {len(obj.meta_title)} chars (want 50–60)')
+                issues.append(f"Title is {len(obj.meta_title)} chars (aim for 50-60)")
         else:
-            issues.append('no meta title')
+            issues.append("Missing Meta Title")
 
         if obj.meta_description:
             if 150 <= len(obj.meta_description) <= 160:
                 score += 1
             else:
-                issues.append(f'desc {len(obj.meta_description)} chars (want 150–160)')
+                issues.append(f"Description is {len(obj.meta_description)} chars (aim for 150-160)")
         else:
-            issues.append('no meta description')
+            issues.append("Missing Meta Description")
 
         if obj.focus_keyword:
             score += 1
         else:
-            issues.append('no focus keyword')
+            issues.append("Missing Focus Keyword")
 
         if obj.featured_image:
             score += 1
         else:
-            issues.append('no featured image')
+            issues.append("Missing Featured Image")
 
         if obj.excerpt and len(obj.excerpt) >= 100:
             score += 1
         else:
-            issues.append('excerpt too short')
+            issues.append("Excerpt is too short (need 100+ chars)")
 
         colour = {5: '#2ecc71', 4: '#f39c12', 3: '#e67e22'}.get(score, '#e74c3c')
-        tip    = ' | '.join(issues) if issues else 'All SEO fields complete'
-        label  = f'{score}/5'
-
+        tip    = ' | '.join(issues) if issues else 'All SEO fields perfect!'
+        
         return format_html(
-            '<span title="{}" style="background:{};color:white;padding:2px 8px;'
-            'border-radius:100px;font-size:11px;font-weight:600;cursor:help;">{}</span>',
-            tip, colour, label
+            '<span title="{}" style="background:{};color:white;padding:3px 10px;'
+            'border-radius:100px;font-size:11px;font-weight:700;cursor:help;display:inline-block;">{}</span>',
+            tip, colour, f"{score}/5"
         )
     seo_health.short_description = 'SEO Score'
+
+    def seo_report(self, obj):
+        """A detailed checklist shown inside the post edit page."""
+        checks = [
+            (obj.meta_title and 50 <= len(obj.meta_title) <= 60, 
+             f"Meta Title (50-60 chars): Currently {len(obj.meta_title) if obj.meta_title else 0}"),
+            (obj.meta_description and 150 <= len(obj.meta_description) <= 160, 
+             f"Meta Description (150-160 chars): Currently {len(obj.meta_description) if obj.meta_description else 0}"),
+            (bool(obj.focus_keyword), "Focus Keyword set"),
+            (bool(obj.featured_image), "Featured Image uploaded"),
+            (obj.excerpt and len(obj.excerpt) >= 100, "Excerpt length (100+ chars)"),
+        ]
+        
+        html = '<ul style="margin:0; padding:0; list-style:none;">'
+        for passed, label in checks:
+            icon = '✅' if passed else '❌'
+            color = '#2ecc71' if passed else '#e74c3c'
+            html += f'<li style="color:{color}; margin-bottom:5px;">{icon} {label}</li>'
+        html += '</ul>'
+        return format_html(html)
+    seo_report.short_description = 'SEO Checklist'
 
     def word_count_display(self, obj):
         if obj.content:
@@ -154,7 +174,7 @@ class PostAdmin(admin.ModelAdmin):
             colour = '#2ecc71' if count >= 800 else '#e74c3c'
             note   = '✅ Good length' if count >= 800 else '⚠️ Too short for AdSense (need 800+)'
             return format_html(
-                '<span style="color:{};">{} words — {}</span>',
+                '<span style="color:{};font-weight:bold;">{} words — {}</span>',
                 colour, count, note
             )
         return '0 words'
@@ -167,15 +187,15 @@ class PostAdmin(admin.ModelAdmin):
         url   = f'/blog/{obj.slug}/'
         return format_html(
             '<div style="max-width:600px;font-family:Arial,sans-serif;'
-            'border:1px solid #ddd;padding:16px;border-radius:8px;background:#fff;">'
-            '<div style="color:#1a0dab;font-size:18px;margin-bottom:4px;">{}</div>'
+            'border:1px solid #ddd;padding:16px;border-radius:8px;background:#f9f9f9;margin-top:10px;">'
+            '<div style="color:#1a0dab;font-size:18px;margin-bottom:4px;text-decoration:none;">{}</div>'
             '<div style="color:#006621;font-size:13px;margin-bottom:4px;">'
             'jobfoundryhub.com{}</div>'
-            '<div style="color:#545454;font-size:13px;">{}</div>'
+            '<div style="color:#545454;font-size:13px;line-height:1.4;">{}</div>'
             '</div>',
             title, url, desc[:160]
         )
-    seo_preview.short_description = 'Google Preview'
+    seo_preview.short_description = 'Google Search Preview'
 
     def save_model(self, request, obj, form, change):
         # Auto-set published_at when status changes to published
