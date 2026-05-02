@@ -18,6 +18,23 @@
     <link rel="stylesheet" href="{% static 'css/skeletons.css' %}">
     <style>
         .w-dropdown-list.w--open { display: block !important; opacity: 1 !important; visibility: visible !important; }
+        
+        /* Smart Sticky Navbar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            transition: transform 0.3s ease-in-out;
+            background-color: #fff; /* Ensure it's opaque */
+        }
+        .navbar.navbar-hidden {
+            transform: translateY(-100%);
+        }
+        /* Offset content so it's not hidden behind fixed navbar */
+        body {
+            padding-top: 80px; 
+        }
     </style>
     
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -241,7 +258,31 @@
         </div>
     </section>
 
-    {% block extra_scripts %}{% endblock %}
+    {% block extra_scripts %}
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let lastScrollTop = 0;
+            const navbar = document.querySelector('.navbar');
+            const scrollThreshold = 10; // Ignore tiny scrolls to prevent jitter
+
+            window.addEventListener('scroll', function() {
+                let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                
+                // Don't trigger on small scrolls
+                if (Math.abs(lastScrollTop - scrollTop) <= scrollThreshold) return;
+
+                if (scrollTop > lastScrollTop && scrollTop > 100) {
+                    // Scrolling Down - Hide
+                    navbar.classList.add('navbar-hidden');
+                } else {
+                    // Scrolling Up - Show
+                    navbar.classList.remove('navbar-hidden');
+                }
+                lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; // For Mobile or negative scrolling
+            }, false);
+        });
+    </script>
+    {% endblock %}
 </body>
 
 </html>
