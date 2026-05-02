@@ -1,2 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<Error><Code>AccessDenied</Code><Message>Access Denied</Message><RequestId>RZTCT59VJT7RX4RJ</RequestId><HostId>Jvru7Gzq3XEv0GkLiA90QDy4i4rCEGB5c4zTbNmVNQ3YiHO9zkaJmqO6R1q4jZGzlaoTjRd7pBSItpo2XhleCqwx4mHq/Mx/</HostId></Error>
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M104 32H24C17.4 32 12 37.4 12 44V84C12 90.6 17.4 96 24 96H104C110.6 96 116 90.6 116 84V44C116 37.4 110.6 32 104 32ZM104 44V48.5L64 71L24 48.5V44H104ZM24 84V57L61.6 78.1C62.3 78.5 63.1 78.7 64 78.7C64.9 78.7 65.7 78.5 66.4 78.1L104 57V84H24Z" fill="#131F18"/>
+</svg>
