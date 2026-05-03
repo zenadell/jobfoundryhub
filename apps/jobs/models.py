@@ -40,10 +40,10 @@ SALARY_PERIOD_CHOICES = [
 class Company(models.Model):
     name = models.CharField(max_length=200)
     slug = models.SlugField(unique=True)
-    logo = models.ImageField(upload_to='company_logos/')
+    logo = models.ImageField(upload_to='company_logos/', blank=True)
     website = models.URLField(blank=True)
-    description = models.TextField()
-    industry = models.CharField(max_length=100)
+    description = models.TextField(blank=True, default='')
+    industry = models.CharField(max_length=100, blank=True, default='')
     size = models.CharField(choices=COMPANY_SIZE_CHOICES, max_length=20)
     location = models.CharField(max_length=200)
     is_verified = models.BooleanField(default=False)
@@ -87,11 +87,11 @@ class Job(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
     category = models.ForeignKey(JobCategory, on_delete=models.SET_NULL, null=True)
     description = RichTextField()  # Full HTML job description
-    requirements = RichTextField()
+    requirements = RichTextField(blank=True, default='')
     
     # Location
     location = models.CharField(max_length=200)
-    region = models.CharField(max_length=100)
+    region = models.CharField(max_length=100, blank=True, default='')
     country = models.CharField(max_length=100, default='United States')
     is_remote = models.BooleanField(default=False)
     remote_type = models.CharField(choices=REMOTE_CHOICES, max_length=20, blank=True)  # remote/hybrid/on-site
