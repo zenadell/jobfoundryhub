@@ -109,12 +109,21 @@ def submit_resume(request):
             cover_note = request.POST.get('message', ''),
         )
 
-        # Send notification
+        # Send notification to admin
         send_mail(
             subject=f"New Resume: {full_name}",
             message=f"Name: {full_name}\nEmail: {email}\nPosition: {position}\n\nCheck admin for details.",
             from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[settings.SUPPORT_EMAIL],
+            fail_silently=True,
+        )
+
+        # Send confirmation to user
+        send_mail(
+            subject="Resume Received - Job Foundry Hub",
+            message=f"Hi {full_name},\n\nThank you for submitting your resume for the {position} position. Our team is reviewing your profile and will be in touch if there's a match.",
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[email],
             fail_silently=True,
         )
 
@@ -147,12 +156,21 @@ def post_job(request):
             apply_url        = request.POST.get('apply_url', ''),
         )
 
-        # Send notification
+        # Send notification to admin
         send_mail(
             subject=f"Job Request: {job_title} @ {company_name}",
             message=f"Company: {company_name}\nJob: {job_title}\nContact: {contact_email}",
             from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[settings.SUPPORT_EMAIL],
+            fail_silently=True,
+        )
+
+        # Send confirmation to company
+        send_mail(
+            subject="Job Posting Request Received - Job Foundry Hub",
+            message=f"Hello {company_name},\n\nWe have received your request to post the '{job_title}' position. Our team will review the details and get back to you shortly.",
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[contact_email],
             fail_silently=True,
         )
 
