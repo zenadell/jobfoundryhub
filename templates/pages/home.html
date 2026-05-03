@@ -465,7 +465,7 @@
                                 </p>
                                 <div class="w-form">
                                     <form id="wf-form-Job-Offer---Form" name="wf-form-Job-Offer---Form"
-                                        method="post" action="{% url 'jobs:submit_resume' %}">
+                                        method="post" action="{% url 'jobs:submit_resume' %}" enctype="multipart/form-data">
                                         {% csrf_token %}
                                         <label for="full_name" class="field-label">
                                             Full Name
@@ -477,6 +477,12 @@
                                         </label>
                                         <input class="form-input w-input" maxlength="256" name="email"
                                             placeholder="Enter your email" type="email" id="email" required />
+                                        
+                                        <label for="resume" class="field-label">
+                                            Upload Resume (Optional)
+                                        </label>
+                                        <input class="form-input w-input" name="resume" type="file" id="resume" />
+
                                         <input type="hidden" name="position" value="General Application (Homepage)">
                                         <input type="submit" data-wait="Please wait..."
                                             class="button black button-small w-button" value="Submit" />
