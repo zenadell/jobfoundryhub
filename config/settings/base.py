@@ -204,5 +204,5 @@ EMAIL_USE_SSL        = env.bool('EMAIL_USE_SSL', default=True)
 EMAIL_HOST_USER      = env('EMAIL_HOST_USER', default='')
 EMAIL_HOST_PASSWORD  = env('EMAIL_HOST_PASSWORD', default='')
 
-DEFAULT_FROM_EMAIL   = env('DEFAULT_FROM_EMAIL', default='hello@jobfoundryhub.com')
+DEFAULT_FROM_EMAIL   = env('DEFAULT_FROM_EMAIL', default='support@jobfoundryhub.com')
 SUPPORT_EMAIL        = env('SUPPORT_EMAIL', default='support@jobfoundryhub.com')
