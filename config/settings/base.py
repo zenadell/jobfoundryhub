@@ -196,13 +196,23 @@ SOCIAL_LINKEDIN      = env('SOCIAL_LINKEDIN', default='')
 SOCIAL_TWITTER       = env('SOCIAL_TWITTER', default='')
 SOCIAL_INSTAGRAM     = env('SOCIAL_INSTAGRAM', default='')
 
-EMAIL_BACKEND        = env('EMAIL_BACKEND', default='django.core.mail.backends.smtp.EmailBackend')
 EMAIL_HOST           = env('EMAIL_HOST', default='smtp.hostinger.com')
 EMAIL_PORT           = env.int('EMAIL_PORT', default=465)
 EMAIL_USE_TLS        = env.bool('EMAIL_USE_TLS', default=False)
 EMAIL_USE_SSL        = env.bool('EMAIL_USE_SSL', default=True)
 EMAIL_HOST_USER      = env('EMAIL_HOST_USER', default='')
 EMAIL_HOST_PASSWORD  = env('EMAIL_HOST_PASSWORD', default='')
+
+# ── Anymail (SendGrid) ────────────────────────────────────────
+SENDGRID_API_KEY = env('SENDGRID_API_KEY', default='')
+
+if SENDGRID_API_KEY:
+    EMAIL_BACKEND = "anymail.backends.sendgrid.EmailBackend"
+    ANYMAIL = {
+        "SENDGRID_API_KEY": SENDGRID_API_KEY,
+    }
+else:
+    EMAIL_BACKEND = env('EMAIL_BACKEND', default='django.core.mail.backends.smtp.EmailBackend')
 
 DEFAULT_FROM_EMAIL   = env('DEFAULT_FROM_EMAIL', default='support@jobfoundryhub.com')
 SUPPORT_EMAIL        = env('SUPPORT_EMAIL', default='support@jobfoundryhub.com')

@@ -23,3 +23,6 @@ django-cloudinary-storage==0.3.0
 
 # Adzuna job sync
 requests==2.32.3
+
+# Email API (for Render/Cloud compatibility)
+django-anymail[sendgrid]==11.1
