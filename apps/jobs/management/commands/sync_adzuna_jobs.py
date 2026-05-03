@@ -33,15 +33,17 @@ COUNTRIES = {
 }
 
 # ── Search queries for variety ──────────────────────────────────
-SEARCH_QUERIES = [
-    'entry level',
-    'marketing entry level',
-    'software developer junior',
-    'data analyst entry level',
-    'human resources graduate',
-    'graphic designer junior',
-    'finance graduate',
-    'customer service entry level',
+CURATED_COMPANIES = [
+    'Hays',
+    'Bupa',
+    'Tesco',
+    'Deliveroo',
+    'Barclays',
+    'Vodafone',
+    'Sky',
+    'Sainsbury',
+    'O2',
+    'EE',
 ]
 
 # ── Category mapping (keyword → category name) ─────────────────
@@ -58,33 +60,16 @@ CATEGORY_MAP = [
 
 # ── Well-known company → domain mapping for logo fetching ──────
 KNOWN_DOMAINS = {
-    'google': 'google.com',
-    'amazon': 'amazon.com',
-    'microsoft': 'microsoft.com',
-    'apple': 'apple.com',
-    'meta': 'meta.com',
-    'facebook': 'facebook.com',
-    'netflix': 'netflix.com',
-    'ibm': 'ibm.com',
-    'oracle': 'oracle.com',
-    'salesforce': 'salesforce.com',
-    'adobe': 'adobe.com',
-    'spotify': 'spotify.com',
-    'uber': 'uber.com',
-    'airbnb': 'airbnb.com',
-    'stripe': 'stripe.com',
-    'shopify': 'shopify.com',
-    'deloitte': 'deloitte.com',
-    'pwc': 'pwc.com',
-    'kpmg': 'kpmg.com',
-    'accenture': 'accenture.com',
-    'jpmorgan': 'jpmorgan.com',
-    'goldman sachs': 'goldmansachs.com',
-    'barclays': 'barclays.com',
-    'hsbc': 'hsbc.com',
-    'unilever': 'unilever.com',
-    'coca-cola': 'coca-cola.com',
-    'nike': 'nike.com',
+    'hays': 'hays.co.uk',
+    'bupa': 'bupa.co.uk',
+    'tesco': 'tesco.com',
+    'deliveroo': 'deliveroo.co.uk',
+    'barclays': 'barclays.co.uk',
+    'vodafone': 'vodafone.co.uk',
+    'sky': 'sky.com',
+    'sainsbury': 'sainsburys.co.uk',
+    'o2': 'o2.co.uk',
+    'ee': 'ee.co.uk',
 }
 
 
@@ -99,44 +84,45 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
-        if options['delete_dummy']:
-            self._delete_dummy_data()
+        self.stdout.write(self.style.WARNING("Wiping database of all existing jobs and companies..."))
+        Job.objects.all().delete()
+        Company.objects.all().delete()
 
         total_saved = 0
 
-        for country_code, meta in COUNTRIES.items():
-            for query in SEARCH_QUERIES:
-                count = self._fetch_and_save(country_code, meta, query)
-                total_saved += count
-                # Be polite to the API
-                time.sleep(0.5)
+        for company in CURATED_COMPANIES:
+            count = self._fetch_and_save(company)
+            total_saved += count
+            # Be polite to the API
+            time.sleep(0.5)
 
         self.stdout.write(self.style.SUCCESS(
-            f'\n✅ Total jobs synced: {total_saved}'
+            f'\n✅ Total curated jobs synced: {total_saved}'
         ))
 
     # ─────────────────────────────────────────────────────────────
     #  FETCH ONE SEARCH PAGE
     # ─────────────────────────────────────────────────────────────
-    def _fetch_and_save(self, country_code, meta, query):
+    def _fetch_and_save(self, company):
         """Fetch one page of results from Adzuna and save them."""
-        url = f'https://api.adzuna.com/v1/api/jobs/{country_code}/search/1'
+        # Using UK as the primary market for these curated standard companies
+        url = f'https://api.adzuna.com/v1/api/jobs/gb/search/1'
         params = {
             'app_id': ADZUNA_APP_ID,
             'app_key': ADZUNA_API_KEY,
-            'results_per_page': 50,
-            'what': query,
+            'results_per_page': 10,
+            'company': company,
             'content-type': 'application/json',
         }
 
         try:
-            self.stdout.write(f'  📡 Fetching: "{query}" in {country_code.upper()}...')
+            self.stdout.write(f'  📡 Fetching jobs for: "{company}"...')
             resp = requests.get(url, params=params, timeout=30)
             resp.raise_for_status()
             data = resp.json()
         except requests.RequestException as e:
             self.stderr.write(self.style.WARNING(
-                f'  ⚠️  API error for "{query}" ({country_code}): {e}'
+                f'  ⚠️  API error for "{company}": {e}'
             ))
             return 0
 
@@ -145,7 +131,8 @@ class Command(BaseCommand):
 
         for item in results:
             try:
-                if self._save_job(item, country_code, meta):
+                meta = {'currency': 'GBP', 'country_name': 'United Kingdom'}
+                if self._save_job(item, 'gb', meta):
                     saved += 1
             except Exception as e:
                 self.stderr.write(self.style.WARNING(
