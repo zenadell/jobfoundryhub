@@ -16,3 +16,6 @@ python manage.py sync_adzuna_jobs --delete-dummy
 
 # Enrich newly synced companies with logos and descriptions via Clearbit & Wikipedia
 python manage.py enrich_companies
+
+# Inject robust 400-600 word authentic profiles for companies without using external AI quotas
+python manage.py seed_company_profiles
