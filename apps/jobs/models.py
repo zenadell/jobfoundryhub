@@ -208,7 +208,7 @@ class ResumeSubmission(models.Model):
     email        = models.EmailField()
     position     = models.CharField(max_length=200, blank=True,
                        help_text='Job title or position they are applying for')
-    resume       = models.FileField(upload_to='resumes/%Y/%m/')
+    resume       = models.FileField(upload_to='resumes/%Y/%m/', blank=True, null=True)
     cover_note   = models.TextField(blank=True)
     submitted_at = models.DateTimeField(auto_now_add=True)
     is_reviewed  = models.BooleanField(default=False)
