@@ -130,6 +130,19 @@ def newsletter_signup(request):
                 email=email,
                 defaults={'source': request.POST.get('source', 'homepage')}
             )
+            # Send notification
+            from django.core.mail import send_mail
+            from django.conf import settings
+            try:
+                send_mail(
+                    subject="New Newsletter Subscriber",
+                    message=f"New subscriber: {email}",
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[settings.SUPPORT_EMAIL],
+                    fail_silently=True,
+                )
+            except:
+                pass
         return redirect(reverse('core:confirmation') + '?type=newsletter')
     return redirect('core:home')
 
