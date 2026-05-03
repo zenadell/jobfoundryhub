@@ -26,6 +26,7 @@ def home(request):
             'companies_count':   Company.objects.filter(is_active=True).count(),
             'users_count':       User.objects.filter(is_active=True).count(),
         },
+        'partner_companies': Company.objects.filter(is_active=True, is_partner=True)[:4],
     })
 
 def about(request):

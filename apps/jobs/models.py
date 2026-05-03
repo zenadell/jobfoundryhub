@@ -47,6 +47,7 @@ class Company(models.Model):
     size = models.CharField(choices=COMPANY_SIZE_CHOICES, max_length=20)
     location = models.CharField(max_length=200)
     is_verified = models.BooleanField(default=False)
+    is_partner = models.BooleanField(default=False, help_text="Show this company in the 'Partners' section on the Home page")
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
 

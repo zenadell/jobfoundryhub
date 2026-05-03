@@ -275,11 +275,24 @@
                             </p>
                         </div>
                         <div>
-                            <div class="margin-top margin-medium">
-                                <a href="{% url 'core:contact' %}" class="button button-small w-button" style="background-color: white; color: black;">
-                                    Become a Partner
-                                </a>
-                            </div>
+                            {% if partner_companies %}
+                                <div class="margin-bottom margin-xxsmall">
+                                    <div class="subtitle">
+                                        Partners
+                                    </div>
+                                </div>
+                                <div class="display-horizontal-left" style="flex-wrap: wrap; gap: 10px;">
+                                    {% for partner in partner_companies %}
+                                        <div class="partner-logo-text">{{ partner.name }}</div>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <div class="margin-top margin-medium">
+                                    <a href="{% url 'core:contact' %}" class="button button-small w-button" style="background-color: white; color: black;">
+                                        Become a Partner
+                                    </a>
+                                </div>
+                            {% endif %}
                         </div>
                     </div>
                     <div class="feature-wrapper---v5">

@@ -30,10 +30,10 @@ class JobInline(admin.StackedInline):
 @admin.register(Company)
 class CompanyAdmin(admin.ModelAdmin):
     list_display  = ('logo_preview', 'name', 'industry', 'size',
-                     'location', 'is_verified', 'is_active', 'active_jobs_badge', 'view_on_site_link')
+                     'location', 'is_verified', 'is_partner', 'is_active', 'active_jobs_badge', 'view_on_site_link')
     list_display_links = ('name',)
-    list_editable = ('is_verified', 'is_active')
-    list_filter   = ('is_verified', 'is_active', 'industry', 'size')
+    list_editable = ('is_verified', 'is_partner', 'is_active')
+    list_filter   = ('is_verified', 'is_partner', 'is_active', 'industry', 'size')
     search_fields = ('name', 'description', 'location', 'industry')
     prepopulated_fields = {'slug': ('name',)}
     inlines       = [JobInline]
@@ -48,7 +48,7 @@ class CompanyAdmin(admin.ModelAdmin):
             'fields': ('description',)
         }),
         ('Status', {
-            'fields': ('is_verified', 'is_active'),
+            'fields': ('is_verified', 'is_partner', 'is_active'),
             'classes': ('collapse',)
         }),
     )
