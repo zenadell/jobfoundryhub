@@ -298,6 +298,12 @@ class Command(BaseCommand):
         if "Content below for Recruitment purposes only" in description_raw:
             return False
 
+        # ── Filter: Low-end / Retail jobs ──────────────────────
+        low_end_keywords = ['Driver', 'Delivery', 'Barista', 'Cleaner', 'Warehouse', 'Sainsbury', 'Argos', 'Tesco', 'Lidl', 'Aldi', 'Customer Advisor']
+        for kw in low_end_keywords:
+            if kw.lower() in title.lower() or kw.lower() in company_name.lower():
+                return False
+
         combined_text = f"{title} {description_raw}".lower()
         is_remote = 'remote' in combined_text or 'work from home' in combined_text
 

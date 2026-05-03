@@ -19,21 +19,29 @@ def home(request):
     # Priority categories for graduates
     priority_cats = ['Technology', 'Marketing', 'Finance', 'Data & Analytics', 'Design', 'Human Resources']
     
+    # Base filter to exclude low-end/retail jobs from homepage
+    low_end_keywords = ['Driver', 'Delivery', 'Barista', 'Cleaner', 'Warehouse', 'Sainsbury', 'Argos', 'Tesco', 'Lidl', 'Aldi', 'Customer Advisor']
+    base_filter = Q(is_active=True)
+    for kw in low_end_keywords:
+        base_filter &= ~Q(title__icontains=kw)
+        base_filter &= ~Q(company__name__icontains=kw)
+
     featured_jobs = Job.objects.filter(
-        is_active=True,
+        base_filter,
         category__name__in=priority_cats
     ).exclude(
         description__icontains="We are looking for a talented individual"
     ).select_related('company', 'category').order_by('-posted_at')[:6]
 
-    # Fallback if we don't have enough priority jobs
+    # Fallback if we don't have enough priority jobs (still excluding low-end)
     if len(featured_jobs) < 6:
         featured_jobs = Job.objects.filter(
-            is_active=True
+            base_filter
         ).exclude(
             description__icontains="We are looking for a talented individual"
         ).select_related('company', 'category').order_by('-posted_at')[:6]
-        
+    return render(request, 'pages/home.html', {
+        'featured_jobs': featured_jobs,
         'recent_posts': Post.live.filter(
             status='published'
         ).select_related('author', 'category').order_by('-published_at')[:3],
