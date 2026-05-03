@@ -14,14 +14,25 @@ from .models import ContactMessage
 User = get_user_model()
 
 def home(request):
-    from django.db.models import Count
+    from django.db.models import Count, Q
     
-    return render(request, 'pages/home.html', {
-        'featured_jobs': Job.objects.filter(
+    # Priority categories for graduates
+    priority_cats = ['Technology', 'Marketing', 'Finance', 'Data & Analytics', 'Design', 'Human Resources']
+    
+    featured_jobs = Job.objects.filter(
+        is_active=True,
+        category__name__in=priority_cats
+    ).exclude(
+        description__icontains="We are looking for a talented individual"
+    ).select_related('company', 'category').order_by('-posted_at')[:6]
+
+    # Fallback if we don't have enough priority jobs
+    if len(featured_jobs) < 6:
+        featured_jobs = Job.objects.filter(
             is_active=True
         ).exclude(
             description__icontains="We are looking for a talented individual"
-        ).select_related('company', 'category').order_by('-posted_at')[:6],
+        ).select_related('company', 'category').order_by('-posted_at')[:6]
         
         'recent_posts': Post.live.filter(
             status='published'
@@ -48,12 +59,28 @@ def contact(request):
         subject = request.POST.get('subject')
         message = request.POST.get('message')
         
+        from django.core.mail import send_mail
+        from django.conf import settings
+        
         ContactMessage.objects.create(
             name=name,
             email=email,
             subject=subject,
             message=message
         )
+        
+        # Send notification to admin
+        try:
+            send_mail(
+                subject=f"New Contact: {subject}",
+                message=f"From: {name} <{email}>\n\nMessage:\n{message}",
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[settings.SUPPORT_EMAIL],
+                fail_silently=True,
+            )
+        except:
+            pass
+
         return redirect(reverse('core:confirmation') + '?type=contact')
         
     return render(request, 'pages/contact.html')

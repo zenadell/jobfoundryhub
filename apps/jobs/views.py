@@ -94,26 +94,53 @@ def company_detail(request, slug):
 def submit_resume(request):
     if request.method == 'POST':
         from .models import ResumeSubmission
+        from django.core.mail import send_mail
+        from django.conf import settings
+        
+        full_name = request.POST.get('full_name', '')
+        email = request.POST.get('email', '')
+        position = request.POST.get('position', '')
+
         ResumeSubmission.objects.create(
-            full_name  = request.POST.get('full_name', ''),
-            email      = request.POST.get('email', ''),
-            position   = request.POST.get('position', ''),
+            full_name  = full_name,
+            email      = email,
+            position   = position,
             resume     = request.FILES.get('resume'),
             cover_note = request.POST.get('message', ''),
         )
+
+        # Send notification
+        try:
+            send_mail(
+                subject=f"New Resume: {full_name}",
+                message=f"Name: {full_name}\nEmail: {email}\nPosition: {position}\n\nCheck admin for details.",
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[settings.SUPPORT_EMAIL],
+                fail_silently=True,
+            )
+        except:
+            pass
+
         return redirect(reverse('core:confirmation') + '?type=resume')
     return render(request, 'jobs/submit_resume.html')
 
 def post_job(request):
     if request.method == 'POST':
         from .models import JobPostingRequest
+        from django.core.mail import send_mail
+        from django.conf import settings
+
+        company_name = request.POST.get('company_name', '')
+        job_title = request.POST.get('job_title', '')
+        contact_email = request.POST.get('contact_email', '')
+
         JobPostingRequest.objects.create(
-            company_name     = request.POST.get('company_name', ''),
+            company_name     = company_name,
             contact_name     = request.POST.get('contact_name', ''),
-            contact_email    = request.POST.get('contact_email', ''),
+            contact_email    = contact_email,
             contact_phone    = request.POST.get('contact_phone', ''),
             company_website  = request.POST.get('company_website', ''),
-            job_title        = request.POST.get('job_title', ''),
+            job_title        = job_title,
             job_description  = request.POST.get('job_description', ''),
             job_requirements = request.POST.get('job_requirements', ''),
             job_location     = request.POST.get('job_location', ''),
@@ -122,5 +149,18 @@ def post_job(request):
             salary_range     = request.POST.get('salary_range', ''),
             apply_url        = request.POST.get('apply_url', ''),
         )
+
+        # Send notification
+        try:
+            send_mail(
+                subject=f"Job Request: {job_title} @ {company_name}",
+                message=f"Company: {company_name}\nJob: {job_title}\nContact: {contact_email}",
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[settings.SUPPORT_EMAIL],
+                fail_silently=True,
+            )
+        except:
+            pass
+
         return redirect(reverse('core:confirmation') + '?type=job')
     return render(request, 'jobs/post_job.html')
