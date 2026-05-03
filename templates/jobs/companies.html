@@ -36,7 +36,7 @@
                                                 {% if company.logo %}
                                                     <img src="{{ company.logo.url }}" loading="lazy" alt="{{ company.name }}" class="icon-1x1-medium" />
                                                 {% else %}
-                                                    <div class="skeleton skeleton--icon" style="width: 60px; height: 60px;"></div>
+                                                    <div style="width:50px;height:50px;background:linear-gradient(135deg,#4ede79,#2a9d5c);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;font-weight:800;color:white;flex-shrink:0;">{{ company.name|first }}</div>
                                                 {% endif %}
                                             </div>
                                             <h2 class="heading-4 no-margin">
@@ -45,7 +45,7 @@
                                         </div>
                                         <div class="margin-top margin-small">
                                             <div class="department-badge small-grey margin-bottom margin-xsmall">
-                                                <div>{{ company.industry }}</div>
+                                                <div>{{ company.industry|default:"General" }}</div>
                                             </div>
                                             <p>
                                                 {{ company.description|striptags|truncatewords:15 }}

@@ -408,7 +408,7 @@
                                                     {% if job.company.logo %}
                                                         <img src="{{ job.company.logo.url }}" loading="lazy" alt="{{ job.company.name }}" class="icon-1x1-xsmall" />
                                                     {% else %}
-                                                        <div class="skeleton skeleton--logo-xsmall"></div>
+                                                        <div style="width:20px;height:20px;background:linear-gradient(135deg,#4ede79,#2a9d5c);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:0.65rem;font-weight:800;color:white;flex-shrink:0;">{{ job.company.name|first }}</div>
                                                     {% endif %}
                                                     <div class="job-info-text">
                                                         {{ job.company.name }}

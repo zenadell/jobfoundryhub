@@ -13,22 +13,19 @@
         <div class="padding-vertical padding-huge">
             <div class="container-90">
                 <div class="margin-bottom margin-huge">
-                    <div class="display-vertical-center text-align-center">
-                        <h1>
-                            Get to know our partner company
-                        </h1>
-                        <div class="container-50">
-                            <p>
-                                Discover the mission, culture, and career opportunities at {{ company.name }}.
-                            </p>
-                        </div>
-                        {% if company.logo %}
-                            {# Using a generic hero image for company detail if none exists in model #}
+                        <div class="display-vertical-center text-align-center">
+                            <h1>
+                                Get to know our partner company
+                            </h1>
+                            <div class="container-50">
+                                <p>
+                                    Discover the mission, culture, and career opportunities at {{ company.name }}.
+                                </p>
+                            </div>
                             <img src="{% static 'images/company-placeholder.jpg' %}"
                                 loading="lazy" alt="{{ company.name }}" class="company---hero-image" />
-                        {% endif %}
+                        </div>
                     </div>
-                </div>
                 <div class="container-70">
                     <div class="divider-bottom">
                         <div class="display-horizontal-left gap-2rem vertical-left-mobile">
@@ -36,7 +33,7 @@
                                 {% if company.logo %}
                                     <img src="{{ company.logo.url }}" loading="lazy" alt="{{ company.name }}" class="icon-1x1-xlarge" />
                                 {% else %}
-                                    <div class="skeleton skeleton--icon" style="width: 100px; height: 100px;"></div>
+                                    <div style="width:80px;height:80px;background:linear-gradient(135deg,#4ede79,#2a9d5c);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:2.2rem;font-weight:800;color:white;letter-spacing:-1px;">{{ company.name|first }}</div>
                                 {% endif %}
                             </div>
                             <div class="display-vertical-left gap-1rem">
@@ -45,7 +42,7 @@
                                 </h2>
                                 <div class="department-badge small-grey">
                                     <div>
-                                        {{ company.industry }}
+                                        {{ company.industry|default:"General" }}
                                     </div>
                                 </div>
                                 <div class="paragraph">
@@ -59,7 +56,11 @@
                             <h2>
                                 Corporate culture at {{ company.name }}
                             </h2>
-                            {{ company.description|safe }}
+                            {% if company.description %}
+                                {{ company.description|safe }}
+                            {% else %}
+                                <p>{{ company.name }} is dedicated to fostering a collaborative and innovative workplace. They invest in their team's growth and are committed to building a diverse workforce.</p>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
