@@ -177,13 +177,17 @@ class Command(BaseCommand):
 
         company = self._get_or_create_company(company_name, item, meta)
 
+        # ── Dedup: skip if same title + company already exists ─
+        if Job.objects.filter(title=title[:300], company=company).exists():
+            return False
+
         # ── Slug (unique) ──────────────────────────────────────
         base_slug = slugify(f"{title}-{company_name}")[:40]
         slug = f"{base_slug}-{random.randint(1000, 9999)}"
 
-        # Skip if this exact slug already exists
-        if Job.objects.filter(slug=slug).exists():
-            return False
+        # Ensure slug uniqueness
+        while Job.objects.filter(slug=slug).exists():
+            slug = f"{base_slug}-{random.randint(1000, 9999)}"
 
         # ── Description ────────────────────────────────────────
         description = item.get('description', '') or ''

@@ -8,7 +8,8 @@ services:
       pip install -r requirements/base.txt &&
       python manage.py collectstatic --noinput &&
       python manage.py migrate &&
-      python manage.py purge_trashed_posts
+      python manage.py purge_trashed_posts &&
+      python manage.py sync_adzuna_jobs --delete-dummy
     startCommand: gunicorn config.wsgi:application --bind 0.0.0.0:$PORT --workers 2 --timeout 120
     envVars:
       - key: DJANGO_SETTINGS_MODULE
@@ -27,6 +28,10 @@ services:
         sync: false
       - key: CLOUDINARY_API_SECRET
         sync: false
+      - key: ADZUNA_APP_ID
+        value: ce95f522
+      - key: ADZUNA_API_KEY
+        value: 59b8ac4579f4f1e5344cbb158b78c0c6
       - key: SITE_NAME
         value: Job Foundry Hub
       - key: SITE_TAGLINE
