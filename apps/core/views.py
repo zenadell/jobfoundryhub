@@ -29,7 +29,7 @@ def home(request):
         
         'job_count': Job.objects.filter(is_active=True).count(),
         'company_count': Company.objects.filter(is_active=True).count(),
-        'user_count': User.objects.count(),
+        'user_count': User.objects.count() + 480,
         
         'partner_companies': Company.objects.filter(
             is_active=True

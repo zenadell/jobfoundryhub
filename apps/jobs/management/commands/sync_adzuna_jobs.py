@@ -49,7 +49,7 @@ SEARCH_QUERIES = {
         'junior developer',
         'marketing graduate',
         # Also keep some curated company names for GB to maintain quality
-        'Hays', 'Bupa', 'Tesco', 'Deliveroo', 'Barclays', 'Vodafone', 'Sky', 'Sainsbury', 'O2', 'EE'
+        'Hays', 'Bupa', 'Tesco', 'Deliveroo', 'Barclays', 'Vodafone', 'Sky', 'Sainsbury'
     ],
 }
 
