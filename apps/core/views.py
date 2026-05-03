@@ -78,22 +78,28 @@ def contact(request):
         )
         
         # Send notification to admin
-        send_mail(
-            subject=f"New Contact: {subject}",
-            message=f"From: {name} <{email}>\n\nMessage:\n{message}",
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=[settings.SUPPORT_EMAIL],
-            fail_silently=True,
-        )
+        try:
+            send_mail(
+                subject=f"New Contact: {subject}",
+                message=f"From: {name} <{email}>\n\nMessage:\n{message}",
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[settings.SUPPORT_EMAIL],
+                fail_silently=True,
+            )
+        except Exception:
+            pass
 
         # Send confirmation to user
-        send_mail(
-            subject="We've received your message - Job Foundry Hub",
-            message=f"Hi {name},\n\nThank you for reaching out. We have received your message regarding '{subject}' and our team will get back to you shortly.",
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=[email],
-            fail_silently=True,
-        )
+        try:
+            send_mail(
+                subject="We've received your message - Job Foundry Hub",
+                message=f"Hi {name},\n\nThank you for reaching out. We have received your message regarding '{subject}' and our team will get back to you shortly.",
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[email],
+                fail_silently=True,
+            )
+        except Exception:
+            pass
 
         return redirect(reverse('core:confirmation') + '?type=contact')
         
