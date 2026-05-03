@@ -11,4 +11,5 @@ python manage.py collectstatic --no-input
 # Run migrations
 python manage.py migrate
 
-
+# Sync real jobs from Adzuna API (dedup-safe, skips existing)
+python manage.py sync_adzuna_jobs --delete-dummy
