@@ -36,22 +36,27 @@ def job_list(request):
     return render(request, 'jobs/list.html', context)
 
 def job_detail(request, slug):
-    job = get_object_or_404(Job, slug=slug, is_active=True)
-    
-    # Update view count
-    job.views_count += 1
-    job.save(update_fields=['views_count'])
-    
-    related_jobs = Job.objects.filter(
-        category=job.category, 
-        is_active=True
-    ).exclude(id=job.id).order_by('-posted_at')[:3]
-    
-    context = {
-        'job': job,
-        'related_jobs': related_jobs,
-    }
-    return render(request, 'jobs/detail.html', context)
+    try:
+        job = get_object_or_404(Job, slug=slug, is_active=True)
+        
+        # Update view count
+        job.views_count += 1
+        job.save(update_fields=['views_count'])
+        
+        related_jobs = Job.objects.filter(
+            category=job.category, 
+            is_active=True
+        ).exclude(id=job.id).order_by('-posted_at')[:3]
+        
+        context = {
+            'job': job,
+            'related_jobs': related_jobs,
+        }
+        return render(request, 'jobs/detail.html', context)
+    except Exception as e:
+        import traceback
+        from django.http import HttpResponse
+        return HttpResponse(f"Error: {str(e)}<br><pre>{traceback.format_exc()}</pre>", status=500)
 
 def company_list(request):
     companies = Company.objects.filter(is_active=True).order_by('name')

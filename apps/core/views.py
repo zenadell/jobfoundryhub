@@ -16,8 +16,8 @@ User = get_user_model()
 def home(request):
     return render(request, 'pages/home.html', {
         'featured_jobs': Job.objects.filter(
-            is_active=True, is_featured=True
-        ).select_related('company', 'category').order_by('-posted_at')[:6],
+            is_active=True
+        ).select_related('company', 'category').order_by('-is_featured', '-posted_at')[:6],
         'recent_posts': Post.live.filter(
             status='published'
         ).select_related('author', 'category').order_by('-published_at')[:3],
