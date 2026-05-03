@@ -203,10 +203,16 @@ EMAIL_USE_SSL        = env.bool('EMAIL_USE_SSL', default=True)
 EMAIL_HOST_USER      = env('EMAIL_HOST_USER', default='')
 EMAIL_HOST_PASSWORD  = env('EMAIL_HOST_PASSWORD', default='')
 
-# ── Anymail (SendGrid) ────────────────────────────────────────
+# ── Anymail (SendGrid/Brevo) ──────────────────────────────────
 SENDGRID_API_KEY = env('SENDGRID_API_KEY', default='')
+BREVO_API_KEY    = env('BREVO_API_KEY', default='')
 
-if SENDGRID_API_KEY:
+if BREVO_API_KEY:
+    EMAIL_BACKEND = "anymail.backends.brevo.EmailBackend"
+    ANYMAIL = {
+        "BREVO_API_KEY": BREVO_API_KEY,
+    }
+elif SENDGRID_API_KEY:
     EMAIL_BACKEND = "anymail.backends.sendgrid.EmailBackend"
     ANYMAIL = {
         "SENDGRID_API_KEY": SENDGRID_API_KEY,
