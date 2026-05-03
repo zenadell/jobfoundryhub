@@ -78,16 +78,13 @@ def contact(request):
         )
         
         # Send notification to admin
-        try:
-            send_mail(
-                subject=f"New Contact: {subject}",
-                message=f"From: {name} <{email}>\n\nMessage:\n{message}",
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[settings.SUPPORT_EMAIL],
-                fail_silently=True,
-            )
-        except:
-            pass
+        send_mail(
+            subject=f"New Contact: {subject}",
+            message=f"From: {name} <{email}>\n\nMessage:\n{message}",
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[settings.SUPPORT_EMAIL],
+            fail_silently=False,
+        )
 
         return redirect(reverse('core:confirmation') + '?type=contact')
         

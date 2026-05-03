@@ -110,16 +110,13 @@ def submit_resume(request):
         )
 
         # Send notification
-        try:
-            send_mail(
-                subject=f"New Resume: {full_name}",
-                message=f"Name: {full_name}\nEmail: {email}\nPosition: {position}\n\nCheck admin for details.",
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[settings.SUPPORT_EMAIL],
-                fail_silently=True,
-            )
-        except:
-            pass
+        send_mail(
+            subject=f"New Resume: {full_name}",
+            message=f"Name: {full_name}\nEmail: {email}\nPosition: {position}\n\nCheck admin for details.",
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[settings.SUPPORT_EMAIL],
+            fail_silently=False,
+        )
 
         return redirect(reverse('core:confirmation') + '?type=resume')
     return render(request, 'jobs/submit_resume.html')
@@ -151,16 +148,13 @@ def post_job(request):
         )
 
         # Send notification
-        try:
-            send_mail(
-                subject=f"Job Request: {job_title} @ {company_name}",
-                message=f"Company: {company_name}\nJob: {job_title}\nContact: {contact_email}",
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[settings.SUPPORT_EMAIL],
-                fail_silently=True,
-            )
-        except:
-            pass
+        send_mail(
+            subject=f"Job Request: {job_title} @ {company_name}",
+            message=f"Company: {company_name}\nJob: {job_title}\nContact: {contact_email}",
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[settings.SUPPORT_EMAIL],
+            fail_silently=False,
+        )
 
         return redirect(reverse('core:confirmation') + '?type=job')
     return render(request, 'jobs/post_job.html')
