@@ -467,16 +467,17 @@
                                     <form id="wf-form-Job-Offer---Form" name="wf-form-Job-Offer---Form"
                                         method="post" action="{% url 'jobs:submit_resume' %}">
                                         {% csrf_token %}
-                                        <label for="Full-Name" class="field-label">
+                                        <label for="full_name" class="field-label">
                                             Full Name
                                         </label>
-                                        <input class="form-input w-input" maxlength="256" name="Full-Name"
-                                            placeholder="" type="text" id="Full-Name" required />
+                                        <input class="form-input w-input" maxlength="256" name="full_name"
+                                            placeholder="Enter your full name" type="text" id="full_name" required />
                                         <label for="email" class="field-label">
                                             Email Address
                                         </label>
                                         <input class="form-input w-input" maxlength="256" name="email"
-                                            placeholder="" type="email" id="email" required />
+                                            placeholder="Enter your email" type="email" id="email" required />
+                                        <input type="hidden" name="position" value="General Application (Homepage)">
                                         <input type="submit" data-wait="Please wait..."
                                             class="button black button-small w-button" value="Submit" />
                                     </form>

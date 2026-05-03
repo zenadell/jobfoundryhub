@@ -4,12 +4,10 @@ Uses Resend's HTTP API directly via `requests` — no special libraries,
 no SMTP ports, no platform restrictions.  Works anywhere on port 443.
 
 Usage:
-    from apps.core.email_sender import send_email
-    send_email(
-        to="user@example.com",
-        subject="Hello!",
-        body="Your message here.",
-    )
+    from apps.core.email_templates import contact_user_confirmation
+    from apps.core.email_sender import send_templated_email
+
+    send_templated_email(to="user@example.com", template=contact_user_confirmation("James", "Help needed"))
 """
 
 import logging
@@ -23,14 +21,8 @@ RESEND_API_URL = "https://api.resend.com/emails"
 
 def send_email(to, subject, body, html=None):
     """
-    Send an email using the Resend HTTP API.
+    Send a plain or HTML email using the Resend HTTP API.
     Falls back silently — the site never crashes.
-
-    Args:
-        to:      Recipient email (str or list)
-        subject: Email subject line
-        body:    Plain-text body
-        html:    Optional HTML body
     """
     api_key = getattr(settings, 'RESEND_API_KEY', '')
     from_email = getattr(settings, 'DEFAULT_FROM_EMAIL', 'support@jobfoundryhub.com')
@@ -43,7 +35,7 @@ def send_email(to, subject, body, html=None):
         to = [to]
 
     payload = {
-        "from": from_email,
+        "from": f"Job Foundry Hub <{from_email}>",
         "to": to,
         "subject": subject,
         "text": body,
@@ -71,3 +63,15 @@ def send_email(to, subject, body, html=None):
     except Exception as e:
         logger.error(f"Email send failed: {e}")
         return False
+
+
+def send_templated_email(to, template: tuple):
+    """
+    Convenience wrapper — pass a template tuple (subject, html) directly.
+
+    Example:
+        from apps.core.email_templates import resume_user_confirmation
+        send_templated_email(to=email, template=resume_user_confirmation(name, position))
+    """
+    subject, html = template
+    return send_email(to=to, subject=subject, body="", html=html)

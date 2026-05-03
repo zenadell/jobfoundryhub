@@ -74,20 +74,19 @@ def contact(request):
             message=message
         )
         
-        from apps.core.email_sender import send_email
+        from apps.core.email_sender import send_templated_email
+        from apps.core import email_templates
         
         # Notify admin
-        send_email(
+        send_templated_email(
             to=settings.SUPPORT_EMAIL,
-            subject=f"New Contact: {subject}",
-            body=f"From: {name} <{email}>\n\nMessage:\n{message}",
+            template=email_templates.contact_admin_notification(name, email, subject, message)
         )
 
         # Confirm to user
-        send_email(
+        send_templated_email(
             to=email,
-            subject="We've received your message - Job Foundry Hub",
-            body=f"Hi {name},\n\nThank you for reaching out. We have received your message regarding '{subject}' and our team will get back to you shortly.\n\nBest regards,\nThe Job Foundry Hub Team",
+            template=email_templates.contact_user_confirmation(name, subject)
         )
 
         return redirect(reverse('core:confirmation') + '?type=contact')
@@ -139,11 +138,11 @@ def newsletter_signup(request):
                 email=email,
                 defaults={'source': request.POST.get('source', 'homepage')}
             )
-            from apps.core.email_sender import send_email
-            send_email(
+            from apps.core.email_sender import send_templated_email
+            from apps.core import email_templates
+            send_templated_email(
                 to=settings.SUPPORT_EMAIL,
-                subject="New Newsletter Subscriber",
-                body=f"New subscriber: {email}",
+                template=email_templates.newsletter_admin_notification(email)
             )
         return redirect(reverse('core:confirmation') + '?type=newsletter')
     return redirect('core:home')

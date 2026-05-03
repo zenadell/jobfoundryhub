@@ -109,18 +109,26 @@ def submit_resume(request):
             cover_note = request.POST.get('message', ''),
         )
 
+        from apps.core.email_sender import send_templated_email
+        from apps.core import email_templates
+        from django.conf import settings
+        
         # Notify admin
-        send_email(
+        send_templated_email(
             to=settings.SUPPORT_EMAIL,
-            subject=f"New Resume: {full_name}",
-            body=f"Name: {full_name}\nEmail: {email}\nPosition: {position}\n\nCheck admin for details.",
+            template=email_templates.resume_admin_notification(full_name, email, position, request.POST.get('message', ''))
         )
 
         # Confirm to user
-        send_email(
+        # If it's from the homepage, use the "Quick Resume" template
+        if position == "General Application (Homepage)":
+            template = email_templates.quick_resume_user_confirmation(full_name)
+        else:
+            template = email_templates.resume_user_confirmation(full_name, position)
+            
+        send_templated_email(
             to=email,
-            subject="Resume Received - Job Foundry Hub",
-            body=f"Hi {full_name},\n\nThank you for submitting your resume for the {position} position. Our team is reviewing your profile and will be in touch if there's a match.\n\nBest regards,\nThe Job Foundry Hub Team",
+            template=template
         )
 
         return redirect(reverse('core:confirmation') + '?type=resume')
@@ -152,18 +160,20 @@ def post_job(request):
             apply_url        = request.POST.get('apply_url', ''),
         )
 
+        from apps.core.email_sender import send_templated_email
+        from apps.core import email_templates
+        from django.conf import settings
+
         # Notify admin
-        send_email(
+        send_templated_email(
             to=settings.SUPPORT_EMAIL,
-            subject=f"Job Request: {job_title} @ {company_name}",
-            body=f"Company: {company_name}\nJob: {job_title}\nContact: {contact_email}",
+            template=email_templates.job_request_admin_notification(company_name, job_title, contact_email)
         )
 
         # Confirm to company
-        send_email(
+        send_templated_email(
             to=contact_email,
-            subject="Job Posting Request Received - Job Foundry Hub",
-            body=f"Hello {company_name},\n\nWe have received your request to post the '{job_title}' position. Our team will review the details and get back to you shortly.\n\nBest regards,\nThe Job Foundry Hub Team",
+            template=email_templates.job_request_company_confirmation(company_name, job_title)
         )
 
         return redirect(reverse('core:confirmation') + '?type=job')
