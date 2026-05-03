@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'ckeditor',
     'django_extensions',
     'storages',
+    'anymail',
 
     # Local apps
     'apps.core',
