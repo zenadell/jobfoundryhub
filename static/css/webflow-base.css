@@ -6397,8 +6397,8 @@ li {
 
   .background-image-hero {
     background-image: url("https://assets-global.website-files.com/66277126b8030d4bdcebdaf0/664707e8815ab7656f8be520_Better%20Talent%20-%20Webflow%20Ecommerce%20Template%20Hero%20Tablet%20(4).jpeg");
-    background-position: 100% 90%;
-    min-height: 160vh;
+    background-position: 100% 30%;
+    min-height: 100vh;
     padding-left: 0%;
   }
 
@@ -7283,9 +7283,9 @@ li {
 
   .background-image-hero {
     background-image: url("https://assets-global.website-files.com/66277126b8030d4bdcebdaf0/664707e8815ab7656f8be520_Better%20Talent%20-%20Webflow%20Ecommerce%20Template%20Hero%20Tablet%20(4).jpeg");
-    background-position: 50% 0;
+    background-position: 50% 30%;
     background-size: cover;
-    min-height: 160vh;
+    min-height: 100vh;
   }
 
   .grid-3x2.gap-30px {

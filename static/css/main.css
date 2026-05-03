@@ -369,7 +369,9 @@
 
     /* Fix hero image crop on mobile */
     .background-image-hero {
-        background-position: center bottom !important;
+        background-position: center 30% !important;
+        background-size: cover !important;
+        min-height: 100vh !important;
     }
 }
 
