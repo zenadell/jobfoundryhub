@@ -58,6 +58,98 @@ CATEGORY_MAP = [
     (['sales', 'business develop'],                        'Sales'),
 ]
 
+# ── Category Details (Requirements & Expanded Descriptions) ────
+CATEGORY_DETAILS = {
+    'Marketing': {
+        'requirements': [
+            "Experience with digital marketing tools and social media platforms.",
+            "Strong copywriting skills and ability to create engaging content.",
+            "Analytical mindset with familiarity in SEO/SEM best practices.",
+            "Excellent communication and collaborative team-work skills.",
+            "Degree in Marketing, Communications, or a related field preferred.",
+            "Proficiency in Google Analytics and basic design tools like Canva."
+        ],
+        'extra_desc': "Joining our marketing team means you'll be at the forefront of our brand's growth. You will collaborate with cross-functional teams to design, implement, and track performance-driven campaigns that resonate with our global audience. We value creativity, data-backed decision-making, and a passion for storytelling."
+    },
+    'Technology': {
+        'requirements': [
+            "Proficiency in at least one modern programming language (Python, JS, Java, etc.).",
+            "Understanding of software development life cycles and version control (Git).",
+            "Strong problem-solving skills and attention to technical detail.",
+            "Familiarity with cloud platforms (AWS, Azure, or Google Cloud) is a plus.",
+            "Ability to work in an agile, fast-paced environment.",
+            "Degree in Computer Science or equivalent practical experience."
+        ],
+        'extra_desc': "Our engineering team is dedicated to building robust, scalable solutions that solve real-world problems. You will work alongside senior developers to architect and deploy high-quality code. We emphasize continuous learning, peer code reviews, and staying ahead of the curve with emerging technologies."
+    },
+    'Design': {
+        'requirements': [
+            "Strong portfolio demonstrating proficiency in UI/UX or Graphic Design.",
+            "Mastery of design tools such as Figma, Adobe Creative Suite, or Sketch.",
+            "Deep understanding of typography, color theory, and layout principles.",
+            "Ability to translate complex user needs into intuitive design solutions.",
+            "Excellent presentation and communication skills to explain design choices.",
+            "Degree in Design, Fine Arts, or a related field is highly valued."
+        ],
+        'extra_desc': "Design is at the heart of our user experience. You will be responsible for creating visually stunning and highly functional interfaces. We are looking for designers who are passionate about user-centric design and aren't afraid to push creative boundaries."
+    },
+    'Data & Analytics': {
+        'requirements': [
+            "Strong proficiency in SQL and data visualization tools (Tableau, PowerBI).",
+            "Experience with statistical programming languages like R or Python.",
+            "Ability to derive actionable insights from large, complex datasets.",
+            "Strong mathematical background and analytical thinking.",
+            "Experience with data warehousing and ETL processes is beneficial.",
+            "Degree in Statistics, Mathematics, Economics, or a related field."
+        ],
+        'extra_desc': "Data drives every decision we make. As a member of our analytics team, you will help us unlock the value hidden in our data. You'll build models, create dashboards, and present findings that directly influence our strategic roadmap."
+    },
+    'Finance': {
+        'requirements': [
+            "Strong understanding of accounting principles and financial reporting.",
+            "Proficiency in MS Excel (advanced formulas, pivot tables, modeling).",
+            "High level of accuracy and attention to detail in financial calculations.",
+            "Ability to manage multiple deadlines in a fast-paced environment.",
+            "Strong ethical standards and understanding of regulatory compliance.",
+            "Degree in Finance, Accounting, or Economics; progress toward CPA/CFA is a plus."
+        ],
+        'extra_desc': "Our finance team ensures the fiscal health and stability of our operations. You will support budgeting, forecasting, and financial analysis to help the company grow sustainably. We value integrity, precision, and the ability to turn numbers into strategic advice."
+    },
+    'Human Resources': {
+        'requirements': [
+            "Strong interpersonal skills and ability to manage sensitive information.",
+            "Familiarity with employment laws and HR best practices.",
+            "Experience with recruitment processes and applicant tracking systems.",
+            "Excellent organizational and time-management skills.",
+            "Ability to foster a positive and inclusive workplace culture.",
+            "Degree in Human Resources, Business, or Psychology preferred."
+        ],
+        'extra_desc': "People are our most important asset. In this role, you will help us attract, develop, and retain the best talent. You'll be a key part of our culture-building initiatives and ensure that every employee feels supported and valued."
+    },
+    'Customer Service': {
+        'requirements': [
+            "Excellent verbal and written communication skills.",
+            "Empathy and patience when dealing with complex customer inquiries.",
+            "Ability to handle high-pressure situations with a professional attitude.",
+            "Strong problem-solving skills and ability to think on your feet.",
+            "Proficiency in CRM software and helpdesk tools (Zendesk, Salesforce).",
+            "Previous experience in a customer-facing role is highly desirable."
+        ],
+        'extra_desc': "Our customer service team is the face of our company. You will be the first point of contact for our users, ensuring they have a seamless and positive experience. We are looking for people who are passionate about helping others and solving problems."
+    },
+    'Sales': {
+        'requirements': [
+            "Proven track record of meeting or exceeding sales targets.",
+            "Strong negotiation skills and ability to close deals effectively.",
+            "Excellent relationship-building and networking abilities.",
+            "Self-motivated with a high level of resilience and drive.",
+            "Strong understanding of the sales funnel and CRM management.",
+            "Degree in Business or Marketing is preferred but not mandatory."
+        ],
+        'extra_desc': "Our sales team is responsible for driving revenue and expanding our market reach. You will identify new opportunities, build lasting partnerships, and represent our products to key stakeholders. We value ambition, persistence, and a results-oriented mindset."
+    },
+}
+
 # ── Well-known company → domain mapping for logo fetching ──────
 KNOWN_DOMAINS = {
     'hays': 'hays.co.uk',
@@ -176,12 +268,6 @@ class Command(BaseCommand):
         while Job.objects.filter(slug=slug).exists():
             slug = f"{base_slug}-{random.randint(1000, 9999)}"
 
-        # ── Description ────────────────────────────────────────
-        description = item.get('description', '') or ''
-        description = re.sub(r'<[^>]+>', '', description).strip()
-        if not description:
-            description = title
-
         # ── Location ───────────────────────────────────────────
         location_data = item.get('location', {})
         location = (location_data.get('display_name') or '').strip()
@@ -193,7 +279,8 @@ class Command(BaseCommand):
         region = areas[0] if areas else ''
 
         # ── Remote detection ───────────────────────────────────
-        combined_text = f"{title} {description}".lower()
+        description_raw = item.get('description', '') or ''
+        combined_text = f"{title} {description_raw}".lower()
         is_remote = 'remote' in combined_text or 'work from home' in combined_text
 
         # ── Salary ─────────────────────────────────────────────
@@ -202,6 +289,28 @@ class Command(BaseCommand):
 
         # ── Category ───────────────────────────────────────────
         category = self._detect_category(title)
+        category_name = category.name if category else 'General'
+
+        # ── Requirements (Dynamic & Professional) ───────────────
+        req_list = CATEGORY_DETAILS.get(category_name, {}).get('requirements', [
+            "Excellent communication and interpersonal skills.",
+            "Strong organizational and time management abilities.",
+            "Ability to work effectively both independently and in a team.",
+            "A proactive and positive attitude towards learning.",
+            "Relevant degree or equivalent professional experience."
+        ])
+        requirements_html = "<ul>" + "".join([f"<li>{r}</li>" for r in req_list]) + "</ul>"
+
+        # ── Description (Expanded & Professional) ──────────────
+        original_desc = re.sub(r'<[^>]+>', '', description_raw).strip()
+        
+        extra_desc = CATEGORY_DETAILS.get(category_name, {}).get('extra_desc', 
+            "We are looking for a dedicated individual to join our growing team. "
+            "In this role, you will have the opportunity to work on meaningful projects "
+            "that impact our customers every day. We value innovation, integrity, and a "
+            "commitment to excellence.")
+        
+        full_description = f"<p>{original_desc}</p><p>{extra_desc}</p>"
 
         # ── Country name ───────────────────────────────────────
         country_names = {
@@ -216,8 +325,8 @@ class Command(BaseCommand):
             slug=slug,
             company=company,
             category=category,
-            description=description,
-            requirements='',
+            description=full_description,
+            requirements=requirements_html,
             location=location[:200],
             region=region[:100] if region else '',
             country=country_names.get(country_code, 'United States'),

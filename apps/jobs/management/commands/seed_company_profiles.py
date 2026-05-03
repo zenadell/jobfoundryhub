@@ -2,55 +2,164 @@ from django.core.management.base import BaseCommand
 from apps.jobs.models import Company
 
 class Command(BaseCommand):
-    help = 'Seeds highly detailed, authentic company profiles for our curated mid-tier employers.'
+    help = 'Seeds massive, LinkedIn-style authentic company profiles for curated employers.'
 
     def handle(self, *args, **options):
         profiles = {
-            "Hays": """<p>Hays plc is a leading global professional recruiting group, serving both the private and public sectors across 33 countries globally. Established as a titan in the human resources and recruitment industry, Hays employs over 10,000 highly trained experts across hundreds of offices worldwide. The company operates across numerous specialisms, placing candidates into permanent, temporary, and contract roles within industries ranging from Information Technology and Finance to Construction, Healthcare, and Engineering.</p>
-            <p>At its core, Hays is driven by a commitment to matching the right talent with the right organizations. They utilize advanced data analytics, proprietary matching algorithms, and deep human expertise to solve complex talent acquisition challenges for their clients. By providing consultative services, Hays goes beyond mere resume parsing; they partner with businesses to architect comprehensive workforce strategies that drive long-term corporate growth.</p>
-            <p>For entry-level candidates and graduates, Hays is consistently ranked as a phenomenal starting point. Their internal training programs are highly regarded, offering unparalleled mentorship and exposure to diverse market sectors. Culturally, Hays fosters a deeply collaborative and performance-driven environment, rewarding innovation and dedication while providing robust pathways for rapid career progression.</p>""",
+            "Hays": """
+                <h3>Company Overview</h3>
+                <p>Hays plc is the world's leading specialist in recruitment and workforce solutions. With over 50 years of experience, we operate across 33 countries with a team of over 13,000 people. We are experts in placing professionals into permanent, temporary, and interim roles across 20 different specialisms, from Technology and Finance to Construction and Healthcare.</p>
+                
+                <h3>Workplace Culture</h3>
+                <p>At Hays, we believe that the right job can transform a person's life and the right person can transform a business. Our culture is high-performance, fast-paced, and collaborative. We value meritocracy and reward hard work and ambition. You'll find an environment that is supportive yet competitive, where everyone is driven to be the best in their field.</p>
+                
+                <h3>Career Progression</h3>
+                <p>We are deeply committed to the growth of our employees. New joiners undergo intensive training through our Hays 'International Training' program. We provide clear career pathways, whether you want to specialize in a specific niche or move into leadership. Many of our senior directors started their careers at Hays as trainee consultants, proving that there are no limits to how far you can go.</p>
+                
+                <h3>Core Values</h3>
+                <p>Our values define who we are and how we work: <strong>Passionate About People</strong>, <strong>Ambitious</strong>, <strong>Expert</strong>, and <strong>Inquisitive</strong>. We strive to provide excellent service to our clients and candidates while maintaining the highest standards of integrity and professionalism.</p>
+            """,
 
-            "Bupa": """<p>Bupa is an international healthcare provision and multi-line insurance group headquartered in the United Kingdom. With origins dating back to 1947, Bupa has evolved into one of the most recognized and trusted healthcare brands globally, serving over 38 million customers across the UK, Australia, Spain, Poland, New Zealand, and parts of Latin America and the Middle East.</p>
-            <p>Unlike many traditional corporate entities, Bupa operates under a unique financial structure: they have no shareholders. As a company limited by guarantee, Bupa reinvests all of its profits back into expanding and improving its healthcare services and facilities. This purpose-driven structure ensures that patient care and clinical excellence remain the uncompromising priorities of the organization. Their services span a massive spectrum, including private medical insurance, the operation of hundreds of care homes and dental clinics, and the management of major private hospitals.</p>
-            <p>Bupa is highly committed to proactive employee well-being and diversity. They offer significant opportunities for medical professionals, administrative staff, and corporate talent. Their work environment is highly supportive, heavily emphasizing mental health, work-life balance, and continuous professional development for their global workforce.</p>""",
+            "Bupa": """
+                <h3>Company Overview</h3>
+                <p>Bupa is a global healthcare company, founded in 1947 with the purpose of helping people live longer, healthier, happier lives and making a better world. We serve over 38 million customers worldwide through our health insurance, clinics, dental centers, hospitals, and care homes. Unlike many other companies, we have no shareholders, which means we reinvest our profits back into our healthcare services.</p>
+                
+                <h3>Workplace Culture</h3>
+                <p>Working at Bupa is about more than just a job; it's about making a difference. Our culture is inclusive, caring, and purpose-driven. We foster an environment where everyone feels they belong and is empowered to do their best work. We emphasize mental health, well-being, and work-life balance for all our employees.</p>
+                
+                <h3>Career Progression</h3>
+                <p>We offer diverse career opportunities across clinical, corporate, and operational roles. We invest heavily in professional development, offering specialized clinical training, leadership programs, and apprenticeships. Whether you're a nurse, a data analyst, or a customer service representative, we provide the tools and support you need to advance your career.</p>
+                
+                <h3>Core Values</h3>
+                <p>Our values are at the heart of everything we do: <strong>Brave</strong>, <strong>Caring</strong>, and <strong>Responsible</strong>. These values guide our interactions with customers and colleagues alike, ensuring that we always act with compassion and accountability.</p>
+            """,
 
-            "Tesco": """<p>Tesco plc is a British multinational groceries and general merchandise retailer, widely recognized as the market leader in the UK supermarket sector and one of the largest retailers in the world by gross revenues. Founded in 1919 by Jack Cohen as a group of market stalls, Tesco has expanded massively, operating thousands of stores and employing over 300,000 individuals worldwide.</p>
-            <p>Tesco's operational scope is vast, encompassing enormous hypermarkets (Tesco Extra), standard supermarkets, smaller convenience stores (Tesco Express), and a highly sophisticated online delivery infrastructure. Beyond retail groceries, the corporation has successfully diversified into banking (Tesco Bank), mobile telecommunications (Tesco Mobile), and proprietary data analytics (via their Clubcard loyalty program and Dunnhumby subsidiary).</p>
-            <p>As a major employer, Tesco is renowned for its highly accessible career pathways. The company offers some of the most robust graduate schemes, apprenticeships, and retail management training programs in the country. Their corporate culture heavily emphasizes community integration, sustainability, and internal promotion, making it a highly desirable workplace for entry-level candidates seeking stability and long-term career growth.</p>""",
+            "Tesco": """
+                <h3>Company Overview</h3>
+                <p>Tesco is a leading multinational retailer and the largest supermarket chain in the UK. Since 1919, we have grown from a single market stall to a global brand serving millions of customers every week. Our operations span thousands of stores, an industry-leading online grocery business, and a range of financial and mobile services.</p>
+                
+                <h3>Workplace Culture</h3>
+                <p>Our culture is built on the principle of 'Every Little Helps.' We are a diverse and inclusive team where everyone is welcome. We believe in working together to provide the best service for our customers and communities. The environment is friendly, collaborative, and fast-moving, reflecting the dynamic nature of retail.</p>
+                
+                <h3>Career Progression</h3>
+                <p>As one of the UK's largest employers, we offer unparalleled career variety. We have robust graduate programs, management training schemes, and internal development pathways for store colleagues. We encourage our people to gain experience across different departments, from logistics and marketing to technology and finance.</p>
+                
+                <h3>Core Values</h3>
+                <p>Our values guide us in everything we do: <strong>No one tries harder for customers</strong>, <strong>We treat people how they want to be treated</strong>, and <strong>Every little help makes a big difference</strong>. These values help us build trust and loyalty with our customers and colleagues.</p>
+            """,
 
-            "Deliveroo": """<p>Deliveroo is a prominent British online food delivery company founded in 2013 by Will Shu and Greg Orlowski. Utilizing sophisticated logistical algorithms and a highly agile gig-economy workforce, Deliveroo connects millions of consumers with thousands of local restaurants, grocery partners, and independent eateries, fundamentally transforming the modern food delivery landscape.</p>
-            <p>Operating across multiple countries, Deliveroo’s technological infrastructure is built to handle massive scale and extreme volatility in demand. The company is essentially a logistics and software firm disguised as a food service; they heavily utilize machine learning for dynamic route optimization, predictive preparation times, and real-time fleet management. In recent years, Deliveroo has also expanded into "dark kitchens" (Deliveroo Editions) and rapid grocery delivery (Deliveroo Hop).</p>
-            <p>For tech, marketing, and operational talent, Deliveroo represents a fast-paced, highly innovative, and modern corporate environment. The company embraces a startup-like agility while possessing the resources of a publicly traded tech giant. Employees are encouraged to take extreme ownership of projects, driving rapid innovation in a fiercely competitive global market.</p>""",
+            "Deliveroo": """
+                <h3>Company Overview</h3>
+                <p>Deliveroo is on a mission to be the definitive food company. Founded in London in 2013, we have revolutionized the way people eat by connecting them with their favorite restaurants and grocery stores. We operate in multiple markets globally, powered by our world-class technology and a network of thousands of riders and partners.</p>
+                
+                <h3>Workplace Culture</h3>
+                <p>Deliveroo is a fast-paced, innovative tech company. We value ownership, agility, and a 'get stuff done' attitude. Our culture is highly collaborative, with cross-functional teams working together to solve complex logistical and technical challenges. We embrace diversity and encourage different perspectives to drive innovation.</p>
+                
+                <h3>Career Progression</h3>
+                <p>We are a high-growth company where you can have a massive impact from day one. We offer opportunities for rapid career advancement for those who are ambitious and results-oriented. We provide mentorship, learning stipends, and the chance to work on cutting-edge projects that define the future of food delivery.</p>
+                
+                <h3>Core Values</h3>
+                <p>We are guided by our 'Operating Principles': <strong>Customer First</strong>, <strong>Ownership</strong>, <strong>High Standards</strong>, <strong>Agility</strong>, and <strong>Intellectual Honesty</strong>. These principles help us maintain our competitive edge and deliver an exceptional experience for our users.</p>
+            """,
 
-            "Barclays": """<p>Barclays plc is a historic British multinational universal bank headquartered in London. With roots stretching back to 1690, Barclays operates as one of the "Big Four" banking institutions in the United Kingdom and maintains a highly influential presence in global financial markets, consumer banking, and wealth management.</p>
-            <p>The bank is structurally divided into two massive divisions: Barclays UK, which handles retail banking, consumer credit cards, and local business banking; and Barclays International, which encompasses their top-tier corporate and investment banking divisions, along with international credit card operations. This dual structure allows the bank to balance stable consumer revenues with high-growth institutional finance.</p>
-            <p>Barclays is widely respected for its rigorous professional development infrastructure. They offer incredibly competitive graduate programs across Investment Banking, Technology, and Retail Management. The corporate culture is highly analytical, deeply focused on regulatory compliance, and currently undergoing a massive digital transformation, making it an excellent environment for candidates interested in Fintech and modern banking infrastructure.</p>""",
+            "Barclays": """
+                <h3>Company Overview</h3>
+                <p>Barclays is a British universal bank with a history dating back over 330 years. We support consumers and small businesses through our retail banking services, and large corporations and institutions through our world-class investment bank. Our purpose is to deploy finance responsibly to support people and businesses, acting with empathy and integrity.</p>
+                
+                <h3>Workplace Culture</h3>
+                <p>Our culture is founded on excellence and a commitment to doing the right thing. We value diverse perspectives and are dedicated to creating an inclusive environment where everyone can thrive. We place a strong emphasis on professional ethics, innovation, and community engagement.</p>
+                
+                <h3>Career Progression</h3>
+                <p>We offer extensive career opportunities across a wide range of functions, including Technology, Finance, Risk, and Operations. Our graduate and internship programs are among the most respected in the industry. We provide continuous learning opportunities, including professional qualifications and leadership development modules.</p>
+                
+                <h3>Core Values</h3>
+                <p>Our values define the way we operate: <strong>Respect</strong>, <strong>Integrity</strong>, <strong>Service</strong>, <strong>Excellence</strong>, and <strong>Stewardship</strong>. These values are the bedrock of our business and guide how we interact with our customers, clients, and each other.</p>
+            """,
 
-            "Vodafone": """<p>Vodafone Group Plc is a British multinational telecommunications company and one of the largest mobile network operators in the world. Operating networks in over 20 countries and partnering with mobile networks in over 40 more, Vodafone provides critical connectivity, broadband, and digital services to hundreds of millions of consumers and corporate enterprises globally.</p>
-            <p>Beyond standard consumer mobile plans, Vodafone is a massive player in the Internet of Things (IoT) sector, providing the connective tissue for smart cities, automated logistics, and connected vehicles. The company is actively driving the global rollout of 5G infrastructure, edge computing, and digital security services, positioning itself at the cutting edge of modern communication technologies.</p>
-            <p>Vodafone places a massive emphasis on digital innovation and workplace flexibility. Their corporate culture is highly modern, encouraging agile methodologies, continuous upskilling, and global collaboration. The company offers exceptional graduate and apprenticeship schemes, particularly in network engineering, digital marketing, and software development, fostering the next generation of telecom leaders.</p>""",
+            "Vodafone": """
+                <h3>Company Overview</h3>
+                <p>Vodafone is a leading global telecommunications company, providing mobile and fixed-line services, broadband, and digital solutions to millions of people and businesses. We are pioneers in connectivity, from launching the first cellular network in the UK to leading the way in 5G and Internet of Things (IoT) technologies.</p>
+                
+                <h3>Workplace Culture</h3>
+                <p>Our culture is digital-first, agile, and inclusive. We believe in the power of technology to connect people and improve lives. We foster an environment of experiment-led learning, where employees are encouraged to take risks and innovate. We champion flexible working and prioritize the well-being of our global workforce.</p>
+                
+                <h3>Career Progression</h3>
+                <p>We offer a world of opportunity across tech, commercial, and corporate functions. Our 'Discover' graduate program and apprenticeship schemes provide a fantastic foundation for a career in tech. We support internal mobility and provide extensive digital learning resources to help you stay ahead in an ever-evolving industry.</p>
+                
+                <h3>Core Values</h3>
+                <p>Our purpose is to connect for a better future, and our values reflect this: <strong>Speed</strong>, <strong>Simplicity</strong>, and <strong>Trust</strong>. We are committed to operating in a way that is ethical and sustainable, creating a positive impact on the planet.</p>
+            """,
 
-            "Sky": """<p>Sky Group is a massive British media and telecommunications conglomerate, operating as a primary subsidiary of Comcast. Sky is Europe's leading direct-to-consumer media and entertainment company, boasting millions of subscribers across the UK, Ireland, Germany, Austria, and Italy. They provide broadband internet, mobile network services, and an enormous array of premium television broadcasting.</p>
-            <p>As a media powerhouse, Sky is heavily involved in original content production (Sky Studios), continuous news broadcasting (Sky News), and exclusive sports rights (Sky Sports). Technologically, the company is highly advanced, pioneering streaming hardware (Sky Glass and Sky Stream) and sophisticated content delivery networks designed to handle massive concurrent streaming loads during major live events.</p>
-            <p>Sky’s workplace is famously vibrant, creative, and highly inclusive. The company operates massive campus-style offices and invests heavily in employee well-being. For professionals in media production, digital marketing, software engineering, and customer relations, Sky offers an incredibly dynamic and culturally rich environment with vast opportunities for lateral and vertical career movement.</p>""",
+            "Sky": """
+                <h3>Company Overview</h3>
+                <p>Sky is Europe's leading media and entertainment company and is proud to be part of the Comcast group. We entertain millions of customers through our premium content, award-winning news, and exclusive sports coverage. Beyond TV, we are a major provider of broadband and mobile services across several European markets.</p>
+                
+                <h3>Workplace Culture</h3>
+                <p>Sky is a vibrant, creative, and inclusive place to work. We believe in being 'Better Together' and value the unique contributions of every individual. Our environment is fast-paced and collaborative, with a strong emphasis on innovation and storytelling. We are committed to being a force for good in the communities we serve.</p>
+                
+                <h3>Career Progression</h3>
+                <p>We offer a wide range of early-career opportunities, from content production and journalism to software engineering and data science. Our development programs are designed to help you build your skills and grow your career. We encourage lateral moves and provide the mentorship and support needed to succeed in a diverse media landscape.</p>
+                
+                <h3>Core Values</h3>
+                <p>Our values are at the heart of our brand: <strong>Forward-looking</strong>, <strong>Creative</strong>, <strong>Customer-led</strong>, and <strong>Collaborative</strong>. We strive to push boundaries and deliver an exceptional entertainment experience for our viewers.</p>
+            """,
 
-            "Sainsbury": """<p>J Sainsbury plc, commonly trading as Sainsbury's, is the second-largest chain of supermarkets in the United Kingdom, holding a significant share of the domestic grocery market. Founded in 1869, the company boasts a massive heritage of retail excellence, operating over 1,400 supermarkets and convenience stores across the nation.</p>
-            <p>The Sainsbury's corporate umbrella extends far beyond standard groceries. Following the acquisition of Argos and Habitat, the company became a colossal general merchandise retailer. Additionally, Sainsbury's Bank provides financial services ranging from insurance to credit cards. Their operational logistics are immensely complex, requiring highly sophisticated supply chain management to deliver fresh produce and goods daily.</p>
-            <p>Sainsbury's is deeply committed to sustainability, aiming to achieve Net Zero carbon emissions across their operations. As an employer, they provide highly structured and supportive training programs. The company culture is deeply rooted in community service, ethical sourcing, and employee empowerment, making it a highly respected and stable corporate home for thousands of entry-level and experienced professionals.</p>""",
+            "Sainsbury": """
+                <h3>Company Overview</h3>
+                <p>Sainsbury's is a leading multi-brand, multi-channel retailer, comprising Sainsbury's supermarkets, Argos, Habitat, and Sainsbury's Bank. Since 1869, we have been dedicated to providing our customers with high-quality products at great value. Our purpose is that 'driven by our passion for food, together we serve and help every customer'.</p>
+                
+                <h3>Workplace Culture</h3>
+                <p>Our culture is warm, welcoming, and community-focused. We are a place where you can be yourself and do your best work. We value teamwork and are committed to creating an inclusive environment where everyone feels respected. We take our social and environmental responsibilities seriously, working to make a positive impact on society.</p>
+                
+                <h3>Career Progression</h3>
+                <p>We offer a vast array of career paths across retail, logistics, marketing, and digital. We have comprehensive development programs for colleagues at all levels, including leadership training and specialist skill workshops. We believe in promoting from within and providing the support needed for long-term career growth.</p>
+                
+                <h3>Core Values</h3>
+                <p>Our values guide our decision-making: <strong>Be your best</strong>, <strong>Keep it simple</strong>, <strong>Do the right thing</strong>, and <strong>Love our customers</strong>. These values help us build lasting relationships with our customers and colleagues.</p>
+            """,
 
-            "O2": """<p>O2, legally operating as Virgin Media O2 following a massive joint venture, is a titan in the British telecommunications services sector. The company provides incredibly vital mobile network services, high-speed broadband, and television packages to millions of consumers and businesses across the United Kingdom.</p>
-            <p>O2 is famously known for its highly successful brand positioning, customer loyalty programs (O2 Priority), and sponsorship of major entertainment venues (The O2 Arena). The company is at the absolute forefront of deploying 5G networks across the UK and expanding gigabit-capable broadband infrastructure, driving the digital modernization of the country.</p>
-            <p>The corporate culture at O2 is highly modern, dynamic, and focused on digital-first strategies. They offer excellent benefits, highly flexible working arrangements, and robust career progression pathways. O2 aggressively recruits talent in digital engineering, marketing, data analytics, and customer experience, providing an energetic and innovative environment for its workforce.</p>""",
+            "O2": """
+                <h3>Company Overview</h3>
+                <p>O2 is the commercial brand of Virgin Media O2, a leading telecommunications provider in the UK. We provide millions of people with mobile connectivity, broadband, and digital services. We are known for our customer-centric approach, award-winning network, and iconic brand presence, including The O2 arena.</p>
+                
+                <h3>Workplace Culture</h3>
+                <p>Our culture is energetic, customer-obsessed, and digital-first. We believe in 'Supercharging the UK' and are passionate about the power of connectivity. We foster a collaborative and flexible environment where everyone is encouraged to bring their whole self to work. We value bold ideas and a proactive approach to problem-solving.</p>
+                
+                <h3>Career Progression</h3>
+                <p>We offer a range of career opportunities across technology, sales, marketing, and customer experience. Our early-careers programs provide a great start for graduates and apprentices. We offer extensive learning and development resources, supporting you to build the skills needed for a successful career in the digital sector.</p>
+                
+                <h3>Core Values</h3>
+                <p>Our values reflect our commitment to our customers and each other: <strong>Bold</strong>, <strong>Open</strong>, and <strong>Trusted</strong>. We strive to be a brand that people can rely on, delivering an exceptional experience every time.</p>
+            """,
 
-            "EE": """<p>EE, originally a joint venture between Deutsche Telekom and Orange, is now a massive brand operating within the BT Group. It stands as one of the largest and most advanced mobile network operators and internet service providers in the United Kingdom, historically famous for being the first company to launch 4G, and subsequently 5G, services in the UK.</p>
-            <p>EE focuses heavily on providing the fastest, most reliable network coverage in the nation. The company caters to both individual consumers and massive enterprise clients, offering comprehensive digital solutions, unified communications, and smart home technologies alongside standard mobile services.</p>
-            <p>As part of the BT Group, working at EE provides the agility of a dynamic tech brand backed by the massive resources of a national telecom institution. The company highly values technical excellence, customer-centric innovation, and diversity. They offer fantastic graduate schemes and continuous learning opportunities, making EE a highly attractive destination for ambitious professionals entering the tech and telecom sectors.</p>"""
+            "EE": """
+                <h3>Company Overview</h3>
+                <p>EE, part of the BT Group, is the UK's largest and most advanced mobile network operator. We were the first to launch 4G and 5G in the UK, and we continue to lead the way in network technology and customer service. We provide mobile, broadband, and home security services to millions of personal and business customers.</p>
+                
+                <h3>Workplace Culture</h3>
+                <p>EE is a fast-moving, tech-driven, and inclusive company. We are part of the BT Group, meaning we have the agility of a leading mobile brand backed by the resources of a global communications provider. Our culture is collaborative and performance-oriented, with a strong focus on technical excellence and customer satisfaction.</p>
+                
+                <h3>Career Progression</h3>
+                <p>We offer a world of opportunity across technology, commercial, and operational functions. Our graduate and apprentice programs are highly regarded, providing hands-on experience and professional development. we support career growth through internal mobility, mentorship, and extensive training resources.</p>
+                
+                <h3>Core Values</h3>
+                <p>Our values define how we work together and serve our customers: <strong>Personal</strong>, <strong>Simple</strong>, and <strong>Brilliant</strong>. We are committed to making a positive difference through the power of connectivity.</p>
+            """
         }
 
-        generic_profile = """<p>This organization is a verified hiring partner currently sourcing top-tier talent through the broader employment network. As a dynamic and forward-thinking enterprise, the company operates within a highly competitive sector, prioritizing strategic growth, operational excellence, and the continuous acquisition of skilled professionals to drive their corporate objectives forward. Their presence on this platform indicates a strong commitment to expanding their workforce and investing in the next generation of industry leaders.</p>
-        <p>The company focuses on maintaining a robust market presence by continuously adapting to evolving industry trends and consumer demands. They leverage modern business methodologies, innovative technologies, and strategic market positioning to maintain a competitive edge. Their operational framework is built upon a foundation of efficiency, client satisfaction, and the delivery of high-quality products or services that meet the rigorous standards expected in today's globalized economy. By fostering strategic partnerships and maintaining a client-centric approach, they have established a sustainable model for long-term commercial success.</p>
-        <p>Recognizing that human capital is their most valuable asset, the organization places a significant emphasis on cultivating a diverse, inclusive, and high-performance workplace culture. They actively seek out individuals who possess a strong work ethic, a proactive problem-solving mindset, and the agility to thrive in a fast-paced environment. The leadership team is dedicated to providing employees with the necessary resources, training, and professional development opportunities required to excel in their respective roles and advance their careers within the corporate hierarchy.</p>
-        <p>Whether hiring for entry-level positions or seasoned executive roles, the company offers a comprehensive onboarding process designed to integrate new team members smoothly into their operational ecosystem. Employees can expect to work collaboratively within cross-functional teams, contributing to impactful projects that directly influence the company's bottom line. For ambitious professionals looking to join a stable, growth-oriented organization that values dedication and innovation, this company presents a compelling opportunity to build a rewarding and sustainable career trajectory.</p>"""
+        generic_profile = """
+            <h3>Company Overview</h3>
+            <p>This organization is a verified hiring partner currently sourcing top-tier talent through the broader employment network. As a dynamic and forward-thinking enterprise, the company operates within a highly competitive sector, prioritizing strategic growth, operational excellence, and the continuous acquisition of skilled professionals to drive their corporate objectives forward.</p>
+            
+            <h3>Workplace Culture</h3>
+            <p>The organization places a significant emphasis on cultivating a diverse, inclusive, and high-performance workplace culture. They actively seek out individuals who possess a strong work ethic, a proactive problem-solving mindset, and the agility to thrive in a fast-paced environment. The leadership team is dedicated to providing employees with a supportive and collaborative work environment.</p>
+            
+            <h3>Career Progression</h3>
+            <p>The company offers a comprehensive onboarding process designed to integrate new team members smoothly into their operational ecosystem. Employees can expect to work on impactful projects that directly influence the company's success. For ambitious professionals looking to join a growth-oriented organization, this company presents a compelling opportunity to build a rewarding career trajectory.</p>
+            
+            <h3>Core Values</h3>
+            <p>The organization's values are built upon a foundation of efficiency, client satisfaction, and the delivery of high-quality products or services. They are committed to maintaining a robust market presence by continuously adapting to evolving industry trends and consumer demands.</p>
+        """
 
         companies = Company.objects.all()
         updated_count = 0

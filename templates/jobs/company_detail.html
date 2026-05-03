@@ -30,7 +30,10 @@
                     <div class="divider-bottom">
                         <div class="display-horizontal-left gap-2rem vertical-left-mobile">
                             <div class="company-logo-wrapper">
-                                {% if company.logo %}
+                                {% if company.website %}
+                                    <img src="https://logo.clearbit.com/{{ company.website|cut:'https://'|cut:'http://' }}" loading="lazy" alt="{{ company.name }}" class="icon-1x1-xlarge" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+                                    <div style="display:none;width:80px;height:80px;background:linear-gradient(135deg,#4ede79,#2a9d5c);border-radius:12px;align-items:center;justify-content:center;font-size:2.2rem;font-weight:800;color:white;letter-spacing:-1px;">{{ company.name|first }}</div>
+                                {% elif company.logo %}
                                     <img src="{{ company.logo.url }}" loading="lazy" alt="{{ company.name }}" class="icon-1x1-xlarge" />
                                 {% else %}
                                     <div style="width:80px;height:80px;background:linear-gradient(135deg,#4ede79,#2a9d5c);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:2.2rem;font-weight:800;color:white;letter-spacing:-1px;">{{ company.name|first }}</div>

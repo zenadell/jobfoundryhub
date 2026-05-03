@@ -21,7 +21,10 @@
                                         <div class="display-horizontal-space-btw align-items-top">
                                             <div class="display-horizontal-left gap-2rem vertical-left-mobile">
                                                 <div class="company-logo-wrapper">
-                                                    {% if job.company.logo %}
+                                                    {% if job.company.website %}
+                                                        <img src="https://logo.clearbit.com/{{ job.company.website|cut:'https://'|cut:'http://' }}" loading="lazy" alt="{{ job.company.name }}" class="icon-1x1-large" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+                                                        <div style="display:none;width:60px;height:60px;background:linear-gradient(135deg,#4ede79,#2a9d5c);border-radius:10px;align-items:center;justify-content:center;font-size:1.6rem;font-weight:800;color:white;">{{ job.company.name|first }}</div>
+                                                    {% elif job.company.logo %}
                                                         <img src="{{ job.company.logo.url }}" loading="lazy" alt="{{ job.company.name }}" class="icon-1x1-large" />
                                                     {% else %}
                                                         <div style="width:60px;height:60px;background:linear-gradient(135deg,#4ede79,#2a9d5c);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.6rem;font-weight:800;color:white;">{{ job.company.name|first }}</div>
@@ -127,7 +130,10 @@
                             <div class="job-offer-wrapper static">
                                 <div class="display-vertical-left gap-1rem">
                                     <div class="company-logo-wrapper">
-                                        {% if r_job.company.logo %}
+                                        {% if r_job.company.website %}
+                                            <img src="https://logo.clearbit.com/{{ r_job.company.website|cut:'https://'|cut:'http://' }}" loading="lazy" alt="{{ r_job.company.name }}" class="icon-1x1-small" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+                                            <div style="display:none;width:36px;height:36px;background:linear-gradient(135deg,#4ede79,#2a9d5c);border-radius:8px;align-items:center;justify-content:center;font-size:1rem;font-weight:800;color:white;">{{ r_job.company.name|first }}</div>
+                                        {% elif r_job.company.logo %}
                                             <img src="{{ r_job.company.logo.url }}" loading="lazy" alt="{{ r_job.company.name }}" class="icon-1x1-small" />
                                         {% else %}
                                             <div style="width:36px;height:36px;background:linear-gradient(135deg,#4ede79,#2a9d5c);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem;font-weight:800;color:white;">{{ r_job.company.name|first }}</div>
