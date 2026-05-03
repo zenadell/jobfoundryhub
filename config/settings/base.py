@@ -226,5 +226,7 @@ elif SENDGRID_API_KEY:
 else:
     EMAIL_BACKEND = env('EMAIL_BACKEND', default='django.core.mail.backends.smtp.EmailBackend')
 
+EMAIL_TIMEOUT = 5  # Give up after 5 seconds to prevent site crash
+
 DEFAULT_FROM_EMAIL   = env('DEFAULT_FROM_EMAIL', default='support@jobfoundryhub.com')
 SUPPORT_EMAIL        = env('SUPPORT_EMAIL', default='support@jobfoundryhub.com')
