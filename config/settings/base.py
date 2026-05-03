@@ -203,31 +203,10 @@ EMAIL_USE_TLS        = env.bool('EMAIL_USE_TLS', default=False)
 EMAIL_USE_SSL        = env.bool('EMAIL_USE_SSL', default=True)
 EMAIL_HOST_USER      = env('EMAIL_HOST_USER', default='')
 EMAIL_HOST_PASSWORD  = env('EMAIL_HOST_PASSWORD', default='')
+EMAIL_BACKEND        = 'django.core.mail.backends.smtp.EmailBackend'
 
-# ── Anymail (MailerSend/Brevo/SendGrid) ────────────────────────
-MAILERSEND_API_KEY = env('MAILERSEND_API_KEY', default='')
-BREVO_API_KEY      = env('BREVO_API_KEY', default='')
-SENDGRID_API_KEY   = env('SENDGRID_API_KEY', default='')
-
-if MAILERSEND_API_KEY:
-    EMAIL_BACKEND = "anymail.backends.mailersend.EmailBackend"
-    ANYMAIL = {
-        "MAILERSEND_API_KEY": MAILERSEND_API_KEY,
-    }
-elif BREVO_API_KEY:
-    EMAIL_BACKEND = "anymail.backends.brevo.EmailBackend"
-    ANYMAIL = {
-        "BREVO_API_KEY": BREVO_API_KEY,
-    }
-elif SENDGRID_API_KEY:
-    EMAIL_BACKEND = "anymail.backends.sendgrid.EmailBackend"
-    ANYMAIL = {
-        "SENDGRID_API_KEY": SENDGRID_API_KEY,
-    }
-else:
-    EMAIL_BACKEND = env('EMAIL_BACKEND', default='django.core.mail.backends.smtp.EmailBackend')
-
-EMAIL_TIMEOUT = 5  # Give up after 5 seconds to prevent site crash
+# ── Custom Email via Resend HTTP API (bypasses all port blocks) ──
+RESEND_API_KEY       = env('RESEND_API_KEY', default='')
 
 DEFAULT_FROM_EMAIL   = env('DEFAULT_FROM_EMAIL', default='support@jobfoundryhub.com')
 SUPPORT_EMAIL        = env('SUPPORT_EMAIL', default='support@jobfoundryhub.com')

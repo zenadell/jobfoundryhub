@@ -94,7 +94,7 @@ def company_detail(request, slug):
 def submit_resume(request):
     if request.method == 'POST':
         from .models import ResumeSubmission
-        from django.core.mail import send_mail
+        from apps.core.email_sender import send_email
         from django.conf import settings
         
         full_name = request.POST.get('full_name', '')
@@ -109,29 +109,19 @@ def submit_resume(request):
             cover_note = request.POST.get('message', ''),
         )
 
-        # Send notification to admin
-        try:
-            send_mail(
-                subject=f"New Resume: {full_name}",
-                message=f"Name: {full_name}\nEmail: {email}\nPosition: {position}\n\nCheck admin for details.",
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[settings.SUPPORT_EMAIL],
-                fail_silently=True,
-            )
-        except Exception:
-            pass
+        # Notify admin
+        send_email(
+            to=settings.SUPPORT_EMAIL,
+            subject=f"New Resume: {full_name}",
+            body=f"Name: {full_name}\nEmail: {email}\nPosition: {position}\n\nCheck admin for details.",
+        )
 
-        # Send confirmation to user
-        try:
-            send_mail(
-                subject="Resume Received - Job Foundry Hub",
-                message=f"Hi {full_name},\n\nThank you for submitting your resume for the {position} position. Our team is reviewing your profile and will be in touch if there's a match.",
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[email],
-                fail_silently=True,
-            )
-        except Exception:
-            pass
+        # Confirm to user
+        send_email(
+            to=email,
+            subject="Resume Received - Job Foundry Hub",
+            body=f"Hi {full_name},\n\nThank you for submitting your resume for the {position} position. Our team is reviewing your profile and will be in touch if there's a match.\n\nBest regards,\nThe Job Foundry Hub Team",
+        )
 
         return redirect(reverse('core:confirmation') + '?type=resume')
     return render(request, 'jobs/submit_resume.html')
@@ -139,7 +129,7 @@ def submit_resume(request):
 def post_job(request):
     if request.method == 'POST':
         from .models import JobPostingRequest
-        from django.core.mail import send_mail
+        from apps.core.email_sender import send_email
         from django.conf import settings
 
         company_name = request.POST.get('company_name', '')
@@ -162,29 +152,19 @@ def post_job(request):
             apply_url        = request.POST.get('apply_url', ''),
         )
 
-        # Send notification to admin
-        try:
-            send_mail(
-                subject=f"Job Request: {job_title} @ {company_name}",
-                message=f"Company: {company_name}\nJob: {job_title}\nContact: {contact_email}",
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[settings.SUPPORT_EMAIL],
-                fail_silently=True,
-            )
-        except Exception:
-            pass
+        # Notify admin
+        send_email(
+            to=settings.SUPPORT_EMAIL,
+            subject=f"Job Request: {job_title} @ {company_name}",
+            body=f"Company: {company_name}\nJob: {job_title}\nContact: {contact_email}",
+        )
 
-        # Send confirmation to company
-        try:
-            send_mail(
-                subject="Job Posting Request Received - Job Foundry Hub",
-                message=f"Hello {company_name},\n\nWe have received your request to post the '{job_title}' position. Our team will review the details and get back to you shortly.",
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[contact_email],
-                fail_silently=True,
-            )
-        except Exception:
-            pass
+        # Confirm to company
+        send_email(
+            to=contact_email,
+            subject="Job Posting Request Received - Job Foundry Hub",
+            body=f"Hello {company_name},\n\nWe have received your request to post the '{job_title}' position. Our team will review the details and get back to you shortly.\n\nBest regards,\nThe Job Foundry Hub Team",
+        )
 
         return redirect(reverse('core:confirmation') + '?type=job')
     return render(request, 'jobs/post_job.html')

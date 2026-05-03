@@ -67,9 +67,6 @@ def contact(request):
         subject = request.POST.get('subject')
         message = request.POST.get('message')
         
-        from django.core.mail import send_mail
-        from django.conf import settings
-        
         ContactMessage.objects.create(
             name=name,
             email=email,
@@ -77,29 +74,21 @@ def contact(request):
             message=message
         )
         
-        # Send notification to admin
-        try:
-            send_mail(
-                subject=f"New Contact: {subject}",
-                message=f"From: {name} <{email}>\n\nMessage:\n{message}",
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[settings.SUPPORT_EMAIL],
-                fail_silently=True,
-            )
-        except Exception:
-            pass
+        from apps.core.email_sender import send_email
+        
+        # Notify admin
+        send_email(
+            to=settings.SUPPORT_EMAIL,
+            subject=f"New Contact: {subject}",
+            body=f"From: {name} <{email}>\n\nMessage:\n{message}",
+        )
 
-        # Send confirmation to user
-        try:
-            send_mail(
-                subject="We've received your message - Job Foundry Hub",
-                message=f"Hi {name},\n\nThank you for reaching out. We have received your message regarding '{subject}' and our team will get back to you shortly.",
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[email],
-                fail_silently=True,
-            )
-        except Exception:
-            pass
+        # Confirm to user
+        send_email(
+            to=email,
+            subject="We've received your message - Job Foundry Hub",
+            body=f"Hi {name},\n\nThank you for reaching out. We have received your message regarding '{subject}' and our team will get back to you shortly.\n\nBest regards,\nThe Job Foundry Hub Team",
+        )
 
         return redirect(reverse('core:confirmation') + '?type=contact')
         
@@ -150,19 +139,12 @@ def newsletter_signup(request):
                 email=email,
                 defaults={'source': request.POST.get('source', 'homepage')}
             )
-            # Send notification
-            from django.core.mail import send_mail
-            from django.conf import settings
-            try:
-                send_mail(
-                    subject="New Newsletter Subscriber",
-                    message=f"New subscriber: {email}",
-                    from_email=settings.DEFAULT_FROM_EMAIL,
-                    recipient_list=[settings.SUPPORT_EMAIL],
-                    fail_silently=True,
-                )
-            except:
-                pass
+            from apps.core.email_sender import send_email
+            send_email(
+                to=settings.SUPPORT_EMAIL,
+                subject="New Newsletter Subscriber",
+                body=f"New subscriber: {email}",
+            )
         return redirect(reverse('core:confirmation') + '?type=newsletter')
     return redirect('core:home')
 
