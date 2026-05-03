@@ -14,19 +14,28 @@ from .models import ContactMessage
 User = get_user_model()
 
 def home(request):
+    from django.db.models import Count
+    
     return render(request, 'pages/home.html', {
         'featured_jobs': Job.objects.filter(
             is_active=True
-        ).select_related('company', 'category').order_by('?')[:50],
+        ).exclude(
+            description__icontains="We are looking for a talented individual"
+        ).select_related('company', 'category').order_by('-posted_at')[:6],
+        
         'recent_posts': Post.live.filter(
             status='published'
         ).select_related('author', 'category').order_by('-published_at')[:3],
-        'stats': {
-            'active_jobs_count': Job.objects.filter(is_active=True).count(),
-            'companies_count':   Company.objects.filter(is_active=True).count(),
-            'users_count':       User.objects.filter(is_active=True).count(),
-        },
-        'partner_companies': Company.objects.filter(is_active=True, is_partner=True)[:4],
+        
+        'job_count': Job.objects.filter(is_active=True).count(),
+        'company_count': Company.objects.filter(is_active=True).count(),
+        'user_count': User.objects.count(),
+        
+        'partner_companies': Company.objects.filter(
+            is_active=True
+        ).annotate(
+            total_jobs=Count('job')
+        ).order_by('-total_jobs')[:5],
     })
 
 def about(request):
