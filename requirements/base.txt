@@ -25,4 +25,4 @@ django-cloudinary-storage==0.3.0
 requests==2.32.3
 
 # Email API (for Render/Cloud compatibility)
-django-anymail[sendgrid,brevo]==11.1
+django-anymail[sendgrid,brevo,mailersend]==11.1
