@@ -33,18 +33,25 @@ COUNTRIES = {
 }
 
 # ── Search queries for variety ──────────────────────────────────
-CURATED_COMPANIES = [
-    'Hays',
-    'Bupa',
-    'Tesco',
-    'Deliveroo',
-    'Barclays',
-    'Vodafone',
-    'Sky',
-    'Sainsbury',
-    'O2',
-    'EE',
-]
+SEARCH_QUERIES = {
+    'us': [
+        'software engineer junior',
+        'marketing coordinator',
+        'data analyst',
+        'financial analyst entry level',
+        'product manager associate',
+        'UX designer junior',
+        'hr coordinator',
+    ],
+    'gb': [
+        'graduate scheme',
+        'graduate trainee',
+        'junior developer',
+        'marketing graduate',
+        # Also keep some curated company names for GB to maintain quality
+        'Hays', 'Bupa', 'Tesco', 'Deliveroo', 'Barclays', 'Vodafone', 'Sky', 'Sainsbury', 'O2', 'EE'
+    ],
+}
 
 # ── Category mapping (keyword → category name) ─────────────────
 CATEGORY_MAP = [
@@ -182,39 +189,42 @@ class Command(BaseCommand):
 
         total_saved = 0
 
-        for company in CURATED_COMPANIES:
-            count = self._fetch_and_save(company)
-            total_saved += count
-            # Be polite to the API
-            time.sleep(0.5)
+        for country_code, queries in SEARCH_QUERIES.items():
+            self.stdout.write(self.style.MIGRATE_HEADING(f"\n🌍 Syncing {COUNTRIES[country_code]['country_name']} ({country_code.upper()})..."))
+            for query in queries:
+                count = self._fetch_and_save(query, country_code)
+                total_saved += count
+                # Be polite to the API
+                time.sleep(0.5)
 
         self.stdout.write(self.style.SUCCESS(
-            f'\n✅ Total curated jobs synced: {total_saved}'
+            f'\n✅ Total jobs synced: {total_saved}'
         ))
 
     # ─────────────────────────────────────────────────────────────
     #  FETCH ONE SEARCH PAGE
     # ─────────────────────────────────────────────────────────────
-    def _fetch_and_save(self, company):
+    def _fetch_and_save(self, query, country_code):
         """Fetch one page of results from Adzuna and save them."""
-        # Using UK as the primary market for these curated standard companies
-        url = f'https://api.adzuna.com/v1/api/jobs/gb/search/1'
+        url = f'https://api.adzuna.com/v1/api/jobs/{country_code}/search/1'
+        meta = COUNTRIES[country_code]
+        
         params = {
             'app_id': ADZUNA_APP_ID,
             'app_key': ADZUNA_API_KEY,
             'results_per_page': 10,
-            'company': company,
+            'what': query,
             'content-type': 'application/json',
         }
 
         try:
-            self.stdout.write(f'  📡 Fetching jobs for: "{company}"...')
+            self.stdout.write(f'  📡 Fetching: "{query}" in {country_code.upper()}...')
             resp = requests.get(url, params=params, timeout=30)
             resp.raise_for_status()
             data = resp.json()
         except requests.RequestException as e:
             self.stderr.write(self.style.WARNING(
-                f'  ⚠️  API error for "{company}": {e}'
+                f'  ⚠️  API error for "{query}": {e}'
             ))
             return 0
 
@@ -223,8 +233,7 @@ class Command(BaseCommand):
 
         for item in results:
             try:
-                meta = {'currency': 'GBP', 'country_name': 'United Kingdom'}
-                if self._save_job(item, 'gb', meta):
+                if self._save_job(item, country_code, meta):
                     saved += 1
             except Exception as e:
                 self.stderr.write(self.style.WARNING(
@@ -329,7 +338,7 @@ class Command(BaseCommand):
             requirements=requirements_html,
             location=location[:200],
             region=region[:100] if region else '',
-            country=country_names.get(country_code, 'United States'),
+            country=meta['country_name'],
             is_remote=is_remote,
             remote_type='remote' if is_remote else '',
             job_type='full-time',
