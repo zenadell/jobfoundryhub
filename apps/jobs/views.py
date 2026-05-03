@@ -6,18 +6,9 @@ from django.db import models
 from .models import Job, Company, JobCategory, ResumeSubmission, JobPostingRequest
 
 def job_list(request):
-    from django.db.models import Window, F
-    from django.db.models.functions import RowNumber
-
-    # Diversified sorting: Show 1st job of every company, then 2nd, etc.
-    queryset = Job.objects.filter(is_active=True).annotate(
-        company_rank=Window(
-            expression=RowNumber(),
-            partition_by=[F('company_id')],
-            order_by=F('posted_at').desc()
-        )
-    ).order_by('company_rank', '-posted_at')
-
+    # Base queryset with requested ordering
+    queryset = Job.objects.filter(is_active=True).select_related('company', 'category').order_by('company', '-posted_at')
+    
     q = request.GET.get('q')
     category_slug = request.GET.get('category')
     job_type = request.GET.get('job_type')
@@ -33,8 +24,23 @@ def job_list(request):
         
     if job_type:
         queryset = queryset.filter(job_type=job_type)
+
+    # ── Manual Diversity Logic (Max 3 per company on page) ─────
+    diverse_jobs = []
+    company_counts = {}
+    
+    # We iterate and collect up to 100 jobs to handle pagination decently
+    for job in queryset:
+        c_id = job.company_id
+        count = company_counts.get(c_id, 0)
+        if count < 3:
+            diverse_jobs.append(job)
+            company_counts[c_id] = count + 1
         
-    paginator = Paginator(queryset, 12)
+        if len(diverse_jobs) >= 120: # Enough for ~10 pages of 12
+            break
+            
+    paginator = Paginator(diverse_jobs, 12)
     page_number = request.GET.get('page')
     jobs = paginator.get_page(page_number)
     
