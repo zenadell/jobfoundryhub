@@ -265,6 +265,10 @@ class Command(BaseCommand):
 
         company = self._get_or_create_company(company_name, item, meta)
 
+        # ── Filter: Max jobs per company (Diversity) ────────────
+        if Job.objects.filter(company=company, is_active=True).count() >= 10:
+            return False
+
         # ── Dedup: skip if same title + company already exists ─
         if Job.objects.filter(title=title[:300], company=company).exists():
             return False
@@ -289,6 +293,11 @@ class Command(BaseCommand):
 
         # ── Remote detection ───────────────────────────────────
         description_raw = item.get('description', '') or ''
+        
+        # ── Filter: Low quality listings ────────────────────────
+        if "Content below for Recruitment purposes only" in description_raw:
+            return False
+
         combined_text = f"{title} {description_raw}".lower()
         is_remote = 'remote' in combined_text or 'work from home' in combined_text
 

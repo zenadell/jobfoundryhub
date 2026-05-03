@@ -6,7 +6,18 @@ from django.db import models
 from .models import Job, Company, JobCategory, ResumeSubmission, JobPostingRequest
 
 def job_list(request):
-    queryset = Job.objects.filter(is_active=True).order_by('-is_featured', '-posted_at')
+    from django.db.models import Window, F
+    from django.db.models.functions import RowNumber
+
+    # Diversified sorting: Show 1st job of every company, then 2nd, etc.
+    queryset = Job.objects.filter(is_active=True).annotate(
+        company_rank=Window(
+            expression=RowNumber(),
+            partition_by=[F('company_id')],
+            order_by=F('posted_at').desc()
+        )
+    ).order_by('company_rank', '-posted_at')
+
     q = request.GET.get('q')
     category_slug = request.GET.get('category')
     job_type = request.GET.get('job_type')
