@@ -83,7 +83,7 @@ def contact(request):
             message=f"From: {name} <{email}>\n\nMessage:\n{message}",
             from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[settings.SUPPORT_EMAIL],
-            fail_silently=False,
+            fail_silently=True,
         )
 
         return redirect(reverse('core:confirmation') + '?type=contact')

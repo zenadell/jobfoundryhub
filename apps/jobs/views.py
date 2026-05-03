@@ -115,7 +115,7 @@ def submit_resume(request):
             message=f"Name: {full_name}\nEmail: {email}\nPosition: {position}\n\nCheck admin for details.",
             from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[settings.SUPPORT_EMAIL],
-            fail_silently=False,
+            fail_silently=True,
         )
 
         return redirect(reverse('core:confirmation') + '?type=resume')
@@ -153,7 +153,7 @@ def post_job(request):
             message=f"Company: {company_name}\nJob: {job_title}\nContact: {contact_email}",
             from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[settings.SUPPORT_EMAIL],
-            fail_silently=False,
+            fail_silently=True,
         )
 
         return redirect(reverse('core:confirmation') + '?type=job')
