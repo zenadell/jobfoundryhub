@@ -3,10 +3,13 @@ from django.urls import reverse
 from apps.jobs.models import Job
 from apps.blog.models import Post
 
-class StaticViewSitemap(Sitemap):
+class JobFoundrySitemap(Sitemap):
+    protocol = 'https'
+    domain = 'www.jobfoundryhub.com'
+
+class StaticViewSitemap(JobFoundrySitemap):
     priority = 0.8
     changefreq = 'weekly'
-    protocol = 'https'
 
     def items(self):
         return ['core:home', 'core:about', 'core:contact', 'core:faq', 'core:privacy', 'core:terms']
@@ -14,10 +17,9 @@ class StaticViewSitemap(Sitemap):
     def location(self, item):
         return reverse(item)
 
-class ServiceViewSitemap(Sitemap):
+class ServiceViewSitemap(JobFoundrySitemap):
     priority = 0.9
     changefreq = 'monthly'
-    protocol = 'https'
 
     def items(self):
         return [
@@ -32,10 +34,9 @@ class ServiceViewSitemap(Sitemap):
     def location(self, item):
         return reverse(item)
 
-class JobSitemap(Sitemap):
+class JobSitemap(JobFoundrySitemap):
     changefreq = "daily"
     priority = 0.8
-    protocol = 'https'
 
     def items(self):
         return Job.objects.filter(is_active=True)
@@ -43,10 +44,9 @@ class JobSitemap(Sitemap):
     def lastmod(self, obj):
         return obj.posted_at
 
-class PostSitemap(Sitemap):
+class PostSitemap(JobFoundrySitemap):
     changefreq = "weekly"
     priority = 0.9
-    protocol = 'https'
 
     def items(self):
         return Post.live.filter(status='published')
