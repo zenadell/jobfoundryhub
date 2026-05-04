@@ -8,4 +8,4 @@ Disallow: /licenses/
 Disallow: /changelog/
 Disallow: /coming-soon/
 
-Sitemap: https://jobfoundryhub.com/sitemap.xml
+Sitemap: https://www.jobfoundryhub.com/sitemap.xml
