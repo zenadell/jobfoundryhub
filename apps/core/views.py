@@ -10,6 +10,7 @@ from django.conf import settings
 from apps.jobs.models import Job, JobCategory, Company
 from apps.blog.models import Post
 from .models import ContactMessage
+import requests as http_requests
 
 User = get_user_model()
 
@@ -171,3 +172,55 @@ def health_check(request):
         })
     except Exception as e:
         return JsonResponse({'status': 'error', 'detail': str(e)}, status=500)
+
+
+def test_email_debug(request):
+    """Temporary diagnostic — hit /test-email-debug/ to see the raw Resend API response."""
+    api_key = getattr(settings, 'RESEND_API_KEY', '')
+    from_email = getattr(settings, 'DEFAULT_FROM_EMAIL', 'support@jobfoundryhub.com')
+    support_email = getattr(settings, 'SUPPORT_EMAIL', 'support@jobfoundryhub.com')
+
+    if not api_key:
+        return JsonResponse({
+            'error': 'RESEND_API_KEY is empty or not set',
+            'from_email': from_email,
+            'support_email': support_email,
+        })
+
+    # Try sending a simple test email
+    payload = {
+        "from": f"Job Foundry Hub <{from_email}>",
+        "to": ["jobfoundryhub@gmail.com"],
+        "subject": "Resend Debug Test",
+        "html": "<h1>Debug Test</h1><p>If you see this, Resend is working.</p>",
+    }
+
+    try:
+        resp = http_requests.post(
+            "https://api.resend.com/emails",
+            headers={
+                "Authorization": f"Bearer {api_key}",
+                "Content-Type": "application/json",
+            },
+            json=payload,
+            timeout=10,
+        )
+        return JsonResponse({
+            'resend_status_code': resp.status_code,
+            'resend_response': resp.json() if resp.headers.get('content-type', '').startswith('application/json') else resp.text,
+            'payload_sent': {
+                'from': payload['from'],
+                'to': payload['to'],
+                'subject': payload['subject'],
+            },
+            'settings': {
+                'RESEND_API_KEY': f"{api_key[:8]}...{api_key[-4:]}",
+                'DEFAULT_FROM_EMAIL': from_email,
+                'SUPPORT_EMAIL': support_email,
+            }
+        })
+    except Exception as e:
+        return JsonResponse({
+            'error': str(e),
+            'type': type(e).__name__,
+        }, status=500)
