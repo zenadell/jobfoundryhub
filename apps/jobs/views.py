@@ -93,51 +93,63 @@ def company_detail(request, slug):
 
 def submit_resume(request):
     if request.method == 'POST':
-        from .models import ResumeSubmission
-        from apps.core.email_sender import send_email
-        from django.conf import settings
-        
-        full_name = request.POST.get('full_name', '')
-        email = request.POST.get('email', '')
-        position = request.POST.get('position', '')
-
-        ResumeSubmission.objects.create(
-            full_name  = full_name,
-            email      = email,
-            position   = position,
-            resume     = request.FILES.get('resume'),
-            cover_note = request.POST.get('message', ''),
-        )
-
-        from apps.core.email_sender import send_templated_email
-        from apps.core import email_templates
-        from django.conf import settings
-        
-        # Notify admin
         try:
-            send_templated_email(
-                to=settings.SUPPORT_EMAIL,
-                template=email_templates.resume_admin_notification(full_name, email, position, request.POST.get('message', ''))
-            )
-        except Exception:
-            pass
+            from .models import ResumeSubmission
+            from apps.core.email_sender import send_templated_email
+            from apps.core import email_templates
+            from django.conf import settings
+            from django.http import JsonResponse
+            import traceback
+            
+            full_name = request.POST.get('full_name', '')
+            email = request.POST.get('email', '')
+            position = request.POST.get('position', '')
 
-        # Confirm to user
-        try:
-            # If it's from the homepage, use the "Quick Resume" template
-            if position == "General Application (Homepage)":
-                template = email_templates.quick_resume_user_confirmation(full_name)
-            else:
-                template = email_templates.resume_user_confirmation(full_name, position)
-                
-            send_templated_email(
-                to=email,
-                template=template
-            )
-        except Exception:
-            pass
+            try:
+                ResumeSubmission.objects.create(
+                    full_name  = full_name,
+                    email      = email,
+                    position   = position,
+                    resume     = request.FILES.get('resume'),
+                    cover_note = request.POST.get('message', ''),
+                )
+            except Exception as db_err:
+                logger.error(f"Database error in resume submission: {db_err}")
+                # We continue even if DB fails, so we can at least try to send the email
 
-        return redirect(reverse('core:confirmation') + '?type=resume')
+            # Notify admin
+            try:
+                send_templated_email(
+                    to=settings.SUPPORT_EMAIL,
+                    template=email_templates.resume_admin_notification(full_name, email, position, request.POST.get('message', ''))
+                )
+            except Exception:
+                pass
+
+            # Confirm to user
+            try:
+                # If it's from the homepage, use the "Quick Resume" template
+                if position == "General Application (Homepage)":
+                    template = email_templates.quick_resume_user_confirmation(full_name)
+                else:
+                    template = email_templates.resume_user_confirmation(full_name, position)
+                    
+                send_templated_email(
+                    to=email,
+                    template=template
+                )
+            except Exception:
+                pass
+
+            return redirect(reverse('core:confirmation') + '?type=resume')
+        except Exception as e:
+            import traceback
+            return JsonResponse({
+                'error': str(e),
+                'type': type(e).__name__,
+                'traceback': traceback.format_exc(),
+            }, status=500)
+            
     return render(request, 'jobs/submit_resume.html')
 
 def post_job(request):
