@@ -114,22 +114,28 @@ def submit_resume(request):
         from django.conf import settings
         
         # Notify admin
-        send_templated_email(
-            to=settings.SUPPORT_EMAIL,
-            template=email_templates.resume_admin_notification(full_name, email, position, request.POST.get('message', ''))
-        )
+        try:
+            send_templated_email(
+                to=settings.SUPPORT_EMAIL,
+                template=email_templates.resume_admin_notification(full_name, email, position, request.POST.get('message', ''))
+            )
+        except Exception:
+            pass
 
         # Confirm to user
-        # If it's from the homepage, use the "Quick Resume" template
-        if position == "General Application (Homepage)":
-            template = email_templates.quick_resume_user_confirmation(full_name)
-        else:
-            template = email_templates.resume_user_confirmation(full_name, position)
-            
-        send_templated_email(
-            to=email,
-            template=template
-        )
+        try:
+            # If it's from the homepage, use the "Quick Resume" template
+            if position == "General Application (Homepage)":
+                template = email_templates.quick_resume_user_confirmation(full_name)
+            else:
+                template = email_templates.resume_user_confirmation(full_name, position)
+                
+            send_templated_email(
+                to=email,
+                template=template
+            )
+        except Exception:
+            pass
 
         return redirect(reverse('core:confirmation') + '?type=resume')
     return render(request, 'jobs/submit_resume.html')
@@ -165,16 +171,22 @@ def post_job(request):
         from django.conf import settings
 
         # Notify admin
-        send_templated_email(
-            to=settings.SUPPORT_EMAIL,
-            template=email_templates.job_request_admin_notification(company_name, job_title, contact_email)
-        )
+        try:
+            send_templated_email(
+                to=settings.SUPPORT_EMAIL,
+                template=email_templates.job_request_admin_notification(company_name, job_title, contact_email)
+            )
+        except Exception:
+            pass
 
         # Confirm to company
-        send_templated_email(
-            to=contact_email,
-            template=email_templates.job_request_company_confirmation(company_name, job_title)
-        )
+        try:
+            send_templated_email(
+                to=contact_email,
+                template=email_templates.job_request_company_confirmation(company_name, job_title)
+            )
+        except Exception:
+            pass
 
         return redirect(reverse('core:confirmation') + '?type=job')
     return render(request, 'jobs/post_job.html')

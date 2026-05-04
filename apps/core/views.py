@@ -78,16 +78,22 @@ def contact(request):
         from apps.core import email_templates
         
         # Notify admin
-        send_templated_email(
-            to=settings.SUPPORT_EMAIL,
-            template=email_templates.contact_admin_notification(name, email, subject, message)
-        )
+        try:
+            send_templated_email(
+                to=settings.SUPPORT_EMAIL,
+                template=email_templates.contact_admin_notification(name, email, subject, message)
+            )
+        except Exception:
+            pass
 
         # Confirm to user
-        send_templated_email(
-            to=email,
-            template=email_templates.contact_user_confirmation(name, subject)
-        )
+        try:
+            send_templated_email(
+                to=email,
+                template=email_templates.contact_user_confirmation(name, subject)
+            )
+        except Exception:
+            pass
 
         return redirect(reverse('core:confirmation') + '?type=contact')
         
@@ -140,10 +146,13 @@ def newsletter_signup(request):
             )
             from apps.core.email_sender import send_templated_email
             from apps.core import email_templates
-            send_templated_email(
-                to=settings.SUPPORT_EMAIL,
-                template=email_templates.newsletter_admin_notification(email)
-            )
+            try:
+                send_templated_email(
+                    to=settings.SUPPORT_EMAIL,
+                    template=email_templates.newsletter_admin_notification(email)
+                )
+            except Exception:
+                pass
         return redirect(reverse('core:confirmation') + '?type=newsletter')
     return redirect('core:home')
 
