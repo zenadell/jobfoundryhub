@@ -93,109 +93,93 @@ def company_detail(request, slug):
 
 def submit_resume(request):
     if request.method == 'POST':
+        full_name = request.POST.get('full_name', '')
+        email = request.POST.get('email', '')
+        position = request.POST.get('position', '')
+
+        # Save to database — skip silently if it fails
         try:
-            from .models import ResumeSubmission
-            from apps.core.email_sender import send_templated_email
-            from apps.core import email_templates
-            from django.conf import settings
-            from django.http import JsonResponse
-            import traceback
-            
-            full_name = request.POST.get('full_name', '')
-            email = request.POST.get('email', '')
-            position = request.POST.get('position', '')
-
-            try:
-                ResumeSubmission.objects.create(
-                    full_name  = full_name,
-                    email      = email,
-                    position   = position,
-                    resume     = request.FILES.get('resume'),
-                    cover_note = request.POST.get('message', ''),
-                )
-            except Exception as db_err:
-                logger.error(f"Database error in resume submission: {db_err}")
-                # We continue even if DB fails, so we can at least try to send the email
-
-            # Notify admin
-            try:
-                send_templated_email(
-                    to=settings.SUPPORT_EMAIL,
-                    template=email_templates.resume_admin_notification(full_name, email, position, request.POST.get('message', ''))
-                )
-            except Exception:
-                pass
-
-            # Confirm to user
-            try:
-                # If it's from the homepage, use the "Quick Resume" template
-                if position == "General Application (Homepage)":
-                    template = email_templates.quick_resume_user_confirmation(full_name)
-                else:
-                    template = email_templates.resume_user_confirmation(full_name, position)
-                    
-                send_templated_email(
-                    to=email,
-                    template=template
-                )
-            except Exception:
-                pass
-
-            return redirect(reverse('core:confirmation') + '?type=resume')
-        except Exception as e:
-            import traceback
-            return JsonResponse({
-                'error': str(e),
-                'type': type(e).__name__,
-                'traceback': traceback.format_exc(),
-            }, status=500)
-            
-    return render(request, 'jobs/submit_resume.html')
-
-def post_job(request):
-    if request.method == 'POST':
-        from .models import JobPostingRequest
-        from apps.core.email_sender import send_email
-        from django.conf import settings
-
-        company_name = request.POST.get('company_name', '')
-        job_title = request.POST.get('job_title', '')
-        contact_email = request.POST.get('contact_email', '')
-
-        JobPostingRequest.objects.create(
-            company_name     = company_name,
-            contact_name     = request.POST.get('contact_name', ''),
-            contact_email    = contact_email,
-            contact_phone    = request.POST.get('contact_phone', ''),
-            company_website  = request.POST.get('company_website', ''),
-            job_title        = job_title,
-            job_description  = request.POST.get('job_description', ''),
-            job_requirements = request.POST.get('job_requirements', ''),
-            job_location     = request.POST.get('job_location', ''),
-            job_type         = request.POST.get('job_type', 'full-time'),
-            is_remote        = request.POST.get('is_remote') == 'on',
-            salary_range     = request.POST.get('salary_range', ''),
-            apply_url        = request.POST.get('apply_url', ''),
-        )
-
-        from apps.core.email_sender import send_templated_email
-        from apps.core import email_templates
-        from django.conf import settings
-
-        # Notify admin
-        try:
-            send_templated_email(
-                to=settings.SUPPORT_EMAIL,
-                template=email_templates.job_request_admin_notification(company_name, job_title, contact_email)
+            ResumeSubmission.objects.create(
+                full_name  = full_name,
+                email      = email,
+                position   = position,
+                resume     = request.FILES.get('resume'),
+                cover_note = request.POST.get('message', ''),
             )
         except Exception:
             pass
 
-        # Confirm to company
+        # Send emails — skip silently if they fail
         try:
+            from apps.core.email_sender import send_templated_email
+            from apps.core import email_templates
+            from django.conf import settings
+
+            # Admin notification
+            send_templated_email(
+                to=settings.SUPPORT_EMAIL,
+                template=email_templates.resume_admin_notification(
+                    full_name, email, position,
+                    request.POST.get('message', '')
+                )
+            )
+
+            # User confirmation — homepage gets a different template
+            if position == "General Application (Homepage)":
+                tpl = email_templates.quick_resume_user_confirmation(full_name)
+            else:
+                tpl = email_templates.resume_user_confirmation(full_name, position)
+            send_templated_email(to=email, template=tpl)
+        except Exception:
+            pass
+
+        return redirect(reverse('core:confirmation') + '?type=resume')
+    return render(request, 'jobs/submit_resume.html')
+
+
+def post_job(request):
+    if request.method == 'POST':
+        company_name = request.POST.get('company_name', '')
+        job_title = request.POST.get('job_title', '')
+        contact_email = request.POST.get('contact_email', '')
+
+        # Save to database — skip silently if it fails
+        try:
+            JobPostingRequest.objects.create(
+                company_name     = company_name,
+                contact_name     = request.POST.get('contact_name', ''),
+                contact_email    = contact_email,
+                contact_phone    = request.POST.get('contact_phone', ''),
+                company_website  = request.POST.get('company_website', ''),
+                job_title        = job_title,
+                job_description  = request.POST.get('job_description', ''),
+                job_requirements = request.POST.get('job_requirements', ''),
+                job_location     = request.POST.get('job_location', ''),
+                job_type         = request.POST.get('job_type', 'full-time'),
+                is_remote        = request.POST.get('is_remote') == 'on',
+                salary_range     = request.POST.get('salary_range', ''),
+                apply_url        = request.POST.get('apply_url', ''),
+            )
+        except Exception:
+            pass
+
+        # Send emails — skip silently if they fail
+        try:
+            from apps.core.email_sender import send_templated_email
+            from apps.core import email_templates
+            from django.conf import settings
+
+            send_templated_email(
+                to=settings.SUPPORT_EMAIL,
+                template=email_templates.job_request_admin_notification(
+                    company_name, job_title, contact_email
+                )
+            )
             send_templated_email(
                 to=contact_email,
-                template=email_templates.job_request_company_confirmation(company_name, job_title)
+                template=email_templates.job_request_company_confirmation(
+                    company_name, job_title
+                )
             )
         except Exception:
             pass
