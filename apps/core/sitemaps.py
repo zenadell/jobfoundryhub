@@ -6,6 +6,7 @@ from apps.blog.models import Post
 class StaticViewSitemap(Sitemap):
     priority = 0.8
     changefreq = 'weekly'
+    protocol = 'https'
 
     def items(self):
         return ['core:home', 'core:about', 'core:contact', 'core:faq', 'core:privacy', 'core:terms']
@@ -16,6 +17,7 @@ class StaticViewSitemap(Sitemap):
 class ServiceViewSitemap(Sitemap):
     priority = 0.9
     changefreq = 'monthly'
+    protocol = 'https'
 
     def items(self):
         return [
@@ -33,6 +35,7 @@ class ServiceViewSitemap(Sitemap):
 class JobSitemap(Sitemap):
     changefreq = "daily"
     priority = 0.8
+    protocol = 'https'
 
     def items(self):
         return Job.objects.filter(is_active=True)
@@ -43,6 +46,7 @@ class JobSitemap(Sitemap):
 class PostSitemap(Sitemap):
     changefreq = "weekly"
     priority = 0.9
+    protocol = 'https'
 
     def items(self):
         return Post.live.filter(status='published')
