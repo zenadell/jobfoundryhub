@@ -68,27 +68,26 @@ def contact(request):
         subject = request.POST.get('subject')
         message = request.POST.get('message')
         
-        ContactMessage.objects.create(
-            name=name,
-            email=email,
-            subject=subject,
-            message=message
-        )
-        
-        from apps.core.email_sender import send_templated_email
-        from apps.core import email_templates
-        
-        # Notify admin
+        # Save to database — skip silently if it fails
         try:
+            ContactMessage.objects.create(
+                name=name,
+                email=email,
+                subject=subject,
+                message=message
+            )
+        except Exception:
+            pass
+        
+        # Send emails
+        try:
+            from apps.core.email_sender import send_templated_email
+            from apps.core import email_templates
+            
             send_templated_email(
                 to=settings.SUPPORT_EMAIL,
                 template=email_templates.contact_admin_notification(name, email, subject, message)
             )
-        except Exception:
-            pass
-
-        # Confirm to user
-        try:
             send_templated_email(
                 to=email,
                 template=email_templates.contact_user_confirmation(name, subject)
@@ -140,14 +139,17 @@ def newsletter_signup(request):
     if request.method == 'POST':
         email = request.POST.get('email', '').strip()
         if email:
-            from apps.newsletter.models import NewsletterSubscriber
-            NewsletterSubscriber.objects.get_or_create(
-                email=email,
-                defaults={'source': request.POST.get('source', 'homepage')}
-            )
-            from apps.core.email_sender import send_templated_email
-            from apps.core import email_templates
             try:
+                from apps.newsletter.models import NewsletterSubscriber
+                NewsletterSubscriber.objects.get_or_create(
+                    email=email,
+                    defaults={'source': request.POST.get('source', 'homepage')}
+                )
+            except Exception:
+                pass
+            try:
+                from apps.core.email_sender import send_templated_email
+                from apps.core import email_templates
                 send_templated_email(
                     to=settings.SUPPORT_EMAIL,
                     template=email_templates.newsletter_admin_notification(email)
