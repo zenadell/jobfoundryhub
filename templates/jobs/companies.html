@@ -33,11 +33,11 @@
                                     <div class="job-offer-wrapper company">
                                         <div class="display-horizontal-left gap-2rem vertical-left-mobile">
                                             <div class="company-logo-wrapper">
-                                                {% if company.website %}
-                                                    <img src="https://logo.clearbit.com/{{ company.website|cut:'https://'|cut:'http://' }}" loading="lazy" alt="{{ company.name }}" class="icon-1x1-medium" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
-                                                    <div style="display:none;width:50px;height:50px;background:linear-gradient(135deg,#4ede79,#2a9d5c);border-radius:10px;align-items:center;justify-content:center;font-size:1.4rem;font-weight:800;color:white;flex-shrink:0;">{{ company.name|first }}</div>
-                                                {% elif company.logo %}
+                                                {% if company.logo %}
                                                     <img src="{{ company.logo.url }}" loading="lazy" alt="{{ company.name }}" class="icon-1x1-medium" />
+                                                {% elif company.website %}
+                                                    <img src="https://www.google.com/s2/favicons?sz=128&domain={{ company.website|cut:'https://'|cut:'http://' }}" loading="lazy" alt="{{ company.name }}" class="icon-1x1-medium" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+                                                    <div style="display:none;width:50px;height:50px;background:linear-gradient(135deg,#4ede79,#2a9d5c);border-radius:10px;align-items:center;justify-content:center;font-size:1.4rem;font-weight:800;color:white;flex-shrink:0;">{{ company.name|first }}</div>
                                                 {% else %}
                                                     <div style="width:50px;height:50px;background:linear-gradient(135deg,#4ede79,#2a9d5c);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;font-weight:800;color:white;flex-shrink:0;">{{ company.name|first }}</div>
                                                 {% endif %}

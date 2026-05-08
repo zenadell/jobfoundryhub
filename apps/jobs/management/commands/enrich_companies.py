@@ -19,28 +19,60 @@ class Command(BaseCommand):
             self.stdout.write(f"\nEnriching: {company.name}")
             enriched_something = False
 
-            # STEP 1 & 3: Guess Domain and Website
-            domain = None
-            if company.website:
-                domain = company.website.replace('https://', '').replace('http://', '').split('/')[0]
-            else:
-                clean_name = re.sub(r'[^a-z0-9]', '', company.name.lower())
-                if len(clean_name) >= 3:
-                    domain = f"{clean_name}.com"
-                    company.website = f"https://{domain}"
-                    enriched_something = True
+            # STEP 1 & 3: Domain Mapping
+            CURATED_DOMAINS = {
+                'hays': 'hays.co.uk',
+                'bupa': 'bupa.co.uk',
+                'tesco': 'tesco.com',
+                'deliveroo': 'deliveroo.co.uk',
+                'barclays': 'barclays.co.uk',
+                'vodafone': 'vodafone.co.uk',
+                'sky': 'sky.com',
+                'sainsbury': 'sainsburys.co.uk',
+                'o2': 'o2.co.uk',
+                'ee': 'ee.co.uk',
+            }
 
-            # Fetch Logo from Clearbit using the domain
-            if domain and not company.logo:
-                try:
-                    logo_url = f"https://logo.clearbit.com/{domain}"
-                    resp = requests.get(logo_url, timeout=2) # Short timeout
-                    if resp.status_code == 200:
-                        image_name = f"{domain}_logo.png"
-                        company.logo.save(image_name, ContentFile(resp.content), save=False)
-                        enriched_something = True
-                except Exception as e:
-                    self.stderr.write(f"  [Error] Logo fetch failed: {e}")
+            # Get domain — try curated list first, then guess
+            domain = None
+            for key, val in CURATED_DOMAINS.items():
+                if key in company.name.lower():
+                    domain = val
+                    break
+            
+            if not domain:
+                # Fall back to guessing from company name
+                clean = re.sub(
+                    r'\b(inc|ltd|llc|corp|corporation|limited|group'
+                    r'|holdings|services|solutions|technologies'
+                    r'|technology|consulting|international|global'
+                    r'|uk|us|usa|plc|co)\b',
+                    '', company.name.lower()
+                ).strip()
+                simple = re.sub(r'[^a-z0-9]', '', clean)
+                if len(simple) >= 3:
+                    domain = f'{simple}.com'
+
+            if domain:
+                company.website = f"https://{domain}"
+                enriched_something = True
+                
+                # Fetch logo
+                if not company.logo:
+                    try:
+                        from django.core.files.base import ContentFile
+                        logo_url = f"https://www.google.com/s2/favicons?sz=128&domain={domain}"
+                        resp = requests.get(logo_url, timeout=5, allow_redirects=True)
+                        if resp.status_code == 200 and len(resp.content) > 100:
+                            filename = f"{re.sub(r'[^a-z0-9]', '', company.name.lower())}_logo.png"
+                            company.logo.save(
+                                filename,
+                                ContentFile(resp.content),
+                                save=False
+                            )
+                            enriched_something = True
+                    except Exception as e:
+                        pass
 
             # STEP 2: Wikipedia Description
             default_snippet = "is a company hiring entry-level talent"

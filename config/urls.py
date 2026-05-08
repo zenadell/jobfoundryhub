@@ -16,6 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.views.generic import RedirectView
 
 # Brand the admin panel
 admin.site.site_header  = 'Job Foundry Hub'
@@ -23,6 +24,16 @@ admin.site.site_title   = 'JFH Admin'
 admin.site.index_title  = '⚡ Site Management Dashboard'
 
 urlpatterns = [
+    # 301 Redirects for SEO stability
+    path('blog/how-to-ace-your-next-interview/',
+        RedirectView.as_view(
+            url='/blog/first-job-interview-questions-answers/',
+            permanent=True)),
+    path('blog/5-tips-for-building-a-great-resume/',
+        RedirectView.as_view(
+            url='/blog/how-to-build-resume-no-work-experience/',
+            permanent=True)),
+
     path('admin/', admin.site.urls),
     path('', include('apps.core.urls')),
     path('', include('apps.jobs.urls')),

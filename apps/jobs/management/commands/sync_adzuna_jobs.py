@@ -4,11 +4,11 @@ and save them into the local Job / Company / JobCategory tables.
 
 Usage:
     python manage.py sync_adzuna_jobs
-    python manage.py sync_adzuna_jobs --delete-dummy   # also purge old seed data
 """
 
 import os
 import random
+import hashlib
 import re
 import time
 import requests
@@ -183,9 +183,7 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
-        self.stdout.write(self.style.WARNING("Wiping database of all existing jobs and companies..."))
-        Job.objects.all().delete()
-        Company.objects.all().delete()
+        self.stdout.write("Starting Adzuna sync...")
 
         total_saved = 0
 
@@ -275,11 +273,19 @@ class Command(BaseCommand):
 
         # ── Slug (unique) ──────────────────────────────────────
         base_slug = slugify(f"{title}-{company_name}")[:40]
-        slug = f"{base_slug}-{random.randint(1000, 9999)}"
+        stable_id = hashlib.md5(
+            f"{title}{company_name}".encode()
+        ).hexdigest()[:4]
+        slug = f"{base_slug}-{stable_id}"
 
-        # Ensure slug uniqueness
+        # Ensure slug uniqueness (if collisions occur)
+        counter = 1
+        original_slug = slug
         while Job.objects.filter(slug=slug).exists():
-            slug = f"{base_slug}-{random.randint(1000, 9999)}"
+            # If same title+company already exists, it should have been caught by dedup 
+            # on line 273, but this handles edge cases.
+            slug = f"{original_slug}-{counter}"
+            counter += 1
 
         # ── Location ───────────────────────────────────────────
         location_data = item.get('location', {})
@@ -414,38 +420,71 @@ class Command(BaseCommand):
         return display[:200] if display else meta['country_name']
 
     def _try_fetch_logo(self, company, name):
-        """Try fetching a company logo from Clearbit by guessing domain."""
+        """
+        Download logo from Clearbit and save to Cloudinary
+        via Django's ImageField. This is permanent storage.
+        Only runs for newly created companies with no logo.
+        """
+        from django.core.files.base import ContentFile
+        
         domain = self._guess_domain(name)
         if not domain:
             return
 
-        logo_url = f'https://logo.clearbit.com/{domain}'
+        logo_url = f'https://www.google.com/s2/favicons?sz=128&domain={domain}'
         try:
-            resp = requests.head(logo_url, timeout=5, allow_redirects=True)
-            if resp.status_code == 200:
-                # Save the URL as the logo path
-                # Since our model uses ImageField, we store externally
-                # by saving the website field instead for reference
-                company.website = f'https://{domain}'
-                company.save(update_fields=['website'])
-                self.stdout.write(f'     🖼  Found logo domain: {domain}')
-        except requests.RequestException:
+            resp = requests.get(
+                logo_url,
+                timeout=5,
+                headers={"User-Agent": "JobFoundryHub/1.0"},
+                allow_redirects=True
+            )
+            if resp.status_code == 200 and len(resp.content) > 100:
+                # Save image content directly to Cloudinary 
+                # via Django's DEFAULT_FILE_STORAGE
+                filename = f"{re.sub(r'[^a-z0-9]', '', name.lower())}_logo.png"
+                company.logo.save(
+                    filename,
+                    ContentFile(resp.content),
+                    save=True  # saves company record immediately
+                )
+                self.stdout.write(
+                    f'     🖼  Logo saved for: {name}'
+                )
+        except Exception as e:
+            # Fail silently — letter avatar will show as fallback
             pass
 
     def _guess_domain(self, name):
-        """Guess a company's website domain from their name."""
+        """
+        Guess a company's website domain from their name.
+        Tries curated list first, then falls back to 
+        cleaning the name and appending .com
+        """
         clean = name.lower().strip()
 
-        # Check known domains first
+        # 1. Check curated known domains first
         for key, domain in KNOWN_DOMAINS.items():
             if key in clean:
                 return domain
 
-        # Try simple guess: "Company Name" → companyname.com
-        simple = re.sub(r'[^a-z0-9]', '', clean)
+        # 2. Remove common suffixes that are not part of domain
+        suffixes = [
+            ' inc', ' ltd', ' llc', ' corp', ' corporation',
+            ' limited', ' group', ' holdings', ' services',
+            ' solutions', ' technologies', ' technology', 
+            ' consulting', ' international', ' global',
+            ' uk', ' us', ' usa', ' plc', ' co'
+        ]
+        for suffix in suffixes:
+            clean = clean.replace(suffix, '')
+        
+        # 3. Remove all non-alphanumeric characters
+        simple = re.sub(r'[^a-z0-9]', '', clean.strip())
+        
         if len(simple) >= 3:
             return f'{simple}.com'
-
+        
         return None
 
     # ─────────────────────────────────────────────────────────────
