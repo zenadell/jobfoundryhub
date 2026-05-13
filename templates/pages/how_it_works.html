@@ -303,7 +303,7 @@
             <div class="hiw-video-container" id="video-job-seekers">
                 <div class="hiw-video-wrapper">
                     {% if site_settings.hiw_video_file_seekers %}
-                        <video controls class="hiw-uploaded-video" style="position:absolute;top:0;left:0;width:100%;height:100%;">
+                        <video muted controls class="hiw-uploaded-video" style="position:absolute;top:0;left:0;width:100%;height:100%;">
                             <source src="{{ site_settings.hiw_video_file_seekers.url }}" type="video/mp4">
                             Your browser does not support the video tag.
                         </video>
@@ -344,7 +344,7 @@
             <div class="hiw-video-container" id="video-employers">
                 <div class="hiw-video-wrapper">
                     {% if site_settings.hiw_video_file_employers %}
-                        <video controls class="hiw-uploaded-video" style="position:absolute;top:0;left:0;width:100%;height:100%;">
+                        <video muted controls class="hiw-uploaded-video" style="position:absolute;top:0;left:0;width:100%;height:100%;">
                             <source src="{{ site_settings.hiw_video_file_employers.url }}" type="video/mp4">
                             Your browser does not support the video tag.
                         </video>
@@ -371,4 +371,68 @@
             <a href="{% url 'jobs:post_job' %}" class="button black w-button">Post a Job</a>
         </div>
     </section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="https://www.youtube.com/iframe_api"></script>
+<script>
+    var ytPlayers = {};
+
+    function onYouTubeIframeAPIReady() {
+        document.querySelectorAll('.hiw-video-wrapper iframe').forEach(function(iframe, index) {
+            var playerId = 'yt-player-' + index;
+            iframe.id = playerId;
+            ytPlayers[playerId] = new YT.Player(playerId, {
+                events: {
+                    'onReady': function(event) {
+                        // Optional: Mute YouTube videos too for seamless autoplay
+                        // event.target.mute();
+                    }
+                }
+            });
+        });
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const observerOptions = {
+            root: null,
+            threshold: 0.5 // Trigger when 50% of the video is visible
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const target = entry.target;
+                
+                // Handle Native Video Tags
+                if (target.tagName === 'VIDEO') {
+                    if (entry.isIntersecting) {
+                        target.play().catch(e => console.log("Autoplay blocked:", e));
+                    } else {
+                        target.pause();
+                    }
+                } 
+                
+                // Handle YouTube Iframes
+                else if (target.tagName === 'DIV' && target.classList.contains('hiw-video-wrapper')) {
+                    const iframe = target.querySelector('iframe');
+                    if (iframe && ytPlayers[iframe.id]) {
+                        if (entry.isIntersecting) {
+                            ytPlayers[iframe.id].playVideo();
+                        } else {
+                            ytPlayers[iframe.id].pauseVideo();
+                        }
+                    }
+                }
+            });
+        }, observerOptions);
+
+        // Observe both native videos and the wrappers around iframes
+        document.querySelectorAll('.hiw-uploaded-video').forEach(video => observer.observe(video));
+        document.querySelectorAll('.hiw-video-wrapper').forEach(wrapper => {
+            if (wrapper.querySelector('iframe')) {
+                observer.observe(wrapper);
+            }
+        });
+    });
+</script>
 {% endblock %}
