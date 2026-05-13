@@ -118,10 +118,10 @@ class SiteSettingsAdmin(admin.ModelAdmin):
         }),
         ('📹 How It Works Videos', {
             'fields': (
-                'hiw_video_file_seekers', 'hiw_video_embed_seekers',
-                'hiw_video_file_employers', 'hiw_video_embed_employers'
+                'hiw_video_embed_seekers',
+                'hiw_video_embed_employers'
             ),
-            'description': 'Choose either to upload a video file OR paste a YouTube/Vimeo embed code. If both are provided, the uploaded file takes priority.'
+            'description': 'Use the "Upload Video" button below to upload directly to the cloud, or paste a YouTube link.'
         }),
     )
 
@@ -138,3 +138,9 @@ class SiteSettingsAdmin(admin.ModelAdmin):
         url = reverse('core:home')
         return format_html('<a href="{}" target="_blank" style="font-weight:bold;color:#3498db;">🔗 View Homepage</a>', url)
     view_site_link.short_description = 'Public Site'
+
+    class Media:
+        js = (
+            'https://upload-widget.cloudinary.com/global/all.js',
+            'js/cloudinary_admin.js',
+        )
