@@ -86,6 +86,32 @@ class SiteSettings(models.Model):
         obj, _ = cls.objects.get_or_create(pk=1)
         return obj
 
+    def get_seeker_video_html(self):
+        return self._process_video_html(self.hiw_video_embed_seekers)
+
+    def get_employer_video_html(self):
+        return self._process_video_html(self.hiw_video_embed_employers)
+
+    def _process_video_html(self, raw_input):
+        if not raw_input:
+            return ""
+        
+        # If it's already an iframe, just return it
+        if '<iframe' in raw_input.lower():
+            return raw_input
+
+        # If it's a raw YouTube URL, convert to iframe
+        # Handles: youtube.com/watch?v=ID, youtu.be/ID, youtube.com/embed/ID
+        import re
+        yt_regex = r'(https?://)?(www\.)?(youtube\.com/watch\?v=|youtu\.be/|youtube\.com/embed/)([a-zA-Z0-9_-]{11})'
+        match = re.search(yt_regex, raw_input)
+        
+        if match:
+            video_id = match.group(4)
+            return f'<iframe src="https://www.youtube.com/embed/{video_id}" frameborder="0" allowfullscreen style="width:100%;height:100%;"></iframe>'
+            
+        return raw_input  # Fallback if it's not a recognized URL but not an iframe
+
 
 class HowItWorksStep(models.Model):
     CATEGORY_CHOICES = [

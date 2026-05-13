@@ -308,7 +308,7 @@
                             Your browser does not support the video tag.
                         </video>
                     {% elif site_settings.hiw_video_embed_seekers %}
-                        {{ site_settings.hiw_video_embed_seekers|safe }}
+                        {{ site_settings.get_seeker_video_html|safe }}
                     {% else %}
                         <div class="hiw-video-coming-soon">
                             <div class="hiw-play-btn">&#9654;</div>
@@ -349,7 +349,7 @@
                             Your browser does not support the video tag.
                         </video>
                     {% elif site_settings.hiw_video_embed_employers %}
-                        {{ site_settings.hiw_video_embed_employers|safe }}
+                        {{ site_settings.get_employer_video_html|safe }}
                     {% else %}
                         <div class="hiw-video-coming-soon">
                             <div class="hiw-play-btn">&#9654;</div>
