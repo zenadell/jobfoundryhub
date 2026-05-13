@@ -108,7 +108,12 @@ class SiteSettings(models.Model):
         
         if match:
             video_id = match.group(4)
-            return f'<iframe src="https://www.youtube.com/embed/{video_id}" frameborder="0" allowfullscreen style="width:100%;height:100%;"></iframe>'
+            return (
+                f'<iframe src="https://www.youtube-nocookie.com/embed/{video_id}" '
+                f'frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" '
+                f'allowfullscreen referrerpolicy="strict-origin-when-cross-origin" '
+                f'style="width:100%;height:100%;"></iframe>'
+            )
             
         return raw_input  # Fallback if it's not a recognized URL but not an iframe
 
