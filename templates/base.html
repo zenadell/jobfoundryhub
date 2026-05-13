@@ -128,6 +128,8 @@
                                                 </a>
                                                 <a href="{% url 'core:contact' %}" class="nav-dropdown-link w-dropdown-link"> Contact Us
                                                 </a>
+                                                <a href="{% url 'core:how_it_works' %}" class="nav-dropdown-link w-dropdown-link"> How It Works
+                                                </a>
                                             </div>
 
                                         </div>
@@ -159,6 +161,7 @@
                             <a href="{% url 'jobs:job_list' %}" class="mobile-nav-link" @click="mobileOpen = false">Jobs</a>
                             <a href="{% url 'jobs:company_list' %}" class="mobile-nav-link" @click="mobileOpen = false">Companies</a>
                             <a href="{% url 'blog:post_list' %}" class="mobile-nav-link" @click="mobileOpen = false">Blog</a>
+                            <a href="{% url 'core:how_it_works' %}" class="mobile-nav-link" @click="mobileOpen = false">How It Works</a>
 
                             <a href="{% url 'core:contact' %}" class="mobile-nav-link" @click="mobileOpen = false">Contact</a>
                             <div class="margin-top margin-medium">
@@ -235,6 +238,9 @@
                                 </div>
                                 <div class="margin-bottom margin-xsmall">
                                     <a href="{% url 'core:contact' %}" class="text-link---footer"> Contact Us </a>
+                                </div>
+                                <div class="margin-bottom margin-xsmall">
+                                    <a href="{% url 'core:how_it_works' %}" class="text-link---footer"> How It Works </a>
                                 </div>
                             </div>
 

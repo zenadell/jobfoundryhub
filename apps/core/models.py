@@ -58,6 +58,15 @@ class SiteSettings(models.Model):
     ga_measurement_id    = models.CharField(max_length=50, blank=True, help_text='Google Analytics 4 Measurement ID, e.g. G-XXXXXXXXXX')
     adsense_publisher_id = models.CharField(max_length=50, blank=True, help_text='AdSense Publisher ID, e.g. pub-XXXXXXXXXXXXXXXX — only fill after approval')
     adsense_enabled      = models.BooleanField(default=False, help_text='ONLY enable after AdSense application is approved')
+    
+    # How It Works Video Embeds (YouTube, Vimeo, etc.)
+    hiw_video_embed_seekers = models.TextField(blank=True, help_text='YouTube iframe embed code for Job Seekers')
+    hiw_video_embed_employers = models.TextField(blank=True, help_text='YouTube iframe embed code for Employers')
+    
+    # How It Works Video Uploads (Local/Cloudinary)
+    hiw_video_file_seekers = models.FileField(upload_to='videos/hiw/', blank=True, null=True, help_text='Upload a video file for Job Seekers')
+    hiw_video_file_employers = models.FileField(upload_to='videos/hiw/', blank=True, null=True, help_text='Upload a video file for Employers')
+    
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
@@ -76,3 +85,24 @@ class SiteSettings(models.Model):
     def get(cls):
         obj, _ = cls.objects.get_or_create(pk=1)
         return obj
+
+
+class HowItWorksStep(models.Model):
+    CATEGORY_CHOICES = [
+        ('seekers', 'For Job Seekers'),
+        ('employers', 'For Employers'),
+    ]
+    title = models.CharField(max_length=200)
+    description = models.TextField()
+    category = models.CharField(choices=CATEGORY_CHOICES, max_length=20)
+    order = models.PositiveIntegerField(default=0)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['category', 'order']
+        verbose_name = 'How It Works Step'
+        verbose_name_plural = 'How It Works Steps'
+
+    def __str__(self):
+        return f"{self.get_category_display()} - {self.title}"

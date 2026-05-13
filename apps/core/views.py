@@ -61,6 +61,16 @@ def home(request):
 def about(request):
     return render(request, 'pages/about.html')
 
+def how_it_works(request):
+    from .models import HowItWorksStep, SiteSettings
+    seeker_steps = HowItWorksStep.objects.filter(category='seekers', is_active=True).order_by('order')
+    employer_steps = HowItWorksStep.objects.filter(category='employers', is_active=True).order_by('order')
+    return render(request, 'pages/how_it_works.html', {
+        'seeker_steps': seeker_steps,
+        'employer_steps': employer_steps,
+        'site_settings': SiteSettings.get()
+    })
+
 def contact(request):
     if request.method == 'POST':
         name = request.POST.get('name')

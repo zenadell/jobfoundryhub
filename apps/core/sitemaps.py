@@ -12,7 +12,7 @@ class StaticViewSitemap(JobFoundrySitemap):
     changefreq = 'weekly'
 
     def items(self):
-        return ['core:home', 'core:about', 'core:contact', 'core:faq', 'core:privacy', 'core:terms']
+        return ['core:home', 'core:about', 'core:how_it_works', 'core:contact', 'core:faq', 'core:privacy', 'core:terms']
 
     def location(self, item):
         return reverse(item)

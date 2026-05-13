@@ -1,0 +1,374 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}How It Works — {{ site_name }}{% endblock %}
+
+{% block meta_description %}Learn how {{ site_name }} works — whether you're a job seeker looking for your next role or an employer ready to post a vacancy.{% endblock %}
+
+{% block extra_head %}
+<style>
+    /* ── How It Works page styles ── */
+    .hiw-hero {
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        padding: 5rem 0 3rem;
+        text-align: center;
+    }
+    .hiw-hero h1 {
+        font-size: 2.75rem;
+        font-weight: 800;
+        color: #1a202c;
+        margin-bottom: 1rem;
+    }
+    .hiw-hero p {
+        font-size: 1.15rem;
+        color: #4a5568;
+        max-width: 640px;
+        margin: 0 auto;
+    }
+
+    /* Section wrapper */
+    .hiw-section {
+        padding: 4rem 0;
+    }
+    .hiw-section:nth-child(even) {
+        background-color: #f7fafc;
+    }
+    .hiw-section-inner {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 0 1.5rem;
+    }
+
+    /* Section header */
+    .hiw-section-badge {
+        display: inline-block;
+        padding: 0.35rem 1rem;
+        border-radius: 9999px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        margin-bottom: 1rem;
+    }
+    .hiw-section-badge.seekers {
+        background: #ebf5ff;
+        color: #2b6cb0;
+    }
+    .hiw-section-badge.employers {
+        background: #f0fff4;
+        color: #276749;
+    }
+    .hiw-section h2 {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #1a202c;
+        margin-bottom: 2.5rem;
+    }
+
+    /* Steps timeline */
+    .hiw-steps {
+        position: relative;
+        padding-left: 3.5rem;
+    }
+    .hiw-steps::before {
+        content: '';
+        position: absolute;
+        left: 1.25rem;
+        top: 0.5rem;
+        bottom: 0.5rem;
+        width: 3px;
+        border-radius: 3px;
+    }
+    .hiw-section.seekers .hiw-steps::before {
+        background: linear-gradient(180deg, #3182ce, #90cdf4);
+    }
+    .hiw-section.employers .hiw-steps::before {
+        background: linear-gradient(180deg, #38a169, #9ae6b4);
+    }
+
+    .hiw-step {
+        position: relative;
+        margin-bottom: 2rem;
+        animation: fadeInUp 0.5s ease both;
+    }
+    .hiw-step:last-child {
+        margin-bottom: 0;
+    }
+    .hiw-step-number {
+        position: absolute;
+        left: -3.5rem;
+        top: 0;
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 1rem;
+        color: #fff;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    }
+    .hiw-section.seekers .hiw-step-number {
+        background: #3182ce;
+    }
+    .hiw-section.employers .hiw-step-number {
+        background: #38a169;
+    }
+
+    .hiw-step-card {
+        background: #fff;
+        border-radius: 12px;
+        padding: 1.5rem 1.75rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        border: 1px solid #e2e8f0;
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+    .hiw-step-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    }
+    .hiw-step-card h3 {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #2d3748;
+        margin-bottom: 0.35rem;
+    }
+    .hiw-step-card p {
+        font-size: 0.95rem;
+        color: #718096;
+        margin: 0;
+        line-height: 1.6;
+    }
+    .hiw-step-card a {
+        color: #3182ce;
+        font-weight: 600;
+        text-decoration: none;
+    }
+    .hiw-step-card a:hover {
+        text-decoration: underline;
+    }
+
+    /* Video embed container — YouTube ready */
+    .hiw-video-container {
+        margin-top: 2.5rem;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        border: 1px solid #e2e8f0;
+    }
+    .hiw-video-wrapper {
+        position: relative;
+        width: 100%;
+        padding-bottom: 56.25%; /* 16:9 aspect ratio */
+        background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+    }
+    .hiw-video-wrapper iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: 0;
+    }
+    /* Placeholder overlay — shown until real video is added */
+    .hiw-video-coming-soon {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+    }
+    .hiw-play-btn {
+        width: 72px;
+        height: 72px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.75rem;
+        color: #fff;
+        cursor: default;
+        animation: pulse-glow 2.5s ease-in-out infinite;
+    }
+    .hiw-section.seekers .hiw-play-btn {
+        background: rgba(49, 130, 206, 0.85);
+        box-shadow: 0 0 0 0 rgba(49, 130, 206, 0.4);
+    }
+    .hiw-section.employers .hiw-play-btn {
+        background: rgba(56, 161, 105, 0.85);
+        box-shadow: 0 0 0 0 rgba(56, 161, 105, 0.4);
+    }
+    .hiw-video-coming-soon h4 {
+        color: #fff;
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin: 0;
+    }
+    .hiw-video-coming-soon p {
+        color: rgba(255,255,255,0.5);
+        font-size: 0.85rem;
+        margin: 0;
+    }
+    @keyframes pulse-glow {
+        0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255,255,255,0.2); }
+        50%      { transform: scale(1.05); box-shadow: 0 0 20px 8px rgba(255,255,255,0.1); }
+    }
+
+    /* CTA bar */
+    .hiw-cta {
+        background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+        padding: 4rem 1.5rem;
+        text-align: center;
+    }
+    .hiw-cta h2 {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 0.75rem;
+    }
+    .hiw-cta p {
+        color: #a0aec0;
+        font-size: 1rem;
+        margin-bottom: 2rem;
+        max-width: 540px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .hiw-cta-buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    .hiw-cta-buttons .button {
+        min-width: 180px;
+    }
+
+    /* Animate in */
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+    .hiw-step:nth-child(1) { animation-delay: 0.05s; }
+    .hiw-step:nth-child(2) { animation-delay: 0.15s; }
+    .hiw-step:nth-child(3) { animation-delay: 0.25s; }
+    .hiw-step:nth-child(4) { animation-delay: 0.35s; }
+    .hiw-step:nth-child(5) { animation-delay: 0.45s; }
+
+    /* Responsive */
+    @media (max-width: 640px) {
+        .hiw-hero h1 { font-size: 2rem; }
+        .hiw-section h2 { font-size: 1.5rem; }
+        .hiw-steps { padding-left: 3rem; }
+        .hiw-step-number { left: -3rem; width: 2rem; height: 2rem; font-size: 0.85rem; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+    {# ── Hero ── #}
+    <section class="hiw-hero">
+        <div class="container-90">
+            <h1>How It Works</h1>
+            <p>Whether you're searching for your next role or looking to hire fresh talent, {{ site_name }} makes the process simple.</p>
+        </div>
+    </section>
+
+    {# ══════════════════════════════════════════════ #}
+    {# Section 1 — For Job Seekers                    #}
+    {# ══════════════════════════════════════════════ #}
+    <section class="hiw-section seekers">
+        <div class="hiw-section-inner">
+            <span class="hiw-section-badge seekers">For Job Seekers</span>
+            <h2>How to Find and Apply for Jobs</h2>
+
+            <div class="hiw-steps">
+                {% for step in seeker_steps %}
+                <div class="hiw-step">
+                    <div class="hiw-step-number">{{ forloop.counter }}</div>
+                    <div class="hiw-step-card">
+                        <h3>{{ step.title }}</h3>
+                        <p>{{ step.description|safe }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="hiw-video-container" id="video-job-seekers">
+                <div class="hiw-video-wrapper">
+                    {% if site_settings.hiw_video_file_seekers %}
+                        <video controls class="hiw-uploaded-video" style="position:absolute;top:0;left:0;width:100%;height:100%;">
+                            <source src="{{ site_settings.hiw_video_file_seekers.url }}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    {% elif site_settings.hiw_video_embed_seekers %}
+                        {{ site_settings.hiw_video_embed_seekers|safe }}
+                    {% else %}
+                        <div class="hiw-video-coming-soon">
+                            <div class="hiw-play-btn">&#9654;</div>
+                            <h4>Video tutorial coming soon</h4>
+                            <p>A step-by-step walkthrough for job seekers</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {# ══════════════════════════════════════════════ #}
+    {# Section 2 — For Employers                      #}
+    {# ══════════════════════════════════════════════ #}
+    <section class="hiw-section employers">
+        <div class="hiw-section-inner">
+            <span class="hiw-section-badge employers">For Employers</span>
+            <h2>How to Post a Job</h2>
+
+            <div class="hiw-steps">
+                {% for step in employer_steps %}
+                <div class="hiw-step">
+                    <div class="hiw-step-number">{{ forloop.counter }}</div>
+                    <div class="hiw-step-card">
+                        <h3>{{ step.title }}</h3>
+                        <p>{{ step.description|safe }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="hiw-video-container" id="video-employers">
+                <div class="hiw-video-wrapper">
+                    {% if site_settings.hiw_video_file_employers %}
+                        <video controls class="hiw-uploaded-video" style="position:absolute;top:0;left:0;width:100%;height:100%;">
+                            <source src="{{ site_settings.hiw_video_file_employers.url }}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    {% elif site_settings.hiw_video_embed_employers %}
+                        {{ site_settings.hiw_video_embed_employers|safe }}
+                    {% else %}
+                        <div class="hiw-video-coming-soon">
+                            <div class="hiw-play-btn">&#9654;</div>
+                            <h4>Video tutorial coming soon</h4>
+                            <p>A step-by-step walkthrough for employers</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {# ── Bottom CTA ── #}
+    <section class="hiw-cta">
+        <h2>Ready to get started?</h2>
+        <p>Whether you're looking for your dream job or your next great hire, we've got you covered.</p>
+        <div class="hiw-cta-buttons">
+            <a href="{% url 'jobs:job_list' %}" class="button red w-button">Browse Jobs</a>
+            <a href="{% url 'jobs:post_job' %}" class="button black w-button">Post a Job</a>
+        </div>
+    </section>
+{% endblock %}

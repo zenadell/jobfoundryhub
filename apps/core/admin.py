@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.utils.html import format_html
 from django.urls import reverse
-from .models import ContactMessage, FAQ, SiteSettings
+from .models import ContactMessage, FAQ, SiteSettings, HowItWorksStep
 
 
 # ─────────────────────────────────────────
@@ -73,6 +73,19 @@ class FAQAdmin(admin.ModelAdmin):
 
 
 # ─────────────────────────────────────────
+#  HOW IT WORKS STEPS
+# ─────────────────────────────────────────
+
+@admin.register(HowItWorksStep)
+class HowItWorksStepAdmin(admin.ModelAdmin):
+    list_display = ('title', 'category', 'order', 'is_active')
+    list_editable = ('order', 'is_active')
+    list_filter = ('category', 'is_active')
+    search_fields = ('title', 'description')
+    ordering = ('category', 'order')
+
+
+# ─────────────────────────────────────────
 #  SITE SETTINGS (Singleton)
 # ─────────────────────────────────────────
 
@@ -102,6 +115,13 @@ class SiteSettingsAdmin(admin.ModelAdmin):
                 'application to be rejected. Only turn on adsense_enabled after '
                 'you receive the approval email from Google AdSense.'
             )
+        }),
+        ('📹 How It Works Videos', {
+            'fields': (
+                'hiw_video_file_seekers', 'hiw_video_embed_seekers',
+                'hiw_video_file_employers', 'hiw_video_embed_employers'
+            ),
+            'description': 'Choose either to upload a video file OR paste a YouTube/Vimeo embed code. If both are provided, the uploaded file takes priority.'
         }),
     )
 
