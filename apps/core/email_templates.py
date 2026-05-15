@@ -118,7 +118,7 @@ def contact_user_confirmation(name: str, subject: str) -> tuple:
     <p style="font-size:14px;color:{GREY};margin:0 0 20px;">
       While you wait, why not explore the latest opportunities we have available?
     </p>
-    {_button("Browse Jobs", "https://www.jobfoundryhub.com/jobs/")}
+    {_button("Browse Jobs", "https://www.jobfoundryhub.com/job-listings/")}
     <p style="font-size:13px;color:{GREY};text-align:center;margin:0;">
       Need urgent help? Email us at 
       <a href="mailto:support@jobfoundryhub.com" style="color:{GREEN};">support@jobfoundryhub.com</a>
@@ -185,7 +185,7 @@ def resume_user_confirmation(name: str, position: str) -> tuple:
         <td style="padding-left:12px;font-size:14px;color:{GREY};">You get interviewed and land your dream job! 🚀</td>
       </tr>
     </table>
-    {_button("View Open Positions", "https://www.jobfoundryhub.com/jobs/")}
+    {_button("View Open Positions", "https://www.jobfoundryhub.com/job-listings/")}
     """
     return (
         "Resume Received — Job Foundry Hub",
@@ -252,7 +252,7 @@ def job_request_company_confirmation(company_name: str, job_title: str) -> tuple
         <td style="padding-left:12px;font-size:14px;color:{GREY};">You start receiving quality graduate applications directly!</td>
       </tr>
     </table>
-    {_button("View Our Platform", "https://www.jobfoundryhub.com/jobs/")}
+    {_button("View Our Platform", "https://www.jobfoundryhub.com/job-listings/")}
     <p style="font-size:13px;color:{GREY};text-align:center;margin:0;">
       Questions? Contact us at 
       <a href="mailto:support@jobfoundryhub.com" style="color:{GREEN};">support@jobfoundryhub.com</a>
@@ -314,7 +314,7 @@ def quick_resume_user_confirmation(name: str) -> tuple:
     <p style="font-size:14px;color:{GREY};margin:0 0 20px;">
       In the meantime, don't forget to browse our current listings — your perfect role might already be there!
     </p>
-    {_button("Browse All Jobs", "https://www.jobfoundryhub.com/jobs/")}
+    {_button("Browse All Jobs", "https://www.jobfoundryhub.com/job-listings/")}
     <p style="font-size:13px;color:{GREY};text-align:center;margin:8px 0 0;">
       Or submit a full resume for even better matching → 
       <a href="https://www.jobfoundryhub.com/submit-resume/" style="color:{GREEN};">Submit Resume</a>
@@ -327,9 +327,10 @@ def quick_resume_user_confirmation(name: str) -> tuple:
 
 
 def quick_resume_admin_notification(name: str, email: str) -> tuple:
+    subheading = "Someone used the homepage quick resume form."
     content = f"""
     {_heading("🔍 Quick Resume Interest")}
-    {_subheading('Someone used the "Can\'t find anything?" form on the homepage.')}
+    {_subheading(subheading)}
     {_info_table([
         ("Name", name),
         ("Email", f'<a href="mailto:{email}" style="color:{GREEN};">{email}</a>'),

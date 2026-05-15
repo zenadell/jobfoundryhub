@@ -39,6 +39,10 @@
     .legal-content strong {
         color: #000;
     }
+    .legal-content a {
+        color: #22c55e;
+        text-decoration: underline;
+    }
 </style>
 {% endblock %}
 
@@ -50,34 +54,83 @@
     </div>
 
     <div class="legal-content">
+
         <h3>1. Agreement to Terms</h3>
-        <p>These Terms of Use constitute a legally binding agreement made between you, whether personally or on behalf of an entity ("you") and <strong>{{ site_name }}</strong> ("Company," "we," "us," or "our"), concerning your access to and use of the <strong>jobfoundryhub.com</strong> website as well as any other media form, media channel, mobile website or mobile application related, linked, or otherwise connected thereto (collectively, the "Site").</p>
+        <p>These Terms of Service constitute a legally binding agreement between you ("you" or "user") and <strong>{{ site_name }}</strong> ("Company," "we," "us," or "our"), governing your access to and use of <strong>jobfoundryhub.com</strong> (the "Site"). By accessing the Site you confirm that you have read, understood, and agree to be bound by these Terms. If you do not agree, please do not use the Site.</p>
 
         <h3>2. Intellectual Property Rights</h3>
-        <p>Unless otherwise indicated, the Site is our proprietary property and all source code, databases, functionality, software, website designs, audio, video, text, photographs, and graphics on the Site (collectively, the "Content") and the trademarks, service marks, and logos contained therein (the "Marks") are owned or controlled by us or licensed to us, and are protected by copyright and trademark laws and various other intellectual property rights and unfair competition laws of the United States, international copyright laws, and international conventions.</p>
+        <p>Unless otherwise indicated, the Site and all of its content — including source code, databases, functionality, software, website designs, text, photographs, and graphics (the "Content") — are owned by or licensed to {{ site_name }} and are protected by UK and international copyright, trademark, and intellectual property laws.</p>
+        <p>You are granted a limited, non-exclusive, non-transferable licence to access and use the Site for your personal, non-commercial purposes. You may not reproduce, distribute, modify, or create derivative works of any Content without our prior written consent.</p>
 
-        <h3>3. User Representations</h3>
+        <h3>3. Job Listings Disclaimer</h3>
+        <p><strong>{{ site_name }} is a job discovery and career resource platform. We are not a recruitment agency and we are not a party to any employment agreement between you and any employer.</strong></p>
+        <p>Job listings published on the Site are sourced from third-party employers, recruitment agencies, and aggregated job data. By using the Site you acknowledge and agree that:</p>
+        <ul>
+            <li>We do not guarantee the accuracy, completeness, or currency of any job listing. Listings may be out of date, filled, or inaccurately described.</li>
+            <li>We do not verify, endorse, or take responsibility for any employer, recruiter, or third-party organisation whose listings appear on the Site.</li>
+            <li>Any application you submit, interview you attend, or employment offer you receive is entirely between you and the relevant employer. We accept no liability for the outcome of any job application.</li>
+            <li>We are not responsible for any loss, damage, or disappointment arising from reliance on job listing information published on the Site.</li>
+            <li>Job descriptions, salary ranges, and experience requirements are provided for guidance only and may differ from the actual role offered by the employer.</li>
+        </ul>
+        <p>If you believe a listing is fraudulent or misleading, please report it to us at <a href="mailto:{{ contact_email }}">{{ contact_email }}</a>.</p>
+
+        <h3>4. User Representations</h3>
         <p>By using the Site, you represent and warrant that:</p>
         <ul>
-            <li>(1) All registration information you submit will be true, accurate, current, and complete.</li>
-            <li>(2) You will maintain the accuracy of such information and promptly update such registration information as necessary.</li>
-            <li>(3) You have the legal capacity and you agree to comply with these Terms of Use.</li>
-            <li>(4) You are not a minor in the jurisdiction in which you reside.</li>
-            <li>(5) You will not access the Site through automated or non-human means, whether through a bot, script, or otherwise.</li>
-            <li>(6) You will not use the Site for any illegal or unauthorized purpose.</li>
-            <li>(7) Your use of the Site will not violate any applicable law or regulation.</li>
+            <li>All registration information you submit is true, accurate, current, and complete.</li>
+            <li>You will maintain the accuracy of such information and promptly update it as necessary.</li>
+            <li>You have the legal capacity and agree to comply with these Terms.</li>
+            <li>You are not a minor in the jurisdiction in which you reside, or you have parental consent.</li>
+            <li>You will not access the Site through automated or non-human means, whether through a bot, script, or otherwise.</li>
+            <li>You will not use the Site for any illegal or unauthorised purpose.</li>
+            <li>Your use of the Site will not violate any applicable law or regulation.</li>
         </ul>
 
-        <h3>4. Prohibited Activities</h3>
-        <p>You may not access or use the Site for any purpose other than that for which we make the Site available. The Site may not be used in connection with any commercial endeavors except those that are specifically endorsed or approved by us.</p>
+        <h3>5. Prohibited Activities</h3>
+        <p>You may not use the Site for any purpose other than for which it is made available. In particular, you must not:</p>
+        <ul>
+            <li>Post false, fraudulent, or misleading job listings or employer information.</li>
+            <li>Scrape, crawl, or harvest data from the Site without our written permission.</li>
+            <li>Use the Site to transmit spam, unsolicited advertising, or mass communications.</li>
+            <li>Attempt to gain unauthorised access to any part of the Site or its related systems.</li>
+            <li>Upload viruses, malware, or any other harmful code.</li>
+            <li>Impersonate any person or entity or misrepresent your affiliation with any person or entity.</li>
+            <li>Use the Site in any manner that could damage, disable, or impair it.</li>
+        </ul>
 
-        <h3>5. Modifications and Interruptions</h3>
-        <p>We reserve the right to change, modify, or remove the contents of the Site at any time or for any reason at our sole discretion without notice. However, we have no obligation to update any information on our Site. We also reserve the right to modify or discontinue all or part of the Site without notice at any time.</p>
+        <h3>6. Limitation of Liability</h3>
+        <p>To the fullest extent permitted by applicable law:</p>
+        <ul>
+            <li>{{ site_name }}, its directors, employees, and agents shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising from your use of (or inability to use) the Site or any job listing found on it.</li>
+            <li>Our total liability to you for any claim arising from these Terms or your use of the Site shall not exceed £100 (one hundred pounds sterling).</li>
+            <li>We are not liable for the actions, content, or employment practices of any employer or recruiter whose listings appear on the Site.</li>
+            <li>We provide the Site and its content on an "as is" and "as available" basis without warranties of any kind, either express or implied, including but not limited to implied warranties of merchantability, fitness for a particular purpose, or non-infringement.</li>
+        </ul>
+        <p>Nothing in these Terms limits or excludes our liability for death or personal injury caused by our negligence, fraud or fraudulent misrepresentation, or any other liability that cannot be excluded or limited under applicable UK law.</p>
 
-        <h3>6. Contact Us</h3>
-        <p>In order to resolve a complaint regarding the Site or to receive further information regarding use of the Site, please contact us at:</p>
-        <p><strong>{{ site_name }}</strong><br>
-        Email: <a href="mailto:{{ contact_email }}" class="text-color-green">{{ contact_email }}</a></p>
+        <h3>7. Third-Party Links and Content</h3>
+        <p>The Site may contain links to third-party websites, employer career pages, and external resources. These links are provided for your convenience only. We have no control over the content of those sites and accept no responsibility for them or for any loss or damage that may arise from your use of them. Visiting any linked website is at your own risk.</p>
+
+        <h3>8. Privacy and Cookies</h3>
+        <p>Your use of the Site is also governed by our <a href="{% url 'core:privacy' %}">Privacy Policy</a>, which is incorporated into these Terms by reference. By using the Site, you consent to the data practices described in the Privacy Policy.</p>
+
+        <h3>9. Modifications and Interruptions</h3>
+        <p>We reserve the right to change, modify, or remove the contents of the Site at any time and for any reason at our sole discretion, without notice. We have no obligation to update any information on the Site. We may also modify or discontinue all or part of the Site without notice.</p>
+        <p>We will not be liable to you or any third party for any modification, suspension, or discontinuation of the Site.</p>
+
+        <h3>10. Governing Law</h3>
+        <p>These Terms are governed by and construed in accordance with the laws of England and Wales. Any disputes arising from or in connection with these Terms shall be subject to the exclusive jurisdiction of the courts of England and Wales.</p>
+
+        <h3>11. Changes to These Terms</h3>
+        <p>We may update these Terms from time to time. We will notify you of material changes by updating the "Last updated" date at the top of this page. Your continued use of the Site after any changes constitutes your acceptance of the new Terms.</p>
+
+        <h3>12. Contact Us</h3>
+        <p>To resolve a complaint or to receive further information regarding use of the Site, please contact us:</p>
+        <p>
+            <strong>{{ site_name }}</strong><br>
+            Email: <a href="mailto:{{ contact_email }}">{{ contact_email }}</a><br>
+            Location: United Kingdom
+        </p>
     </div>
 </div>
 {% endblock %}

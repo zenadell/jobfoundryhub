@@ -31,22 +31,22 @@
                         </div>
                         {# Author Sidebar Card - "moves" like the job post card #}
                         <div class="job-offer-wrapper blog" style="position: sticky; top: 100px;">
-                            {% if post.author.profile_image %}
-                                <img src="{{ post.author.profile_image.url }}"
+                            {% if post.author.userprofile.avatar %}
+                                <img src="{{ post.author.userprofile.avatar.url }}"
                                     loading="lazy" alt="{{ post.author.get_full_name }}"
                                     class="icon-1x1-large borders-100px" />
                             {% else %}
-                                <div class="icon-1x1-large borders-100px skeleton" 
+                                <div class="icon-1x1-large borders-100px skeleton"
                                      style="width:80px; height:80px; background:#e9e9eb; display:inline-block;"></div>
                             {% endif %}
                             <div class="heading-4">
                                 {{ post.author.get_full_name|default:post.author.username }}
                             </div>
                             <div class="subtitle">
-                                {% if post.author.title %}{{ post.author.title }}{% else %}Staff Writer{% endif %}
+                                {% if post.author.userprofile.current_title %}{{ post.author.userprofile.current_title }}{% else %}Staff Writer{% endif %}
                             </div>
                             <p>
-                                {% if post.author.bio %}{{ post.author.bio|truncatewords:20 }}{% else %}Contributing author at {{ site_name }}, sharing insights on career growth and professional development.{% endif %}
+                                {% if post.author.userprofile.bio %}{{ post.author.userprofile.bio|truncatewords:20 }}{% else %}Contributing author at {{ site_name }}, sharing insights on career growth and professional development.{% endif %}
                             </p>
                             <div class="display-vertical-left">
                                 <div class="w-layout-grid grid-3x1">
@@ -162,7 +162,7 @@
                                         </form>
                                     </div>
                                     <p class="paragraph-small">
-                                        Join 9,500+ users already on the newsletter.
+                                        Get weekly career tips and new job alerts.
                                     </p>
                                 </div>
                             </div>

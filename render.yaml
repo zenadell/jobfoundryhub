@@ -39,3 +39,7 @@ services:
         value: https://jobfoundryhub.com
       - key: DEFAULT_FROM_EMAIL
         value: hello@jobfoundryhub.com
+      - key: SUPPORT_EMAIL
+        value: support@jobfoundryhub.com
+      - key: RESEND_API_KEY
+        sync: false

@@ -1,4 +1,7 @@
+import logging
 from django.shortcuts import render, redirect
+
+logger = logging.getLogger(__name__)
 from django.http import JsonResponse
 from django.urls import reverse
 from django.contrib import messages
@@ -93,7 +96,7 @@ def contact(request):
         try:
             from apps.core.email_sender import send_templated_email
             from apps.core import email_templates
-            
+
             send_templated_email(
                 to=settings.SUPPORT_EMAIL,
                 template=email_templates.contact_admin_notification(name, email, subject, message)
@@ -102,8 +105,8 @@ def contact(request):
                 to=email,
                 template=email_templates.contact_user_confirmation(name, subject)
             )
-        except Exception:
-            pass
+        except Exception as e:
+            logger.error(f"Contact email error: {e}")
 
         return redirect(reverse('core:confirmation') + '?type=contact')
         

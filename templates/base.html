@@ -175,6 +175,52 @@
     </div>
     {% endblock %}
 
+    {# GDPR Cookie Consent Banner #}
+    <div x-data="{
+            show: false,
+            init() {
+                if (!localStorage.getItem('cookie_consent')) {
+                    this.show = true;
+                }
+            },
+            accept() {
+                localStorage.setItem('cookie_consent', 'accepted');
+                this.show = false;
+            },
+            decline() {
+                localStorage.setItem('cookie_consent', 'declined');
+                this.show = false;
+            }
+         }"
+         x-show="show"
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0 translate-y-4"
+         x-transition:enter-end="opacity-100 translate-y-0"
+         x-transition:leave="transition ease-in duration-200"
+         x-transition:leave-start="opacity-100"
+         x-transition:leave-end="opacity-0"
+         style="display:none; position:fixed; bottom:0; left:0; right:0; z-index:9999; background:#1a1a1a; color:#fff; padding:20px 24px; box-shadow:0 -4px 20px rgba(0,0,0,0.3);">
+        <div style="max-width:1200px; margin:0 auto; display:flex; flex-wrap:wrap; align-items:center; gap:16px; justify-content:space-between;">
+            <div style="flex:1; min-width:280px;">
+                <p style="margin:0; font-size:0.95rem; line-height:1.6;">
+                    We use cookies to improve your experience, analyse site traffic, and serve personalised ads via Google AdSense.
+                    By clicking <strong>Accept</strong> you consent to our use of cookies.
+                    <a href="{% url 'core:privacy' %}" style="color:#22c55e; text-decoration:underline;">Learn more in our Privacy Policy.</a>
+                </p>
+            </div>
+            <div style="display:flex; gap:12px; flex-shrink:0;">
+                <button @click="decline()"
+                        style="padding:10px 20px; background:transparent; border:1px solid #555; color:#ccc; border-radius:6px; cursor:pointer; font-size:0.9rem;">
+                    Decline
+                </button>
+                <button @click="accept()"
+                        style="padding:10px 24px; background:#22c55e; border:none; color:#fff; border-radius:6px; cursor:pointer; font-size:0.9rem; font-weight:600;">
+                    Accept All Cookies
+                </button>
+            </div>
+        </div>
+    </div>
+
     {% block content %}{% endblock %}
 
     <section class="footer-section">
