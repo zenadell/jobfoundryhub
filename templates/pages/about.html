@@ -3,10 +3,10 @@
 
 {% block title %}About {{ site_name }}{% endblock %}
 
-{% block meta_description %}Learn about {{ site_name }} — our mission, our team, and how we connect entry-level professionals with leading companies worldwide.{% endblock %}
+{% block meta_description %}Job Foundry Hub connects recent graduates and entry-level job seekers with employers across the UK. Learn about our mission, what we do, and the team behind the platform.{% endblock %}
 
 {% block content %}
-    {# Hero Section with Background Image #}
+    {# Hero Section #}
     <section class="hero-section">
         <div class="margin-top margin-small">
             <div class="container-95">
@@ -16,16 +16,16 @@
                             <div class="container-90">
                                 <div class="container-about-hero">
                                     <h2 class="heading-1">
-                                        A team of experts dedicated to your career growth
+                                        Helping graduates land their first real job
                                     </h2>
                                     <div class="max-width-80 still-80">
                                         <p class="text-color-black">
-                                            We believe everyone deserves a fair shot at building a career they love. {{ site_name }} connects ambitious entry-level professionals with companies that value fresh talent and new perspectives.
+                                            Job Foundry Hub is a UK-based job platform built specifically for recent graduates and entry-level job seekers. We aggregate and curate roles that require zero to two years of experience — filtering out senior positions so you only see jobs you can actually apply for.
                                         </p>
                                     </div>
                                     <div class="display-horizontal-left gap-1rem vertical-left-mobile">
-                                        <a href="{% url 'core:contact' %}" class="button red w-button">Contact us</a>
-                                        <a href="#learn-more" class="button black w-button">Learn more</a>
+                                        <a href="{% url 'jobs:job_list' %}" class="button red w-button">Browse Jobs</a>
+                                        <a href="#our-story" class="button black w-button">Our story</a>
                                     </div>
                                 </div>
                             </div>
@@ -46,9 +46,9 @@
                             <div class="padding-vertical padding-large">
                                 <div class="display-vertical-center text-align-center">
                                     <div class="heading-2">
-                                        100%
+                                        Entry-Level
                                     </div>
-                                    <p>Verified entry-level roles</p>
+                                    <p>Every role is 0–2 years experience</p>
                                 </div>
                             </div>
                         </div>
@@ -56,9 +56,9 @@
                             <div class="padding-vertical padding-large">
                                 <div class="display-vertical-center text-align-center">
                                     <div class="heading-2">
-                                        0-2
+                                        UK-Focused
                                     </div>
-                                    <p>Years experience required</p>
+                                    <p>Roles across the UK and remote</p>
                                 </div>
                             </div>
                         </div>
@@ -67,7 +67,7 @@
                                 <div class="heading-2">
                                     Free
                                 </div>
-                                <p>For all job seekers</p>
+                                <p>Always free for job seekers</p>
                             </div>
                         </div>
                     </div>
@@ -76,42 +76,42 @@
         </div>
     </section>
 
-    {# About Grid Section #}
-    <section id="learn-more" class="about-section">
+    {# Our Story Section #}
+    <section id="our-story" class="about-section">
         <div class="padding-vertical padding-huge">
             <div class="container-90">
                 <div class="w-layout-grid grid-about">
                     <div class="position-relative">
                         <img src="{% static 'images/about-image-1.png' %}"
                             loading="lazy"
-                            alt="{{ site_name }} Team"
+                            alt="Job Foundry Hub team"
                             class="about-image-style" />
                     </div>
                     <div class="display-vertical-space-btw">
                         <div>
                             <div class="margin-bottom margin-large">
-                                <h2>Unlocking your career potential</h2>
+                                <h2>Why we built this</h2>
                             </div>
                             <p>
-                                At {{ site_name }}, we specialize in connecting entry-level talent with companies who understand the value of investing in new professionals. Our platform streamlines the job search process, matching you with opportunities tailored to your skills and ambitions.
+                                Graduating is supposed to be the start of something. But the job market doesn't always feel that way. Most job boards mix entry-level roles with positions that require five or ten years of experience — making it genuinely hard to find what you're actually eligible for.
                                 <br /><br />
-                                Whether you're a recent graduate or making a career transition, we provide the tools, resources, and connections you need to launch a fulfilling career.
+                                Job Foundry Hub exists to fix that. We focus exclusively on roles suited to graduates and early-career professionals, so the time you spend searching is time spent on opportunities that are actually within reach.
                             </p>
                         </div>
                     </div>
                     <div class="display-vertical-space-btw">
                         <div>
                             <p>
-                                For employers, {{ site_name }} offers a premium recruitment experience. We curate a diverse pool of motivated, entry-level candidates who are ready to contribute from day one. Our partner companies benefit from a streamlined hiring process that saves time and delivers results.
+                                We curate listings across technology, marketing, finance, HR, data, design, and more — covering major UK cities as well as remote positions. Every listing is reviewed to ensure it meets our entry-level criteria before it appears on the platform.
                                 <br /><br />
-                                We believe that the right match between talent and opportunity creates lasting impact — for individuals, companies, and communities.
+                                Alongside job listings, we publish practical career guides written by our editorial team to help you with CVs, interviews, salary negotiation, and navigating your first role.
                             </p>
                         </div>
                     </div>
                     <div class="position-relative">
                         <img src="{% static 'images/about-image-2.png' %}"
                             loading="lazy"
-                            alt="{{ site_name }} Opportunities"
+                            alt="Graduate career opportunities"
                             class="about-image-style" />
                     </div>
                 </div>
@@ -119,7 +119,7 @@
         </div>
     </section>
 
-    {# Benefits Section #}
+    {# What We Do Section #}
     <section class="benefits-section">
         <div class="background-color-secondary-4 position-relative overflow-hidden">
             <div class="container-90 position-relative z-index-10">
@@ -128,11 +128,11 @@
                         <div class="margin-bottom margin-xxlarge">
                             <div class="w-layout-grid grid-2x1 gap-2rem align-items-bottom">
                                 <div>
-                                    <h2 class="no-margin">Empowering growth through innovation</h2>
+                                    <h2 class="no-margin">What makes us different</h2>
                                 </div>
                                 <div>
                                     <p class="no-margin">
-                                        We're committed to building the most effective career platform for emerging professionals. Here's what drives us.
+                                        We built Job Foundry Hub around one idea: job searching should be useful, not frustrating. Here's what that looks like in practice.
                                     </p>
                                 </div>
                             </div>
@@ -141,40 +141,78 @@
                             <div>
                                 <div class="margin-bottom margin-small">
                                     <img src="{% static 'images/inspiration-icon.svg' %}"
-                                        loading="lazy" alt="Inspiration" class="icon-large" />
+                                        loading="lazy" alt="Curated listings" class="icon-large" />
                                 </div>
                                 <div class="margin-bottom margin-small">
-                                    <h3 class="heading-4">Inspiration</h3>
+                                    <h3 class="heading-4">Curated listings</h3>
                                 </div>
                                 <p>
-                                    We inspire new professionals to dream big and pursue meaningful careers, providing resources and mentorship every step of the way.
+                                    We filter out senior, management, and experience-heavy roles so you see only what you're genuinely eligible for. No noise, no wasted applications.
                                 </p>
                             </div>
                             <div>
                                 <div class="margin-bottom margin-small">
                                     <img src="{% static 'images/collaboration-icon.svg' %}"
-                                        loading="lazy" alt="Collaboration" class="icon-large" />
+                                        loading="lazy" alt="Career guidance" class="icon-large" />
                                 </div>
                                 <div class="margin-bottom margin-small">
-                                    <h3 class="heading-4">Collaboration</h3>
+                                    <h3 class="heading-4">Career guidance</h3>
                                 </div>
                                 <p>
-                                    We work hand-in-hand with companies and candidates to create lasting, mutually beneficial partnerships that drive real growth.
+                                    Our blog covers the practical side of starting a career — how to write your CV, how to prepare for interviews, how to negotiate your first salary, and more.
                                 </p>
                             </div>
                             <div>
                                 <div class="margin-bottom margin-small">
                                     <img src="{% static 'images/excellence-icon.svg' %}"
-                                        loading="lazy" alt="Excellence" class="icon-large" />
+                                        loading="lazy" alt="Free for seekers" class="icon-large" />
                                 </div>
                                 <div class="margin-bottom margin-small">
-                                    <h3 class="heading-4">Excellence</h3>
+                                    <h3 class="heading-4">Free for job seekers</h3>
                                 </div>
                                 <p>
-                                    We hold ourselves to the highest standards, continually refining our platform and services to deliver exceptional value to every user.
+                                    Using Job Foundry Hub as a job seeker costs nothing — no subscription, no premium tier, no hidden fees. Finding a job is hard enough without paying for the tools to do it.
                                 </p>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {# Team / Editorial Section #}
+    <section class="about-section">
+        <div class="padding-vertical padding-huge">
+            <div class="container-90">
+                <div class="w-layout-grid grid-2x1 gap-4rem align-items-bottom margin-bottom margin-large">
+                    <h2 class="no-margin">Our editorial team</h2>
+                    <p>
+                        The career guides and articles on Job Foundry Hub are written and reviewed by our in-house team, with backgrounds in recruitment, HR, and career development.
+                    </p>
+                </div>
+                <div class="w-layout-grid grid-3x1 _1x3-tablet">
+                    <div class="job-offer-wrapper">
+                        <div class="heading-4">Daniel Hayes</div>
+                        <div class="subtitle">Career Advisor &amp; Lead Writer</div>
+                        <p>
+                            Daniel has over a decade of experience in career coaching and graduate recruitment, having worked with both employers and job seekers across the UK. He leads the editorial team at Job Foundry Hub, focusing on practical, evidence-based career guidance.
+                        </p>
+                    </div>
+                    <div class="job-offer-wrapper">
+                        <div class="heading-4">Editorial Standards</div>
+                        <div class="subtitle">How we write</div>
+                        <p>
+                            Every article on Job Foundry Hub is written from direct experience or thoroughly researched from credible sources. We don't publish generic advice — we aim to give graduates specific, actionable guidance they can use immediately.
+                        </p>
+                    </div>
+                    <div class="job-offer-wrapper">
+                        <div class="heading-4">Get in Touch</div>
+                        <div class="subtitle">Questions or feedback?</div>
+                        <p>
+                            Whether you have a question about a job listing, want to suggest a career topic, or are an employer looking to post a role — we'd love to hear from you.
+                        </p>
+                        <a href="{% url 'core:contact' %}" class="button red w-button">Contact us</a>
                     </div>
                 </div>
             </div>
@@ -189,10 +227,10 @@
                     <div class="position-relative z-index-100">
                         <div class="max-width-60">
                             <div class="display-vertical-left gap-1rem">
-                                <h2>Ready to find your next opportunity?</h2>
+                                <h2>Ready to find your first role?</h2>
                                 <div class="max-width-70">
                                     <p class="text-color-black---landscape">
-                                        Join thousands of professionals who have launched their careers through {{ site_name }}.
+                                        Browse hundreds of entry-level and graduate roles across the UK — all curated for early-career professionals.
                                     </p>
                                 </div>
                                 <div class="display-horizontal-left gap-1rem vertical-left-mobile">
