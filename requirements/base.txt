@@ -26,4 +26,4 @@ requests==2.32.3
 django-anymail[sendgrid,brevo,mailersend]==11.1
 
 # AI
-groq==0.8.0
+groq>=1.0.0
