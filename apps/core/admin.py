@@ -119,9 +119,11 @@ class SiteSettingsAdmin(admin.ModelAdmin):
         ('📹 How It Works Videos', {
             'fields': (
                 'hiw_video_embed_seekers',
-                'hiw_video_embed_employers'
+                'hiw_video_file_seekers',
+                'hiw_video_embed_employers',
+                'hiw_video_file_employers'
             ),
-            'description': 'Use the "Upload Video" button below to upload directly to the cloud, or paste a YouTube link.'
+            'description': 'Paste a YouTube link in the embed field OR upload a local video file using the file fields below.'
         }),
     )
 
