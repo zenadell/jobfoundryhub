@@ -1,3 +1,4 @@
+import os
 import logging
 from django.core.management.base import BaseCommand
 from django.utils import timezone
@@ -15,6 +16,14 @@ class Command(BaseCommand):
         
         if count > 0:
             self.stdout.write(f"Found {count} expired jobs. Deleting...")
+            
+            # Notify Google before deleting
+            from apps.jobs.indexing import notify_google
+            domain = os.environ.get('SITE_DOMAIN', 'https://jobfoundryhub.com')
+            for job in expired_jobs:
+                job_url = f"{domain}/job-listings/{job.slug}/"
+                notify_google(job_url, action="URL_DELETED")
+                
             expired_jobs.delete()
             self.stdout.write(self.style.SUCCESS(f"Successfully deleted {count} expired jobs."))
         else:

@@ -1,0 +1,223 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}{{ category.name }} Graduate Jobs {% if is_remote %}Remote{% else %}in {{ location_name }}{% endif %} | {{ site_name }}{% endblock %}
+
+{% block meta_description %}
+    Browse the latest entry-level {{ category.name }} jobs {% if is_remote %}that are 100% remote{% else %}in {{ location_name }}{% endif %}. Find the right career opportunity for you at {{ site_name }}.
+{% endblock %}
+
+{% block content %}
+    <section class="companies-section">
+        <div class="margin-bottom margin-huge">
+            <div class="padding-vertical padding-huge">
+                <div class="container-90">
+                    <div class="margin-bottom margin-huge">
+                        <div class="display-vertical-center text-align-center">
+                            <h1>
+                                {{ category.name }} Graduate Jobs {% if is_remote %}Remote{% else %}in {{ location_name }}{% endif %}
+                            </h1>
+                            <div class="container-50">
+                                <p>
+                                    Explore hundreds of entry-level {{ category.name|lower }} opportunities {% if is_remote %}available remotely{% else %}located in {{ location_name }}{% endif %}. Your career journey starts here.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {# Search and Filter Form #}
+                    <div class="margin-bottom margin-large">
+                        <div class="w-form">
+                            <form action="{% url 'jobs:job_list' %}" method="GET" class="display-horizontal-left gap-1rem vertical-left-mobile">
+                                <div class="form-field-wrapper no-margin flex-grow" style="width: 100%;">
+                                    <input type="text" name="q" value="{{ request.GET.q }}" class="form-input w-input" placeholder="Search by job title..." id="search-input" />
+                                </div>
+                                <div class="form-field-wrapper no-margin">
+                                    <select name="category" class="form-input select w-select">
+                                        <option value="">All Categories</option>
+                                        {% for cat in categories %}
+                                        <option value="{{ cat.slug }}" {% if request.GET.category == cat.slug %}selected{% endif %}>{{ cat.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="form-field-wrapper no-margin">
+                                    <select name="job_type" class="form-input select w-select">
+                                        <option value="">All Types</option>
+                                        <option value="FT" {% if request.GET.job_type == "FT" %}selected{% endif %}>Full Time</option>
+                                        <option value="PT" {% if request.GET.job_type == "PT" %}selected{% endif %}>Part Time</option>
+                                        <option value="CT" {% if request.GET.job_type == "CT" %}selected{% endif %}>Contract</option>
+                                        <option value="IN" {% if request.GET.job_type == "IN" %}selected{% endif %}>Internship</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="button black w-button">Search</button>
+                                {% if request.GET.q or request.GET.category or request.GET.job_type %}
+                                <a href="{% url 'jobs:job_list' %}" class="text-link red" style="margin-left: 10px;">Clear</a>
+                                {% endif %}
+                            </form>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="w-dyn-list">
+                            <div role="list" class="job-offers-listing-collection jobs-page w-dyn-items">
+                                {% if jobs %}
+                                    {% for job in jobs %}
+                                <div role="listitem" class="w-dyn-item">
+                                    <div class="job-offer-wrapper static">
+                                        <div class="display-horizontal-space-btw vertical-left-mobile">
+                                            <h3 class="no-margin">
+                                                {{ job.title }}
+                                            </h3>
+                                            <div class="department-badge">
+                                                <div>
+                                                    {{ job.category.name }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="margin-vertical margin-xsmall">
+                                            <p>
+                                                {{ job.description|striptags|truncatewords:25 }}
+                                            </p>
+                                        </div>
+                                        <div class="display-horizontal-left gap-2rem vertical-left-mobile">
+                                            <div class="display-horizontal-left gap-1rem">
+                                                <img src="{% static 'images/location-icon.svg' %}"
+                                                    loading="lazy"
+                                                    alt="Location"
+                                                    class="icon-1x1-xsmall" />
+                                                <div class="job-info-text">
+                                                    {{ job.location }}
+                                                </div>
+                                            </div>
+                                            <div class="display-horizontal-left gap-1rem">
+                                                <img src="{% static 'images/job-type-icon.svg' %}"
+                                                    loading="lazy"
+                                                    alt="Job Type"
+                                                    class="icon-1x1-xsmall" />
+                                                <div class="job-info-text">
+                                                    {{ job.get_job_type_display }}
+                                                </div>
+                                            </div>
+                                            <a href="{% url 'jobs:company_detail' slug=job.company.slug %}"
+                                                class="display-horizontal-left gap-1rem w-inline-block">
+                                                {% if job.company.logo %}
+                                                    <img src="{{ job.company.logo.url }}"
+                                                        loading="lazy" alt="{{ job.company.name }}" class="icon-1x1-xsmall" />
+                                                {% else %}
+                                                    <div style="width:20px;height:20px;background:linear-gradient(135deg,#4ede79,#2a9d5c);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:0.65rem;font-weight:800;color:white;flex-shrink:0;">{{ job.company.name|first }}</div>
+                                                {% endif %}
+                                                <div class="job-info-text">
+                                                    {{ job.company.name }}
+                                                </div>
+                                            </a>
+                                        </div>
+                                        <div class="margin-top margin-small">
+                                            {% if job.slug %}
+                                            <a href="{% url 'jobs:job_detail' slug=job.slug %}"
+                                                class="button button-small w-button"> Learn more
+                                            </a>
+                                            {% else %}
+                                            <span class="button button-small w-button disabled" style="opacity:0.5; cursor:not-allowed;">Missing Link</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                    {% endfor %}
+                                {% else %}
+                                    {% if not request.GET.q and not request.GET.category and not request.GET.job_type %}
+                                        {# Skeletons for Initial Empty State #}
+                                        {% for i in "12345678" %}
+                                        <div role="listitem" class="w-dyn-item">
+                                            <div class="job-offer-wrapper static">
+                                                <div class="display-horizontal-space-btw vertical-left-mobile">
+                                                    <div class="skeleton skeleton--text-lg" style="width: 200px;"></div>
+                                                    <div class="skeleton skeleton--badge"></div>
+                                                </div>
+                                                <div class="margin-vertical margin-xsmall">
+                                                    <div class="skeleton skeleton--text-md"></div>
+                                                    <div class="skeleton skeleton--text-md" style="width: 80%;"></div>
+                                                </div>
+                                                <div class="display-horizontal-left gap-2rem vertical-left-mobile">
+                                                    <div class="skeleton skeleton--badge"></div>
+                                                    <div class="skeleton skeleton--badge"></div>
+                                                    <div class="skeleton skeleton--badge"></div>
+                                                </div>
+                                                <div class="margin-top margin-small">
+                                                    <div class="skeleton skeleton--button"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    {% else %}
+                                        {# No Results Found #}
+                                        <div class="text-align-center padding-huge" style="width: 100%;">
+                                            <h3 class="heading-4">No jobs found matching your criteria.</h3>
+                                            <p>Try adjusting your search terms or filters.</p>
+                                        </div>
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        {# Pagination #}
+                        {% if jobs.has_other_pages %}
+                        <div class="margin-top margin-huge display-horizontal-center gap-1rem">
+                            {% if jobs.has_previous %}
+                            <a href="?page={{ jobs.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="button button-small white w-button">Previous</a>
+                            {% endif %}
+                            
+                            <div class="subtitle">Page {{ jobs.number }} of {{ jobs.paginator.num_pages }}</div>
+                            
+                            {% if jobs.has_next %}
+                            <a href="?page={{ jobs.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="button button-small white w-button">Next</a>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="background-cta">
+            <div class="padding-vertical padding-xhuge">
+                <div class="container-90">
+                    <div class="position-relative z-index-100">
+                        <div class="max-width-60">
+                            <div class="display-vertical-left gap-1rem">
+                                <h2>
+                                    Be the first to know about our new job offers
+                                </h2>
+                                <div class="max-width-70">
+                                    <p class="text-color-black---landscape">
+                                        Join our newsletter to receive the latest job openings and career advice directly in your inbox.
+                                    </p>
+                                </div>
+                                <div class="display-vertical-left">
+                                    <div class="w-form">
+                                        <form id="wf-form-Newsletter---Form" name="wf-form-Newsletter---Form"
+                                            action="{% url 'newsletter:subscribe' %}" method="POST"
+                                            class="position-relative newsletter-wrapper">
+                                            {% csrf_token %}
+                                            <input class="form-input newsletter cta w-input" maxlength="256"
+                                                name="email" placeholder="Enter your email"
+                                                type="email" id="Email" required="" />
+                                            <input type="submit" data-wait="Please wait..."
+                                                class="button button-small newsletter-button w-button"
+                                                value="Subscribe" />
+                                        </form>
+                                    </div>
+                                    <p class="paragraph-small">
+                                        Get weekly career tips and new job alerts.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

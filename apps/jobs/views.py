@@ -186,3 +186,37 @@ def post_job(request):
 
         return redirect(reverse('core:confirmation') + '?type=job')
     return render(request, 'jobs/post_job.html')
+
+
+def seo_landing_page(request, category_slug, location_slug):
+    """
+    Dynamic landing page for Programmatic SEO.
+    URL pattern: /jobs/<category_slug>-graduate-jobs-<location_slug>/
+    """
+    category = get_object_or_404(JobCategory, slug=category_slug)
+    
+    location_clean = location_slug.replace('-', ' ').title()
+    
+    queryset = Job.objects.filter(
+        category=category,
+        is_active=True
+    )
+    
+    if location_slug.lower() == 'remote':
+        queryset = queryset.filter(is_remote=True)
+    else:
+        queryset = queryset.filter(location__icontains=location_clean)
+        
+    queryset = queryset.select_related('company', 'category').order_by('-posted_at')
+    
+    paginator = Paginator(queryset, 12)
+    page_number = request.GET.get('page')
+    jobs = paginator.get_page(page_number)
+    
+    context = {
+        'jobs': jobs,
+        'category': category,
+        'location_name': location_clean,
+        'is_remote': location_slug.lower() == 'remote',
+    }
+    return render(request, 'jobs/seo_landing.html', context)

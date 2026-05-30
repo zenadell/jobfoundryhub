@@ -20,6 +20,7 @@ from django.utils import timezone
 from django.utils.text import slugify
 
 from apps.jobs.models import Job, Company, JobCategory
+from apps.jobs.indexing import notify_google
 
 try:
     from groq import Groq
@@ -386,6 +387,14 @@ class Command(BaseCommand):
             is_featured=False,
             expires_at=timezone.now() + timedelta(days=30),
         )
+
+        # Notify Google Indexing API
+        try:
+            domain = os.environ.get('SITE_DOMAIN', 'https://jobfoundryhub.com')
+            job_url = f"{domain}/job-listings/{job.slug}/"
+            notify_google(job_url, action="URL_UPDATED")
+        except Exception as e:
+            self.stderr.write(self.style.WARNING(f"  ⚠️  Indexing API error: {e}"))
 
         self.stdout.write(f'  ✅ Saved: {title[:60]} at {company_name}')
         return True
