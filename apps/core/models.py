@@ -64,8 +64,17 @@ class SiteSettings(models.Model):
     hiw_video_embed_employers = models.TextField(blank=True, help_text='YouTube iframe embed code for Employers')
     
     # How It Works Video Uploads (Local/Cloudinary)
-    hiw_video_file_seekers = models.FileField(upload_to='videos/hiw/', blank=True, null=True, help_text='Upload a video file for Job Seekers')
-    hiw_video_file_employers = models.FileField(upload_to='videos/hiw/', blank=True, null=True, help_text='Upload a video file for Employers')
+    # We use VideoMediaCloudinaryStorage to ensure Cloudinary treats it as a video (resource_type='video')
+    from django.conf import settings
+    
+    if getattr(settings, 'CLOUDINARY_STORAGE', {}).get('CLOUD_NAME'):
+        from cloudinary_storage.storage import VideoMediaCloudinaryStorage
+        storage_backend = VideoMediaCloudinaryStorage()
+    else:
+        storage_backend = None
+
+    hiw_video_file_seekers = models.FileField(upload_to='videos/hiw/', storage=storage_backend, blank=True, null=True, help_text='Upload a video file for Job Seekers')
+    hiw_video_file_employers = models.FileField(upload_to='videos/hiw/', storage=storage_backend, blank=True, null=True, help_text='Upload a video file for Employers')
     
     updated_at = models.DateTimeField(auto_now=True)
 
