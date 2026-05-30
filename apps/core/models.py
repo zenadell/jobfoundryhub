@@ -110,7 +110,6 @@ class SiteSettings(models.Model):
             return raw_input
 
         # If it's a raw YouTube URL, convert to iframe
-        # Handles: youtube.com/watch?v=ID, youtu.be/ID, youtube.com/embed/ID
         import re
         yt_regex = r'(https?://)?(www\.)?(youtube\.com/watch\?v=|youtu\.be/|youtube\.com/embed/)([a-zA-Z0-9_-]{11})'
         match = re.search(yt_regex, raw_input)
@@ -122,6 +121,15 @@ class SiteSettings(models.Model):
                 f'frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" '
                 f'allowfullscreen referrerpolicy="strict-origin-when-cross-origin" '
                 f'style="width:100%;height:100%;"></iframe>'
+            )
+            
+        # If it's a direct video link (.mp4, .webm), convert to video tag
+        if raw_input.strip().lower().endswith(('.mp4', '.webm', '.mov', '.avi')):
+            return (
+                f'<video muted controls class="hiw-uploaded-video" style="position:absolute;top:0;left:0;width:100%;height:100%;">'
+                f'<source src="{raw_input.strip()}" type="video/mp4">'
+                f'Your browser does not support the video tag.'
+                f'</video>'
             )
             
         return raw_input  # Fallback if it's not a recognized URL but not an iframe
