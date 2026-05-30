@@ -9,6 +9,10 @@
 }
 
 /* Skeleton Loaders */
+.grid-span-3 {
+    grid-column: span 3;
+}
+
 .skeleton-image {
     background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
     background-size: 200% 100%;
@@ -335,6 +339,10 @@
     .grid-3x1 {
         grid-template-columns: 1fr !important;
         width: 100% !important;
+    }
+
+    .grid-span-3 {
+        grid-column: span 1 !important;
     }
 
     /* ── ALL CONTAINERS ───────────────────────── */
