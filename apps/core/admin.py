@@ -132,15 +132,14 @@ class SiteSettingsAdmin(admin.ModelAdmin):
     def has_delete_permission(self, request, obj=None):
         return False  # Never delete the settings row
 
-    list_display = ('site_name', 'view_site_link')
+    list_display = ('site_name', 'view_site_link', 'data_vault_link')
 
     def view_site_link(self, obj):
         url = reverse('core:home')
         return format_html('<a href="{}" target="_blank" style="font-weight:bold;color:#3498db;">🔗 View Homepage</a>', url)
     view_site_link.short_description = 'Public Site'
 
-    class Media:
-        js = (
-            'https://upload-widget.cloudinary.com/global/all.js',
-            'js/cloudinary_admin.js',
-        )
+    def data_vault_link(self, obj):
+        url = reverse('core:data_vault')
+        return format_html('<a href="{}" style="font-weight:bold;color:#10b981;">🗄️ Open Data Vault</a>', url)
+    data_vault_link.short_description = 'Database Backup'
