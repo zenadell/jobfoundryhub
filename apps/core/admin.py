@@ -119,11 +119,9 @@ class SiteSettingsAdmin(admin.ModelAdmin):
         ('📹 How It Works Videos', {
             'fields': (
                 'hiw_video_embed_seekers',
-                'hiw_video_file_seekers',
-                'hiw_video_embed_employers',
-                'hiw_video_file_employers'
+                'hiw_video_embed_employers'
             ),
-            'description': 'Paste a YouTube link in the embed field OR upload a local video file using the file fields below.'
+            'description': 'Use the "Upload Video" button below to upload directly to the cloud, or paste a YouTube link.'
         }),
     )
 
@@ -145,3 +143,9 @@ class SiteSettingsAdmin(admin.ModelAdmin):
         url = reverse('core:data_vault')
         return format_html('<a href="{}" style="font-weight:bold;color:#10b981;">🗄️ Open Data Vault</a>', url)
     data_vault_link.short_description = 'Database Backup'
+
+    class Media:
+        js = (
+            'https://upload-widget.cloudinary.com/global/all.js',
+            'js/cloudinary_admin.js',
+        )
