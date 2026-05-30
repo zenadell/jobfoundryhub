@@ -32,5 +32,9 @@ urlpatterns = [
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
     path('robots.txt', TemplateView.as_view(template_name="robots.txt", content_type="text/plain")),
     path('ads.txt', TemplateView.as_view(template_name="ads.txt", content_type="text/plain")),
+    path('admin/data-vault/', views.data_vault, name='data_vault'),
+    path('admin/data-vault/export/', views.data_vault_export, name='data_vault_export'),
+    path('admin/data-vault/import/', views.data_vault_import, name='data_vault_import'),
     path('test-email-debug/', views.test_email_debug, name='test_email_debug'),
+    path('api/cron/trigger/', views.cron_trigger, name='cron_trigger'),
 ]

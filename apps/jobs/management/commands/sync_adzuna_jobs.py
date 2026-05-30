@@ -21,6 +21,10 @@ from django.utils.text import slugify
 
 from apps.jobs.models import Job, Company, JobCategory
 
+try:
+    from groq import Groq
+except ImportError:
+    Groq = None
 
 # ── Adzuna credentials ──────────────────────────────────────────
 ADZUNA_APP_ID = os.environ.get('ADZUNA_APP_ID', 'ce95f522')
@@ -182,6 +186,13 @@ class Command(BaseCommand):
             help='Delete old seed/dummy jobs before syncing',
         )
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.groq_client = None
+        groq_api_key = os.environ.get('GROQ_API_KEY')
+        if Groq and groq_api_key:
+            self.groq_client = Groq(api_key=groq_api_key)
+
     def handle(self, *args, **options):
         self.stdout.write("Starting Adzuna sync...")
 
@@ -334,13 +345,15 @@ class Command(BaseCommand):
         # ── Description (Expanded & Professional) ──────────────
         original_desc = re.sub(r'<[^>]+>', '', description_raw).strip()
         
-        extra_desc = CATEGORY_DETAILS.get(category_name, {}).get('extra_desc', 
-            "We are looking for a dedicated individual to join our growing team. "
-            "In this role, you will have the opportunity to work on meaningful projects "
-            "that impact our customers every day. We value innovation, integrity, and a "
-            "commitment to excellence.")
-        
-        full_description = f"<p>{original_desc}</p><p>{extra_desc}</p>"
+        full_description = self._rewrite_with_ai(title, company_name, original_desc, category_name)
+        if not full_description:
+            # Fallback
+            extra_desc = CATEGORY_DETAILS.get(category_name, {}).get('extra_desc', 
+                "We are looking for a dedicated individual to join our growing team. "
+                "In this role, you will have the opportunity to work on meaningful projects "
+                "that impact our customers every day. We value innovation, integrity, and a "
+                "commitment to excellence.")
+            full_description = f"<p>{original_desc}</p><p>{extra_desc}</p>"
 
         # ── Country name ───────────────────────────────────────
         country_names = {
@@ -376,6 +389,39 @@ class Command(BaseCommand):
 
         self.stdout.write(f'  ✅ Saved: {title[:60]} at {company_name}')
         return True
+
+    def _rewrite_with_ai(self, title, company_name, original_desc, category_name):
+        if not self.groq_client:
+            return None
+            
+        prompt = (
+            f"Write a professional, engaging 2-3 paragraph job description for the position of '{title}' at '{company_name}'. "
+            f"The role falls under the '{category_name}' category. "
+            f"Here is the raw description from the job board to base it on:\n{original_desc}\n\n"
+            "Format the output as clean HTML using only <p> tags. Do not use <h1>, <h2>, or <ul> tags. "
+            "Make it sound unique, exciting, and optimized for an entry-level/graduate audience."
+        )
+        
+        try:
+            chat_completion = self.groq_client.chat.completions.create(
+                messages=[
+                    {
+                        "role": "system",
+                        "content": "You are an expert HR copywriter that creates compelling and unique job descriptions formatted in HTML."
+                    },
+                    {
+                        "role": "user",
+                        "content": prompt,
+                    }
+                ],
+                model="llama3-8b-8192",
+                temperature=0.7,
+                max_tokens=600,
+            )
+            return chat_completion.choices[0].message.content.strip()
+        except Exception as e:
+            self.stderr.write(self.style.WARNING(f'  ⚠️  Groq AI error: {e}'))
+            return None
 
     # ─────────────────────────────────────────────────────────────
     #  COMPANY

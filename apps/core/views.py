@@ -1,4 +1,9 @@
 import logging
+import json
+import os
+import threading
+from datetime import datetime
+from django.core.management import call_command
 from django.shortcuts import render, redirect
 
 logger = logging.getLogger(__name__)
@@ -239,3 +244,111 @@ def test_email_debug(request):
             'error': str(e),
             'type': type(e).__name__,
         }, status=500)
+
+
+@staff_member_required
+def data_vault(request):
+    """Render the Data Vault backup dashboard in the admin styling context."""
+    # We pass the default Django admin site context so headers, titles, and menus align
+    from django.contrib import admin
+    context = admin.site.each_context(request)
+    context.update({
+        'title': 'Data Vault Management',
+        'import_summary': request.session.pop('import_summary', None),
+    })
+    return render(request, 'admin/data_vault.html', context)
+
+
+@staff_member_required
+def data_vault_export(request):
+    """Query the export engine and serve a serialized JSON file download."""
+    from django.http import HttpResponse
+    from apps.core.data_vault import export_all_data, DataVaultEncoder
+    
+    try:
+        data = export_all_data()
+        json_str = json.dumps(data, cls=DataVaultEncoder, indent=2)
+        
+        response = HttpResponse(json_str, content_type='application/json')
+        filename = f"jfh_backup_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}.json"
+        response['Content-Disposition'] = f'attachment; filename="{filename}"'
+        return response
+    except Exception as e:
+        logger.error(f"Data Vault export failed: {e}")
+        messages.error(request, f"❌ Data Vault export failed: {e}")
+        return redirect('core:data_vault')
+
+
+@staff_member_required
+def data_vault_import(request):
+    """Handle backup file upload, validate JSON payload, and restore database."""
+    if request.method != 'POST':
+        return redirect('core:data_vault')
+        
+    backup_file = request.FILES.get('backup_file')
+    if not backup_file:
+        messages.error(request, "❌ Please select a valid backup JSON file first.")
+        return redirect('core:data_vault')
+        
+    clear_existing = request.POST.get('clear_existing') == 'on'
+    
+    try:
+        data_dict = json.load(backup_file)
+        
+        # Quick sanity check on the JSON format
+        if "export_meta" not in data_dict:
+            messages.error(request, "❌ Invalid backup file format (missing export metadata).")
+            return redirect('core:data_vault')
+            
+        from apps.core.data_vault import import_all_data
+        summary = import_all_data(data_dict, clear_existing=clear_existing)
+        
+        # Save summary in session to display on next load
+        request.session['import_summary'] = summary
+        messages.success(request, "🎉 Database restored successfully! All tables mapped perfectly.")
+        
+    except json.JSONDecodeError:
+        messages.error(request, "❌ Failed to parse backup file (invalid JSON formatting).")
+    except Exception as e:
+        logger.error(f"Data Vault import failed: {e}")
+        import traceback
+        traceback.print_exc()
+        messages.error(request, f"❌ Restore failed due to an error: {e}")
+        
+    return redirect('core:data_vault')
+
+
+def run_cron_tasks():
+    """Run management commands in a background thread."""
+    try:
+        logger.info("Running automated cron tasks: cleanup_expired_jobs")
+        call_command('cleanup_expired_jobs')
+        logger.info("Running automated cron tasks: sync_adzuna_jobs")
+        call_command('sync_adzuna_jobs')
+        logger.info("Automated cron tasks completed successfully.")
+    except Exception as e:
+        logger.error(f"Error running cron tasks: {e}")
+
+
+def cron_trigger(request):
+    """
+    Secure webhook endpoint to trigger automated tasks.
+    Can be called by external cron services (e.g., cron-job.org).
+    Requires ?token= match with CRON_SECRET_TOKEN env variable.
+    """
+    from django.http import JsonResponse
+    token = request.GET.get('token')
+    secret_token = os.environ.get('CRON_SECRET_TOKEN', 'jobfoundry-fallback-token-123')
+    
+    if token != secret_token:
+        return JsonResponse({'status': 'error', 'message': 'Invalid or missing token'}, status=403)
+        
+    # Start the tasks in a background thread so the HTTP response returns immediately
+    thread = threading.Thread(target=run_cron_tasks)
+    thread.daemon = True
+    thread.start()
+    
+    return JsonResponse({
+        'status': 'success', 
+        'message': 'Automated tasks have been triggered and are running in the background.'
+    })
