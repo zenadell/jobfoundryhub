@@ -64,6 +64,10 @@
          crossorigin="anonymous"></script>
     {% endif %}
 
+    {% if MONETAG_ENABLED and MONETAG_HEAD_SCRIPT %}
+    {{ MONETAG_HEAD_SCRIPT|safe }}
+    {% endif %}
+
     {% block structured_data %}{% endblock %}
 </head>
 

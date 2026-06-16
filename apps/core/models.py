@@ -59,6 +59,9 @@ class SiteSettings(models.Model):
     adsense_publisher_id = models.CharField(max_length=50, blank=True, help_text='AdSense Publisher ID, e.g. pub-XXXXXXXXXXXXXXXX — only fill after approval')
     adsense_enabled      = models.BooleanField(default=False, help_text='ONLY enable after AdSense application is approved')
     
+    monetag_head_script  = models.TextField(blank=True, help_text='Paste the Monetag JS snippet here (Vignette or In-Page Push)')
+    monetag_enabled      = models.BooleanField(default=False, help_text='Enable Monetag ads on the site')
+    
     # How It Works Video Embeds (YouTube, Vimeo, etc.)
     hiw_video_embed_seekers = models.TextField(blank=True, help_text='YouTube iframe embed code for Job Seekers')
     hiw_video_embed_employers = models.TextField(blank=True, help_text='YouTube iframe embed code for Employers')
