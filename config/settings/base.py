@@ -87,9 +87,21 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # ── Database ──────────────────────────────────────────────────
 import dj_database_url
 
+TURSO_DATABASE_URL = env('TURSO_DATABASE_URL', default='')
+TURSO_AUTH_TOKEN = env('TURSO_AUTH_TOKEN', default='')
 DATABASE_URL = env('DATABASE_URL', default='')
 
-if DATABASE_URL:
+if TURSO_DATABASE_URL:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'libsql.db.backends.sqlite3',
+            'NAME': TURSO_DATABASE_URL,
+            'OPTIONS': {
+                'auth_token': TURSO_AUTH_TOKEN,
+            },
+        }
+    }
+elif DATABASE_URL:
     DATABASES = {
         'default': dj_database_url.config(
             default=DATABASE_URL,
