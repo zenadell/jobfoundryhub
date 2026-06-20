@@ -382,7 +382,7 @@ class Command(BaseCommand):
             salary_max=salary_max,
             salary_currency=meta['currency'],
             salary_period='annual' if salary_min else '',
-            apply_url='https://www.jobfoundryhub.com/submit-resume/',
+            apply_url=item.get('redirect_url') or 'https://www.jobfoundryhub.com/submit-resume/',
             is_active=True,
             is_featured=False,
             expires_at=timezone.now() + timedelta(days=30),

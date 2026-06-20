@@ -61,7 +61,7 @@
                                             {% endif %}
                                         </div>
                                         <div class="margin-top margin-medium">
-                                            <a href="{% url 'jobs:submit_resume' %}" class="button w-button"> Apply now
+                                            <a href="{% if job.apply_url %}{{ job.apply_url }}{% else %}{% url 'jobs:submit_resume' %}{% endif %}" {% if job.apply_url and 'submit-resume' not in job.apply_url %}target="_blank" rel="noopener noreferrer"{% endif %} class="button w-button"> Apply now
                                             </a>
                                         </div>
                                     </div>
@@ -96,7 +96,7 @@
                                                 {% endif %}
                                             </div>
                                         </div>
-                                        <a href="{% url 'jobs:submit_resume' %}" class="button black w-button"> Apply now
+                                        <a href="{% if job.apply_url %}{{ job.apply_url }}{% else %}{% url 'jobs:submit_resume' %}{% endif %}" {% if job.apply_url and 'submit-resume' not in job.apply_url %}target="_blank" rel="noopener noreferrer"{% endif %} class="button black w-button"> Apply now
                                         </a>
                                     </div>
                                 </div>
