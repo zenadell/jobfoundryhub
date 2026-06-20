@@ -18,9 +18,7 @@ services:
         generateValue: true
       - key: ALLOWED_HOSTS
         value: jobfoundryhub.onrender.com,jobfoundryhub.com,www.jobfoundryhub.com
-      - key: TURSO_DATABASE_URL
-        sync: false
-      - key: TURSO_AUTH_TOKEN
+      - key: DATABASE_URL
         sync: false
       - key: CLOUDINARY_CLOUD_NAME
         sync: false
