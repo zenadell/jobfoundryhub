@@ -116,6 +116,13 @@ class SiteSettingsAdmin(admin.ModelAdmin):
                 'you receive the approval email from Google AdSense.'
             )
         }),
+        ('💸 Monetag Ads', {
+            'fields': ('monetag_head_script', 'monetag_enabled'),
+            'description': (
+                'Paste the Monetag JavaScript tag (Vignette or In-Page Push) into the script box. '
+                'Make sure AdSense is disabled if you are using Monetag.'
+            )
+        }),
         ('📹 How It Works Videos', {
             'fields': (
                 'hiw_video_embed_seekers',
