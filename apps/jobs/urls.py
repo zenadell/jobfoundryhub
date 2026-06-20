@@ -10,5 +10,6 @@ urlpatterns = [
     path('companies/<slug:slug>/', views.company_detail, name='company_detail'),
     path('submit-resume/', views.submit_resume, name='submit_resume'),
     path('post-job/', views.post_job, name='post_job'),
+    path('feed.xml', views.job_feed_xml, name='job_feed_xml'),
     path('<slug:category_slug>-graduate-jobs-<slug:location_slug>/', views.seo_landing_page, name='seo_landing'),
 ]

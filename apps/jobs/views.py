@@ -3,6 +3,7 @@ from django.urls import reverse
 from django.core.paginator import Paginator
 from django.contrib import messages
 from django.db import models
+from django.utils import timezone
 from .models import Job, Company, JobCategory, ResumeSubmission, JobPostingRequest
 
 def job_list(request):
@@ -220,3 +221,20 @@ def seo_landing_page(request, category_slug, location_slug):
         'is_remote': location_slug.lower() == 'remote',
     }
     return render(request, 'jobs/seo_landing.html', context)
+
+def job_feed_xml(request):
+    """
+    XML feed for Job Aggregators (Jooble, Talent.com, etc).
+    """
+    jobs = Job.objects.filter(
+        is_active=True,
+        expires_at__gt=timezone.now()
+    ).select_related('company', 'category').order_by('-posted_at')
+    
+    site_url = 'https://jobfoundryhub.com'
+    
+    context = {
+        'jobs': jobs,
+        'site_url': site_url,
+    }
+    return render(request, 'jobs/feed.xml', context, content_type='application/xml')

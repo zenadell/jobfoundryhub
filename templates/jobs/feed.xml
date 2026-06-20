@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<source>
+  <publisher>Job Foundry Hub</publisher>
+  <publisherurl>https://jobfoundryhub.com</publisherurl>
+  <lastBuildDate>{% now "D, d M Y H:i:s O" %}</lastBuildDate>
+  {% for job in jobs %}
+  <job>
+    <title><![CDATA[{{ job.title }}]]></title>
+    <date><![CDATA[{{ job.posted_at|date:"D, d M Y H:i:s O" }}]]></date>
+    <referencenumber><![CDATA[{{ job.id }}]]></referencenumber>
+    <url><![CDATA[{{ site_url }}{{ job.get_absolute_url }}]]></url>
+    <company><![CDATA[{{ job.company.name }}]]></company>
+    <city><![CDATA[{{ job.location }}]]></city>
+    <state><![CDATA[{{ job.region }}]]></state>
+    <country><![CDATA[{{ job.country }}]]></country>
+    <description><![CDATA[{{ job.description|striptags|safe }}]]></description>
+    {% if job.salary_min %}<salary><![CDATA[{{ job.salary_currency }} {{ job.salary_min }}{% if job.salary_max %} - {{ job.salary_max }}{% endif %} per {{ job.salary_period }}]]></salary>{% endif %}
+    <jobtype><![CDATA[{{ job.job_type }}]]></jobtype>
+    <category><![CDATA[{{ job.category.name|default:"General" }}]]></category>
+    <experience><![CDATA[{{ job.experience_level }}]]></experience>
+    {% if job.is_remote %}<remote><![CDATA[true]]></remote>{% endif %}
+  </job>
+  {% endfor %}
+</source>
