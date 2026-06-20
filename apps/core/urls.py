@@ -37,5 +37,4 @@ urlpatterns = [
     path('admin/data-vault/import/', views.data_vault_import, name='data_vault_import'),
     path('test-email-debug/', views.test_email_debug, name='test_email_debug'),
     path('api/cron/trigger/', views.cron_trigger, name='cron_trigger'),
-    path('api/cron/temp-wipe/', views.temp_wipe, name='temp_wipe'),
 ]
