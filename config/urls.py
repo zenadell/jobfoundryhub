@@ -37,6 +37,7 @@ urlpatterns = [
 
     path('', include('apps.core.urls')),
     path('sw.js', TemplateView.as_view(template_name='sw.js', content_type='application/javascript')),
+    path('ads.txt', TemplateView.as_view(template_name='ads.txt', content_type='text/plain')),
     path('admin/', admin.site.urls),
     path('', include('apps.jobs.urls')),
     path('', include('apps.blog.urls')),

@@ -1,1 +1,1 @@
-{% if ADSENSE_PUBLISHER_ID %}google.com, {{ ADSENSE_PUBLISHER_ID }}, DIRECT, f08c47fec0942fa0{% endif %}
+google.com, pub-1153266457985899, DIRECT, f08c47fec0942fa0
