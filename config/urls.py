@@ -16,7 +16,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from django.views.generic import RedirectView
+from django.views.generic import RedirectView, TemplateView
+from apps.core import views as core_views
 
 # Brand the admin panel
 admin.site.site_header  = 'Job Foundry Hub'
@@ -34,8 +35,9 @@ urlpatterns = [
             url='/blog/how-to-build-resume-no-work-experience/',
             permanent=True)),
 
-    path('admin/', admin.site.urls),
     path('', include('apps.core.urls')),
+    path('sw.js', TemplateView.as_view(template_name='sw.js', content_type='application/javascript')),
+    path('admin/', admin.site.urls),
     path('', include('apps.jobs.urls')),
     path('', include('apps.blog.urls')),
     path('', include('apps.services.urls')),
