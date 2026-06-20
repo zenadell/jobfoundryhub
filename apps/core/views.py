@@ -352,3 +352,25 @@ def cron_trigger(request):
         'status': 'success', 
         'message': 'Automated tasks have been triggered and are running in the background.'
     })
+
+def temp_wipe(request):
+    """Temporary endpoint to wipe old automated jobs."""
+    from django.http import JsonResponse
+    token = request.GET.get('token')
+    secret_token = os.environ.get('CRON_SECRET_TOKEN', 'jobfoundry-fallback-token-123')
+    
+    if token != secret_token:
+        return JsonResponse({'status': 'error', 'message': 'Invalid token'}, status=403)
+        
+    def _wipe():
+        from apps.jobs.models import Job
+        from django.core.management import call_command
+        deleted, _ = Job.objects.filter(is_featured=False, apply_url='https://www.jobfoundryhub.com/submit-resume/').delete()
+        print(f"Deleted {deleted} old jobs.")
+        call_command('sync_adzuna_jobs')
+        
+    thread = threading.Thread(target=_wipe)
+    thread.daemon = True
+    thread.start()
+    
+    return JsonResponse({'status': 'success', 'message': 'Wiping old jobs and syncing new ones in background.'})
