@@ -207,6 +207,11 @@ EMAIL_BACKEND        = 'django.core.mail.backends.smtp.EmailBackend'
 
 # ── Custom Email via Resend HTTP API (bypasses all port blocks) ──
 RESEND_API_KEY       = env('RESEND_API_KEY', default='')
+if RESEND_API_KEY:
+    EMAIL_BACKEND = "anymail.backends.resend.EmailBackend"
+    ANYMAIL = {
+        "RESEND_API_KEY": RESEND_API_KEY,
+    }
 
 DEFAULT_FROM_EMAIL   = env('DEFAULT_FROM_EMAIL', default='support@jobfoundryhub.com')
 SUPPORT_EMAIL        = env('SUPPORT_EMAIL', default='support@jobfoundryhub.com')

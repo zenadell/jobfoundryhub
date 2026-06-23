@@ -434,6 +434,42 @@
              <button @click="closePopup()" style="background:none; border:none; color:#999; text-decoration:underline; margin-top:20px; cursor:pointer; font-size:14px;">No thanks, I don't want free resources</button>
          </div>
     </div>
+    {% if messages %}
+    <div x-data="{ showMessage: true }"
+         x-show="showMessage"
+         style="display:none; position:fixed; inset:0; z-index:100000; background:rgba(0,0,0,0.5); display: flex; align-items:center; justify-content:center; padding: 20px;"
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0"
+         x-transition:enter-end="opacity-100"
+         x-transition:leave="transition ease-in duration-200"
+         x-transition:leave-start="opacity-100"
+         x-transition:leave-end="opacity-0">
+         
+         <div @click.outside="showMessage = false" 
+              style="background:#fff; border-radius:12px; padding:40px; max-width:450px; width:100%; position:relative; box-shadow:0 20px 40px rgba(0,0,0,0.2); text-align:center;">
+             <button @click="showMessage = false" style="position:absolute; top:15px; right:15px; background:none; border:none; font-size:24px; cursor:pointer; color:#999; line-height: 1;">&times;</button>
+             
+             {% for message in messages %}
+             <div style="font-size: 40px; margin-bottom: 10px;">
+                 {% if 'success' in message.tags %}✅
+                 {% elif 'info' in message.tags %}ℹ️
+                 {% else %}🔔{% endif %}
+             </div>
+             <h3 style="margin-top: 0; margin-bottom: 15px; font-size: 24px; font-weight: 700;">
+                 {% if 'success' in message.tags %}Success!
+                 {% elif 'info' in message.tags %}Notice
+                 {% else %}Update{% endif %}
+             </h3>
+             <p style="color:#666; margin-bottom: 25px; line-height:1.5;">
+                 {{ message }}
+             </p>
+             {% endfor %}
+             
+             <button @click="showMessage = false" class="button red w-button" style="width: 100%; padding: 14px; border-radius: 6px;">Close</button>
+         </div>
+    </div>
+    {% endif %}
+
 </body>
 
 </html>
