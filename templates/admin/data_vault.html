@@ -1,0 +1,385 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block extrastyle %}
+{{ block.super }}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+    /* Premium Styling Overrides */
+    body {
+        font-family: 'Inter', sans-serif !important;
+        background-color: #f8fafc !important;
+    }
+    #content {
+        padding: 40px 40px !important;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    .vault-header {
+        margin-bottom: 40px;
+        animation: fadeIn 0.6s ease-out;
+    }
+    .vault-title {
+        font-family: 'Outfit', sans-serif;
+        font-size: 2.2rem;
+        font-weight: 800;
+        color: #0f172a;
+        margin: 0 0 10px 0;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    .vault-title span {
+        background: linear-gradient(135deg, #6366f1, #3b82f6);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    .vault-subtitle {
+        color: #64748b;
+        font-size: 1.05rem;
+        margin: 0;
+    }
+    .vault-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+        margin-bottom: 40px;
+        animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .vault-card {
+        background: #ffffff;
+        border-radius: 20px;
+        box-shadow: 0 10px 25px -5px rgba(0,0,0,0.02), 0 8px 10px -6px rgba(0,0,0,0.02), 0 0 0 1px rgba(0,0,0,0.04);
+        padding: 35px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        position: relative;
+        overflow: hidden;
+    }
+    .vault-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: transparent;
+        transition: background 0.3s ease;
+    }
+    .vault-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 25px -5px rgba(0,0,0,0.05), 0 10px 10px -5px rgba(0,0,0,0.04);
+    }
+    .card-export::before {
+        background: linear-gradient(90deg, #6366f1, #3b82f6);
+    }
+    .card-import::before {
+        background: linear-gradient(90deg, #10b981, #059669);
+    }
+    .card-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        margin-bottom: 25px;
+    }
+    .export-icon {
+        background: #eef2ff;
+        color: #4f46e5;
+    }
+    .import-icon {
+        background: #ecfdf5;
+        color: #059669;
+    }
+    .card-title {
+        font-family: 'Outfit', sans-serif;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1e293b;
+        margin: 0 0 12px 0;
+    }
+    .card-desc {
+        color: #64748b;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        margin-bottom: 30px;
+        flex-grow: 1;
+    }
+    .btn-vault {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 14px 28px;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: all 0.2s ease;
+        cursor: pointer;
+        border: none;
+        width: 100%;
+        text-decoration: none !important;
+        text-align: center;
+    }
+    .btn-export {
+        background: linear-gradient(135deg, #6366f1, #3b82f6);
+        color: white !important;
+        box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4);
+    }
+    .btn-export:hover {
+        background: linear-gradient(135deg, #4f46e5, #2563eb);
+        transform: translateY(-2px);
+    }
+    .btn-import {
+        background: linear-gradient(135deg, #10b981, #059669);
+        color: white !important;
+        box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4);
+    }
+    .btn-import:hover {
+        background: linear-gradient(135deg, #059669, #047857);
+        transform: translateY(-2px);
+    }
+    .import-form {
+        margin-top: 20px;
+    }
+    .file-input-wrapper {
+        border: 2px dashed #cbd5e1;
+        border-radius: 12px;
+        padding: 20px;
+        text-align: center;
+        position: relative;
+        background: #f8fafc;
+        transition: all 0.2s ease;
+        margin-bottom: 20px;
+    }
+    .file-input-wrapper:hover {
+        border-color: #10b981;
+        background: #f0fdf4;
+    }
+    .file-input-wrapper input[type="file"] {
+        position: absolute;
+        left: 0;
+        top: 0;
+        opacity: 0;
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+    }
+    .file-label {
+        font-weight: 500;
+        color: #475569;
+    }
+    .checkbox-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 20px;
+        font-weight: 500;
+        color: #334155;
+    }
+    .checkbox-wrapper input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        accent-color: #10b981;
+    }
+    .alert-vault {
+        padding: 16px 20px;
+        border-radius: 12px;
+        margin-bottom: 30px;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        animation: fadeIn 0.4s ease-out;
+    }
+    .alert-success {
+        background-color: #d1fae5;
+        color: #065f46;
+        border: 1px solid #a7f3d0;
+    }
+    .alert-error {
+        background-color: #fee2e2;
+        color: #991b1b;
+        border: 1px solid #fecaca;
+    }
+    .alert-icon {
+        font-size: 20px;
+    }
+    .summary-table-card {
+        background: white;
+        border-radius: 20px;
+        padding: 35px;
+        box-shadow: 0 10px 25px -5px rgba(0,0,0,0.02), 0 8px 10px -6px rgba(0,0,0,0.02), 0 0 0 1px rgba(0,0,0,0.04);
+        margin-top: 40px;
+    }
+    .summary-title {
+        font-family: 'Outfit', sans-serif;
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 25px;
+    }
+    .summary-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    .summary-table th {
+        text-align: left;
+        padding: 12px 16px;
+        color: #475569;
+        font-weight: 600;
+        border-bottom: 2px solid #e2e8f0;
+    }
+    .summary-table td {
+        padding: 14px 16px;
+        border-bottom: 1px solid #f1f5f9;
+        color: #334155;
+    }
+    .summary-table tr:hover td {
+        background-color: #f8fafc;
+    }
+    .badge-count {
+        background-color: #f1f5f9;
+        color: #475569;
+        padding: 4px 10px;
+        border-radius: 100px;
+        font-weight: 600;
+        font-size: 0.85rem;
+    }
+    .badge-success {
+        background-color: #d1fae5;
+        color: #065f46;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    @keyframes slideUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
+{% endblock %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'admin:index' %}">{% translate 'Home' %}</a>
+&rsaquo; Data Vault
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="vault-header">
+    <h1 class="vault-title">🗄️ Job Foundry Hub <span>Data Vault</span></h1>
+    <p class="vault-subtitle">Safeguard and restore your entire database with single-click backup files.</p>
+</div>
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert-vault {% if message.tags == 'success' %}alert-success{% else %}alert-error{% endif %}">
+            <span class="alert-icon">{% if message.tags == 'success' %}✅{% else %}⚠️{% endif %}</span>
+            <span>{{ message }}</span>
+        </div>
+    {% endfor %}
+{% endif %}
+
+<div class="vault-grid">
+    <!-- EXPORT PANEL -->
+    <div class="vault-card card-export">
+        <div>
+            <div class="card-icon export-icon">📥</div>
+            <h2 class="card-title">Export Database</h2>
+            <p class="card-desc">
+                Downloads a unified, complete backup file (.json) containing all settings, accounts, job posts, categories, companies, newsletter subscribers, contact requests, and blog posts. File references to Cloudinary media assets are preserved.
+            </p>
+        </div>
+        <a href="{% url 'core:data_vault_export' %}" class="btn-vault btn-export">
+            <span>Download Backup JSON</span>
+        </a>
+    </div>
+
+    <!-- IMPORT PANEL -->
+    <div class="vault-card card-import">
+        <div>
+            <div class="card-icon import-icon">📤</div>
+            <h2 class="card-title">Import & Restore</h2>
+            <p class="card-desc">
+                Restore your database instantly by uploading a previously downloaded backup JSON file.
+            </p>
+            <form action="{% url 'core:data_vault_import' %}" method="post" enctype="multipart/form-data" class="import-form" id="import-form">
+                {% csrf_token %}
+                <div class="file-input-wrapper">
+                    <span class="file-label" id="file-label-text">Select backup JSON file</span>
+                    <input type="file" name="backup_file" accept=".json" required onchange="updateFileName(this)">
+                </div>
+                <div class="checkbox-wrapper">
+                    <input type="checkbox" name="clear_existing" id="clear_existing" checked>
+                    <label for="clear_existing" style="cursor:pointer; user-select:none;">
+                        Clean Import (Wipes current DB first to avoid duplicates)
+                    </label>
+                </div>
+                <button type="submit" class="btn-vault btn-import" onclick="confirmImport(event)">
+                    <span>Restore Database Now</span>
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% if import_summary %}
+<div class="summary-table-card">
+    <h3 class="summary-title">📊 Import Results Summary</h3>
+    <table class="summary-table">
+        <thead>
+            <tr>
+                <th>Data Category</th>
+                <th>Records Restored</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for key, count in import_summary.items %}
+            <tr>
+                <td style="font-weight: 600;">{{ key }}</td>
+                <td><span class="badge-count {% if count > 0 %}badge-success{% endif %}">{{ count }}</span></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
+
+<script>
+    function updateFileName(input) {
+        const textSpan = document.getElementById('file-label-text');
+        if (input.files && input.files.length > 0) {
+            textSpan.textContent = '📄 ' + input.files[0].name;
+            textSpan.style.color = '#10b981';
+            textSpan.style.fontWeight = '600';
+        } else {
+            textSpan.textContent = 'Select backup JSON file';
+            textSpan.style.color = '#475569';
+        }
+    }
+
+    function confirmImport(event) {
+        const isClean = document.getElementById('clear_existing').checked;
+        let msg = "Are you sure you want to restore the database?\n\n";
+        if (isClean) {
+            msg += "⚠️ WARNING: This will completely WIPE your existing local database tables before importing, ensuring a perfectly clean start with no duplicate slug conflicts!";
+        } else {
+            msg += "This will import new records alongside existing ones. Note: duplicate primary keys will error out.";
+        }
+        
+        if (!confirm(msg)) {
+            event.preventDefault();
+        }
+    }
+</script>
+{% endblock %}

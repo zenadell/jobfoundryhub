@@ -86,6 +86,32 @@
         </div>
     </section>
 
+    <section class="newsletter-section" style="background-color: #fff9f9; border-top: 1px solid #f0f0f0; border-bottom: 1px solid #f0f0f0;">
+        <div class="padding-vertical padding-large">
+            <div class="container-90">
+                <div class="display-vertical-center text-align-center">
+                    <div class="margin-bottom margin-small">
+                        <h2>
+                            📩 Get the latest verified job alerts in your inbox.
+                        </h2>
+                        <div class="container-60">
+                            <p>
+                                Enter your email to receive daily job updates—for free. Plus, get an exclusive career resource instantly when you subscribe!
+                            </p>
+                        </div>
+                    </div>
+                    <div class="w-form" style="max-width: 500px; margin: 0 auto; width: 100%;">
+                        <form method="post" action="{% url 'newsletter:subscribe' %}" class="display-horizontal-center gap-1rem vertical-left-mobile" style="display: flex; gap: 10px;">
+                            {% csrf_token %}
+                            <input class="form-input w-input no-margin" name="email" placeholder="Enter your email address" type="email" required style="flex: 1; margin: 0;" />
+                            <input type="submit" class="button red w-button" value="Subscribe" style="margin: 0; white-space: nowrap;" />
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section id="learn-more" class="features-section">
         <div class="padding-vertical padding-huge">
             <div class="container-90">
