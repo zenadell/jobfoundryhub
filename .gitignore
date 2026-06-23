@@ -38,3 +38,6 @@ local_settings.py
 *.css.bak
 venv/
 *.zip
+*.sql
+*.json
+scratch/
