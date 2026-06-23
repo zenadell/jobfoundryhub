@@ -1,0 +1,16 @@
+name: Send Daily Newsletter
+
+on:
+  schedule:
+    # Runs at 08:00 UTC every day
+    - cron: '0 8 * * *'
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  trigger_newsletter:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Webhook
+        run: |
+          curl -sS --connect-timeout 60 --max-time 120 "https://jobfoundryhub.com/newsletter/trigger-daily-automation/jfh_secure_trigger_991823/"

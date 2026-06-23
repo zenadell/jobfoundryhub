@@ -69,3 +69,26 @@ def subscribe(request):
         import traceback
         from django.http import HttpResponse
         return HttpResponse(f"An error occurred: {str(e)}<br><pre>{traceback.format_exc()}</pre>", status=500)
+
+from django.http import JsonResponse
+from django.core.management import call_command
+from django.views.decorators.csrf import csrf_exempt
+import threading
+
+@csrf_exempt
+def trigger_daily_newsletter(request, secret_token):
+    # Extremely simple security: hardcoded token that matches the GitHub Action
+    if secret_token != "jfh_secure_trigger_991823":
+        return JsonResponse({"error": "Unauthorized"}, status=403)
+        
+    def run_command():
+        try:
+            call_command('send_daily_newsletter')
+        except Exception:
+            pass
+
+    # Run the command in a background thread so the HTTP request returns instantly
+    threading.Thread(target=run_command).start()
+    
+    return JsonResponse({"status": "success", "message": "Daily newsletter triggered in background!"})
+
