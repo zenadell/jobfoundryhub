@@ -1,0 +1,19 @@
+name: Daily Job Sync
+
+on:
+  schedule:
+    # Runs at 06:00 UTC every day (before the 08:00 newsletter)
+    - cron: '0 6 * * *'
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  trigger_job_sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Sync Webhook
+        # Kicks off cleanup + Adzuna/Gemini sync + dedupe in a background
+        # thread on Render. The endpoint returns immediately, so a short
+        # timeout is fine — the sync itself keeps running server-side.
+        run: |
+          curl -sS --connect-timeout 60 --max-time 120 "https://jobfoundryhub.com/api/cron/trigger/?token=jobfoundry2026-secret-sync"
