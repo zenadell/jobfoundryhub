@@ -7,8 +7,10 @@ from django.utils import timezone
 from .models import Job, Company, JobCategory, ResumeSubmission, JobPostingRequest
 
 def job_list(request):
-    # Base queryset with requested ordering
-    queryset = Job.objects.filter(is_active=True).select_related('company', 'category').order_by('company', '-posted_at')
+    # Base queryset — NEWEST jobs first so fresh listings land on page 1.
+    # (Previously ordered by company first, which pinned the oldest companies
+    #  to the front and buried newly-synced jobs on the last pages.)
+    queryset = Job.objects.filter(is_active=True).select_related('company', 'category').order_by('-posted_at', '-id')
     
     q = request.GET.get('q')
     category_slug = request.GET.get('category')
@@ -195,19 +197,20 @@ def seo_landing_page(request, category_slug, location_slug):
     URL pattern: /jobs/<category_slug>-graduate-jobs-<location_slug>/
     """
     category = get_object_or_404(JobCategory, slug=category_slug)
-    
+
     location_clean = location_slug.replace('-', ' ').title()
-    
-    queryset = Job.objects.filter(
-        category=category,
-        is_active=True
-    )
-    
+
+    base_qs = Job.objects.filter(category=category, is_active=True)
+
+    # Apply the location/remote filter, but never strand the visitor on an
+    # empty page: if the strict filter returns nothing, fall back to all
+    # active jobs in this category so the page always has real listings.
     if location_slug.lower() == 'remote':
-        queryset = queryset.filter(is_remote=True)
+        filtered = base_qs.filter(is_remote=True)
     else:
-        queryset = queryset.filter(location__icontains=location_clean)
-        
+        filtered = base_qs.filter(location__icontains=location_clean)
+
+    queryset = filtered if filtered.exists() else base_qs
     queryset = queryset.select_related('company', 'category').order_by('-posted_at')
     
     paginator = Paginator(queryset, 12)

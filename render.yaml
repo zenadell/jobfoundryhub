@@ -32,6 +32,13 @@ services:
         value: ce95f522
       - key: ADZUNA_API_KEY
         value: 59b8ac4579f4f1e5344cbb158b78c0c6
+      - key: GEMINI_MODEL
+        value: gemini-3.1-flash-lite
+      # Comma- or newline-separated Gemini key(s). Set the value in the
+      # Render dashboard (kept out of git). Can also be set in Django
+      # admin → Site Settings, which overrides this.
+      - key: GEMINI_API_KEYS
+        sync: false
       - key: SITE_NAME
         value: Job Foundry Hub
       - key: SITE_TAGLINE

@@ -325,6 +325,10 @@ def run_cron_tasks():
         call_command('cleanup_expired_jobs')
         logger.info("Running automated cron tasks: sync_adzuna_jobs")
         call_command('sync_adzuna_jobs')
+        # Remove any duplicate listings the sync may have let through.
+        # Idempotent — does nothing once the data is clean.
+        logger.info("Running automated cron tasks: dedupe_jobs")
+        call_command('dedupe_jobs')
         logger.info("Automated cron tasks completed successfully.")
     except Exception as e:
         logger.error(f"Error running cron tasks: {e}")

@@ -123,6 +123,15 @@ class SiteSettingsAdmin(admin.ModelAdmin):
                 'Make sure AdSense is disabled if you are using Monetag.'
             )
         }),
+        ('🤖 AI Job Rewriting (Gemini)', {
+            'fields': ('ai_rewrite_enabled', 'gemini_api_keys'),
+            'description': (
+                'Paste your Gemini API key(s), ONE PER LINE. Each key allows about '
+                '15 rewrites per minute — add a second key to double the throughput. '
+                'The sync automatically rests when it nears the limit and then continues, '
+                'so it will never get blocked. Turn off "ai rewrite enabled" to skip AI entirely.'
+            )
+        }),
         ('📹 How It Works Videos', {
             'fields': (
                 'hiw_video_embed_seekers',

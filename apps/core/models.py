@@ -61,7 +61,11 @@ class SiteSettings(models.Model):
     
     monetag_head_script  = models.TextField(blank=True, help_text='Paste the Monetag JS snippet here (Vignette or In-Page Push)')
     monetag_enabled      = models.BooleanField(default=False, help_text='Enable Monetag ads on the site')
-    
+
+    # ── AI job-description rewriting (Google Gemini) ──────────────
+    ai_rewrite_enabled = models.BooleanField(default=True, help_text='Use Gemini to rewrite job descriptions during sync. If off, the raw + template description is used.')
+    gemini_api_keys    = models.TextField(blank=True, help_text='Gemini API key(s), ONE PER LINE. Multiple keys are rotated to raise the rate limit (each key allows ~15 requests/min).')
+
     # How It Works Video Embeds (YouTube, Vimeo, etc.)
     hiw_video_embed_seekers = models.TextField(blank=True, help_text='YouTube iframe embed code for Job Seekers')
     hiw_video_embed_employers = models.TextField(blank=True, help_text='YouTube iframe embed code for Employers')

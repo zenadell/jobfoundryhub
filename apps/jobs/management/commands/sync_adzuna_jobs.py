@@ -12,6 +12,7 @@ import hashlib
 import re
 import time
 import requests
+from collections import deque
 from datetime import timedelta
 from urllib.parse import urlparse
 
@@ -20,16 +21,21 @@ from django.utils import timezone
 from django.utils.text import slugify
 
 from apps.jobs.models import Job, Company, JobCategory
+from apps.jobs.utils import normalize_title
 from apps.jobs.indexing import notify_google
-
-try:
-    from groq import Groq
-except ImportError:
-    Groq = None
 
 # ── Adzuna credentials ──────────────────────────────────────────
 ADZUNA_APP_ID = os.environ.get('ADZUNA_APP_ID', 'ce95f522')
 ADZUNA_API_KEY = os.environ.get('ADZUNA_API_KEY', '59b8ac4579f4f1e5344cbb158b78c0c6')
+
+# ── Gemini (Google AI) config ───────────────────────────────────
+GEMINI_MODEL = os.environ.get('GEMINI_MODEL', 'gemini-3.1-flash-lite')
+GEMINI_ENDPOINT = (
+    'https://generativelanguage.googleapis.com/v1beta/models/'
+    f'{GEMINI_MODEL}:generateContent'
+)
+# Free-tier requests-per-minute per key for flash-lite. We keep 1 in reserve.
+GEMINI_RPM_PER_KEY = int(os.environ.get('GEMINI_RPM_PER_KEY', '15'))
 
 # ── Countries & currency mapping ────────────────────────────────
 COUNTRIES = {
@@ -177,6 +183,50 @@ KNOWN_DOMAINS = {
 }
 
 
+class _GeminiRateLimiter:
+    """
+    Sliding-window limiter across one or more Gemini keys.
+
+    Allows ``(rpm_per_key - 1) * num_keys`` calls per rolling 60s window and
+    round-robins the keys. When the window is full it sleeps just long enough
+    for the oldest call to age out, logs the rest, and then continues — so a
+    long sync paces itself and never trips the quota.
+    """
+
+    def __init__(self, keys, rpm_per_key, logger):
+        self.keys = list(keys)
+        # Keep 1 request/min in reserve per key for safety.
+        self.limit = max(1, (rpm_per_key - 1) * max(1, len(self.keys)))
+        self.window = deque()        # timestamps of recent calls
+        self._idx = 0
+        self._log = logger
+
+    def next_key(self):
+        key = self.keys[self._idx % len(self.keys)]
+        self._idx += 1
+        return key
+
+    def acquire(self):
+        """Block until a call is allowed under the rolling-minute budget."""
+        now = time.time()
+        while self.window and now - self.window[0] >= 60:
+            self.window.popleft()
+
+        if len(self.window) >= self.limit:
+            wait = 60 - (now - self.window[0]) + 0.2
+            if wait > 0:
+                self._log(
+                    f"Hit Gemini budget ({self.limit}/min across {len(self.keys)} key(s)). "
+                    f"Resting {wait:.0f}s, then continuing..."
+                )
+                time.sleep(wait)
+            now = time.time()
+            while self.window and now - self.window[0] >= 60:
+                self.window.popleft()
+
+        self.window.append(time.time())
+
+
 class Command(BaseCommand):
     help = 'Fetch entry-level jobs from Adzuna API and save to database'
 
@@ -189,13 +239,55 @@ class Command(BaseCommand):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.groq_client = None
-        groq_api_key = os.environ.get('GROQ_API_KEY')
-        if Groq and groq_api_key:
-            self.groq_client = Groq(api_key=groq_api_key)
+        self.ai_enabled = False
+        self.ai_keys = []
+        self.limiter = None
+        # Run-summary counters
+        self.ai_ok = 0
+        self.ai_fallback = 0
+
+    def _load_ai_config(self):
+        """
+        Resolve Gemini keys + on/off switch. SiteSettings (admin-editable)
+        wins; falls back to the GEMINI_API_KEYS env var (newline or comma
+        separated).
+        """
+        enabled = True
+        raw_keys = ''
+        try:
+            from apps.core.models import SiteSettings
+            s = SiteSettings.get()
+            enabled = s.ai_rewrite_enabled
+            raw_keys = s.gemini_api_keys or ''
+        except Exception:
+            pass
+
+        if not raw_keys.strip():
+            raw_keys = os.environ.get('GEMINI_API_KEYS', '') or os.environ.get('GEMINI_API_KEY', '')
+
+        keys = [k.strip() for k in re.split(r'[\n,]+', raw_keys) if k.strip()]
+
+        self.ai_keys = keys
+        self.ai_enabled = bool(enabled and keys)
+        if self.ai_enabled:
+            self.limiter = _GeminiRateLimiter(
+                keys, GEMINI_RPM_PER_KEY,
+                logger=lambda m: self.stdout.write(self.style.WARNING(f'  ⏳ {m}')),
+            )
+            budget = (GEMINI_RPM_PER_KEY - 1) * len(keys)
+            self.stdout.write(self.style.SUCCESS(
+                f'🤖 Gemini rewriting ON — model={GEMINI_MODEL}, '
+                f'{len(keys)} key(s), ~{budget} rewrites/min before a short rest.'
+            ))
+        else:
+            self.stdout.write(self.style.WARNING(
+                '🤖 Gemini rewriting OFF (no keys or disabled) — using template descriptions.'
+            ))
 
     def handle(self, *args, **options):
         self.stdout.write("Starting Adzuna sync...")
+
+        self._load_ai_config()
 
         total_saved = 0
 
@@ -210,6 +302,11 @@ class Command(BaseCommand):
         self.stdout.write(self.style.SUCCESS(
             f'\n✅ Total jobs synced: {total_saved}'
         ))
+        if self.ai_enabled:
+            self.stdout.write(self.style.SUCCESS(
+                f'   ✍️  AI rewrites: {self.ai_ok} succeeded, '
+                f'{self.ai_fallback} fell back to template.'
+            ))
 
     # ─────────────────────────────────────────────────────────────
     #  FETCH ONE SEARCH PAGE
@@ -279,8 +376,13 @@ class Command(BaseCommand):
         if Job.objects.filter(company=company, is_active=True).count() >= 10:
             return False
 
-        # ── Dedup: skip if same title + company already exists ─
-        if Job.objects.filter(title=title[:300], company=company).exists():
+        # ── Dedup: skip if a punctuation/case variant of this title
+        #    already exists for this company. Catches Adzuna re-posts
+        #    like "Coordinator - X" vs "Coordinator – X" without merging
+        #    genuinely different listings (different cities, levels, etc.).
+        norm = normalize_title(title)
+        existing_titles = Job.objects.filter(company=company).values_list('title', flat=True)
+        if any(normalize_title(t) == norm for t in existing_titles):
             return False
 
         # ── Slug (unique) ──────────────────────────────────────
@@ -347,9 +449,13 @@ class Command(BaseCommand):
         original_desc = re.sub(r'<[^>]+>', '', description_raw).strip()
         
         full_description = self._rewrite_with_ai(title, company_name, original_desc, category_name)
-        if not full_description:
+        if full_description:
+            self.ai_ok += 1
+        else:
+            if self.ai_enabled:
+                self.ai_fallback += 1
             # Fallback
-            extra_desc = CATEGORY_DETAILS.get(category_name, {}).get('extra_desc', 
+            extra_desc = CATEGORY_DETAILS.get(category_name, {}).get('extra_desc',
                 "We are looking for a dedicated individual to join our growing team. "
                 "In this role, you will have the opportunity to work on meaningful projects "
                 "that impact our customers every day. We value innovation, integrity, and a "
@@ -364,7 +470,7 @@ class Command(BaseCommand):
         }
 
         # ── Create the Job ─────────────────────────────────────
-        Job.objects.create(
+        job = Job.objects.create(
             title=title[:300],
             slug=slug,
             company=company,
@@ -400,37 +506,67 @@ class Command(BaseCommand):
         return True
 
     def _rewrite_with_ai(self, title, company_name, original_desc, category_name):
-        if not self.groq_client:
+        """Rewrite a job description with Google Gemini. Returns clean HTML or None."""
+        if not self.ai_enabled:
             return None
-            
+
         prompt = (
-            f"Write a professional, engaging 2-3 paragraph job description for the position of '{title}' at '{company_name}'. "
-            f"The role falls under the '{category_name}' category. "
+            "You are an expert HR copywriter that creates compelling, unique job "
+            "descriptions formatted in HTML.\n\n"
+            f"Write a professional, engaging 2-3 paragraph job description for the position of "
+            f"'{title}' at '{company_name}'. The role falls under the '{category_name}' category. "
             f"Here is the raw description from the job board to base it on:\n{original_desc}\n\n"
             "Format the output as clean HTML using only <p> tags. Do not use <h1>, <h2>, or <ul> tags. "
+            "Do not wrap the output in markdown code fences. "
             "Make it sound unique, exciting, and optimized for an entry-level/graduate audience."
         )
-        
-        try:
-            chat_completion = self.groq_client.chat.completions.create(
-                messages=[
-                    {
-                        "role": "system",
-                        "content": "You are an expert HR copywriter that creates compelling and unique job descriptions formatted in HTML."
-                    },
-                    {
-                        "role": "user",
-                        "content": prompt,
-                    }
-                ],
-                model="llama3-8b-8192",
-                temperature=0.7,
-                max_tokens=600,
-            )
-            return chat_completion.choices[0].message.content.strip()
-        except Exception as e:
-            self.stderr.write(self.style.WARNING(f'  ⚠️  Groq AI error: {e}'))
-            return None
+
+        payload = {
+            "contents": [{"parts": [{"text": prompt}]}],
+            "generationConfig": {"temperature": 0.7, "maxOutputTokens": 1200},
+        }
+
+        # One retry: respect the rolling budget, and on a 429 try the next key.
+        for attempt in range(2):
+            self.limiter.acquire()
+            key = self.limiter.next_key()
+            try:
+                resp = requests.post(
+                    GEMINI_ENDPOINT,
+                    headers={'x-goog-api-key': key, 'Content-Type': 'application/json'},
+                    json=payload,
+                    timeout=40,
+                )
+                if resp.status_code == 429:
+                    # Quota hit despite pacing — back off briefly and rotate key.
+                    if attempt == 0:
+                        time.sleep(5)
+                        continue
+                    self.stderr.write(self.style.WARNING('  ⚠️  Gemini rate-limited (429), using template.'))
+                    return None
+                resp.raise_for_status()
+                data = resp.json()
+                parts = (
+                    data.get('candidates', [{}])[0]
+                        .get('content', {})
+                        .get('parts', [])
+                )
+                text = ''.join(p.get('text', '') for p in parts).strip()
+                text = self._strip_code_fences(text)
+                return text or None
+            except Exception as e:
+                self.stderr.write(self.style.WARNING(f'  ⚠️  Gemini error: {str(e)[:120]}'))
+                return None
+        return None
+
+    @staticmethod
+    def _strip_code_fences(text):
+        """Remove ```html ... ``` wrappers the model sometimes adds."""
+        t = text.strip()
+        if t.startswith('```'):
+            t = re.sub(r'^```[a-zA-Z]*\n?', '', t)
+            t = re.sub(r'\n?```$', '', t).strip()
+        return t
 
     # ─────────────────────────────────────────────────────────────
     #  COMPANY
