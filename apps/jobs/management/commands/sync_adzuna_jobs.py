@@ -27,6 +27,8 @@ from apps.jobs.indexing import notify_google
 # ── Adzuna credentials ──────────────────────────────────────────
 ADZUNA_APP_ID = os.environ.get('ADZUNA_APP_ID', 'ce95f522')
 ADZUNA_API_KEY = os.environ.get('ADZUNA_API_KEY', '59b8ac4579f4f1e5344cbb158b78c0c6')
+# Only fetch postings from the last N days (keeps the feed fresh).
+ADZUNA_MAX_DAYS_OLD = int(os.environ.get('ADZUNA_MAX_DAYS_OLD', '3'))
 
 # ── Gemini (Google AI) config ───────────────────────────────────
 GEMINI_MODEL = os.environ.get('GEMINI_MODEL', 'gemini-3.1-flash-lite')
@@ -319,8 +321,13 @@ class Command(BaseCommand):
         params = {
             'app_id': ADZUNA_APP_ID,
             'app_key': ADZUNA_API_KEY,
-            'results_per_page': 10,
+            'results_per_page': 20,
             'what': query,
+            # Pull the NEWEST postings within a recent window so each run
+            # brings genuinely fresh jobs instead of re-fetching the same
+            # relevance-ranked top results (which just get deduped away).
+            'sort_by': 'date',
+            'max_days_old': ADZUNA_MAX_DAYS_OLD,
             'content-type': 'application/json',
         }
 
