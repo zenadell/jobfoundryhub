@@ -16,4 +16,4 @@ jobs:
         # thread on Render. The endpoint returns immediately, so a short
         # timeout is fine — the sync itself keeps running server-side.
         run: |
-          curl -sS --connect-timeout 60 --max-time 120 "https://jobfoundryhub.com/api/cron/trigger/?token=jobfoundry2026-secret-sync"
+          curl -sSL --connect-timeout 60 --max-time 120 "https://www.jobfoundryhub.com/api/cron/trigger/?token=jobfoundry2026-secret-sync"

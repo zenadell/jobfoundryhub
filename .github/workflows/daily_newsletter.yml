@@ -13,4 +13,4 @@ jobs:
     steps:
       - name: Trigger Webhook
         run: |
-          curl -sS --connect-timeout 60 --max-time 120 "https://jobfoundryhub.com/newsletter/trigger-daily-automation/jfh_secure_trigger_991823/"
+          curl -sSL --connect-timeout 60 --max-time 120 "https://www.jobfoundryhub.com/newsletter/trigger-daily-automation/jfh_secure_trigger_991823/"
