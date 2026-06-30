@@ -66,6 +66,41 @@ SEARCH_QUERIES = {
     ],
 }
 
+# ── Remote-focused queries (jobs flagged is_remote=True) ────────
+# Spread across the categories shown in the "Remote Jobs" footer so
+# those landing pages actually fill up. Searched on US (largest remote
+# market). Run every day (1 page) and in bulk via `--remote`.
+REMOTE_QUERIES = [
+    'remote software developer',
+    'remote software engineer',
+    'remote frontend developer',
+    'remote backend developer',
+    'remote full stack developer',
+    'remote data analyst',
+    'remote data engineer',
+    'remote data scientist',
+    'remote marketing',
+    'remote digital marketing',
+    'remote social media',
+    'remote content writer',
+    'remote copywriter',
+    'remote sales representative',
+    'remote account executive',
+    'remote business development',
+    'remote customer service',
+    'remote customer support',
+    'remote financial analyst',
+    'remote accountant',
+    'remote bookkeeper',
+    'remote project manager',
+    'remote product manager',
+    'remote ux designer',
+    'remote graphic designer',
+    'remote recruiter',
+    'remote virtual assistant',
+    'remote it support',
+]
+
 # ── Category mapping (keyword → category name) ─────────────────
 CATEGORY_MAP = [
     (['market', 'social media', 'seo', 'content'],       'Marketing'),
@@ -238,6 +273,23 @@ class Command(BaseCommand):
             action='store_true',
             help='Delete old seed/dummy jobs before syncing',
         )
+        parser.add_argument(
+            '--remote',
+            action='store_true',
+            help='Bulk-pull REMOTE jobs only (uses REMOTE_QUERIES across several pages).',
+        )
+        parser.add_argument(
+            '--pages',
+            type=int,
+            default=3,
+            help='Pages to fetch per query in --remote mode (default 3, ~50 jobs/page).',
+        )
+        parser.add_argument(
+            '--max-days-old',
+            type=int,
+            default=None,
+            help='Override the recency window (days). Useful for a wider one-off backfill.',
+        )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -291,14 +343,39 @@ class Command(BaseCommand):
 
         self._load_ai_config()
 
+        max_days_old = options.get('max_days_old')
         total_saved = 0
 
-        for country_code, queries in SEARCH_QUERIES.items():
-            self.stdout.write(self.style.MIGRATE_HEADING(f"\n🌍 Syncing {COUNTRIES[country_code]['country_name']} ({country_code.upper()})..."))
-            for query in queries:
-                count = self._fetch_and_save(query, country_code)
+        if options.get('remote'):
+            # ── Bulk remote pull: REMOTE_QUERIES across several pages ──
+            pages = max(1, options.get('pages') or 3)
+            self.stdout.write(self.style.MIGRATE_HEADING(
+                f"\n🏠 Bulk REMOTE pull — {len(REMOTE_QUERIES)} queries × {pages} page(s)..."
+            ))
+            for query in REMOTE_QUERIES:
+                for page in range(1, pages + 1):
+                    count = self._fetch_and_save(
+                        query, 'us', page=page, force_remote=True,
+                        max_days_old=max_days_old,
+                    )
+                    total_saved += count
+                    time.sleep(0.5)
+                    if count == 0 and page > 1:
+                        break  # no more results for this query
+        else:
+            # ── Normal daily sync: entry-level queries + fresh remote ──
+            for country_code, queries in SEARCH_QUERIES.items():
+                self.stdout.write(self.style.MIGRATE_HEADING(f"\n🌍 Syncing {COUNTRIES[country_code]['country_name']} ({country_code.upper()})..."))
+                for query in queries:
+                    count = self._fetch_and_save(query, country_code, max_days_old=max_days_old)
+                    total_saved += count
+                    time.sleep(0.5)
+
+            # Keep the "Remote Jobs" pages fresh every run (1 page each).
+            self.stdout.write(self.style.MIGRATE_HEADING("\n🏠 Syncing fresh REMOTE jobs (US)..."))
+            for query in REMOTE_QUERIES:
+                count = self._fetch_and_save(query, 'us', force_remote=True, max_days_old=max_days_old)
                 total_saved += count
-                # Be polite to the API
                 time.sleep(0.5)
 
         self.stdout.write(self.style.SUCCESS(
@@ -313,26 +390,26 @@ class Command(BaseCommand):
     # ─────────────────────────────────────────────────────────────
     #  FETCH ONE SEARCH PAGE
     # ─────────────────────────────────────────────────────────────
-    def _fetch_and_save(self, query, country_code):
+    def _fetch_and_save(self, query, country_code, page=1, force_remote=False, max_days_old=None):
         """Fetch one page of results from Adzuna and save them."""
-        url = f'https://api.adzuna.com/v1/api/jobs/{country_code}/search/1'
+        url = f'https://api.adzuna.com/v1/api/jobs/{country_code}/search/{page}'
         meta = COUNTRIES[country_code]
-        
+
         params = {
             'app_id': ADZUNA_APP_ID,
             'app_key': ADZUNA_API_KEY,
-            'results_per_page': 20,
+            'results_per_page': 50 if force_remote else 20,
             'what': query,
             # Pull the NEWEST postings within a recent window so each run
             # brings genuinely fresh jobs instead of re-fetching the same
             # relevance-ranked top results (which just get deduped away).
             'sort_by': 'date',
-            'max_days_old': ADZUNA_MAX_DAYS_OLD,
+            'max_days_old': max_days_old if max_days_old is not None else ADZUNA_MAX_DAYS_OLD,
             'content-type': 'application/json',
         }
 
         try:
-            self.stdout.write(f'  📡 Fetching: "{query}" in {country_code.upper()}...')
+            self.stdout.write(f'  📡 Fetching: "{query}" in {country_code.upper()} (page {page})...')
             resp = requests.get(url, params=params, timeout=30)
             resp.raise_for_status()
             data = resp.json()
@@ -347,7 +424,7 @@ class Command(BaseCommand):
 
         for item in results:
             try:
-                if self._save_job(item, country_code, meta):
+                if self._save_job(item, country_code, meta, force_remote=force_remote):
                     saved += 1
             except Exception as e:
                 self.stderr.write(self.style.WARNING(
@@ -360,7 +437,7 @@ class Command(BaseCommand):
     # ─────────────────────────────────────────────────────────────
     #  SAVE ONE JOB
     # ─────────────────────────────────────────────────────────────
-    def _save_job(self, item, country_code, meta):
+    def _save_job(self, item, country_code, meta, force_remote=False):
         """Parse one Adzuna result dict and save as a Job."""
         title = (item.get('title') or '').strip()
         if not title:
@@ -432,7 +509,7 @@ class Command(BaseCommand):
                 return False
 
         combined_text = f"{title} {description_raw}".lower()
-        is_remote = 'remote' in combined_text or 'work from home' in combined_text
+        is_remote = force_remote or 'remote' in combined_text or 'work from home' in combined_text
 
         # ── Salary ─────────────────────────────────────────────
         salary_min = item.get('salary_min')
